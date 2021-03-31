@@ -1,0 +1,38 @@
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.palantir.graal' version '0.7.2'
+    id 'kotlin-kapt'
+}
+
+group 'me.gendal.conclave.eventmanager'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":common")
+    implementation "com.r3.conclave:conclave-client:$conclaveVersion"
+    implementation "org.apache.httpcomponents:httpclient:4.5.13"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.1"
+    implementation("info.picocli:picocli:4.6.1")
+    kapt("info.picocli:picocli-codegen:4.6.1")
+}
+
+application {
+    mainClassName = "me.gendal.conclave.eventmanager.client.EventManagerClientKt";
+}
+
+configure([compileKotlin, compileTestKotlin]) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+graal {
+    mainClass("me.gendal.conclave.eventmanager.client.EventManagerClientKt")
+    outputName("EventManagerClient")
+    javaVersion("8")
+}

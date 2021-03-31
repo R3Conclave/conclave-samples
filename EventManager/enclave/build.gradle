@@ -1,0 +1,27 @@
+plugins {
+    id 'com.r3.conclave.enclave'
+}
+
+group 'me.gendal.conclave.eventmanager'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":common")
+    implementation "com.r3.conclave:conclave-enclave"
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+        //testImplementation group: 'junit', name: 'junit', version: '5.4.2'
+    implementation "com.r3.conclave:conclave-testing"
+    implementation "org.slf4j:slf4j-api:1.7.30"
+    implementation "org.slf4j:slf4j-simple:1.7.30"
+}
+
+conclave {
+    productID = 1
+    revocationLevel = 0
+    runtime = graalvm_native_image
+    //runtime = avian
+}

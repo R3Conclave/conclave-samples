@@ -1,0 +1,44 @@
+plugins {
+    id 'application'
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group 'me.gendal.conclave.eventmanager'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+// Override the default (simulation) with -PenclaveMode=
+def mode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "mock"
+
+dependencies {
+    implementation project(":common")
+    implementation "com.r3.conclave:conclave-host:$conclaveVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    if (mode == "mock") {
+        implementation project(path: ":enclave")
+    } else {
+        implementation project(path: ":enclave", configuration: mode)
+    }
+    implementation "org.slf4j:slf4j-api:1.7.30"
+    implementation "org.slf4j:slf4j-simple:1.7.30"
+    implementation project(":enclave")  // needed in addition to line 22/24 (not sure why!!)
+    implementation "com.r3.conclave:conclave-testing:$conclaveVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
+}
+
+application {
+    mainClassName = "me.gendal.conclave.eventmanager.host.EventManagerMain"
+    applicationDefaultJvmArgs = ['-Dconclavemode=' + mode ]
+}
+
+test {
+    systemProperty 'conclavemode', mode
+}
+
+configurations {
+    compile.exclude module: 'spring-boot-starter-logging'
+}

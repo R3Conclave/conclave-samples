@@ -1,0 +1,21 @@
+plugins {
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.30'
+}
+
+group 'me.gendal.conclave.eventmanager'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.1'
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.0.1'
+    implementation "com.r3.conclave:conclave-common:$conclaveVersion"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

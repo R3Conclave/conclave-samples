@@ -1,0 +1,2 @@
+rm ALICE BOB CHARLEY DENISE
+rm *.conclave
