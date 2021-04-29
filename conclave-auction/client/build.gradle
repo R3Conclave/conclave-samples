@@ -12,7 +12,6 @@ dependencies {
     implementation "com.r3.conclave:conclave-client:$conclaveVersion"
 }
 
-
 task runClientAsAdmin(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.r3.conclave.sample.auction.client.AuctionClient'

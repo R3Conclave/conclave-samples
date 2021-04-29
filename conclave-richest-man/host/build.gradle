@@ -1,0 +1,24 @@
+plugins {
+    id 'application'
+}
+
+mainClassName = "com.r3.conclave.sample.host.Host"
+
+
+// Override the default (simulation) with -PenclaveMode=
+def mode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "simulation"
+
+// Create a task that can be used for generating signing materials
+tasks.register("prepareForSigning") {
+    it.dependsOn(":enclave:generateEnclaveSigningMaterial" + mode.capitalize())
+}
+
+dependencies {
+    implementation "com.r3.conclave:conclave-host:$conclaveVersion"
+    runtimeOnly project(path: ":enclave", configuration: mode)
+    runtimeOnly "org.slf4j:slf4j-simple:1.7.30"
+
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE'
+
+    testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
+}
