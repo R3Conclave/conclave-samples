@@ -1,0 +1,7 @@
+
+Msquid:S1481"1Remove this unused "outputStream" local variable.(ù©òçüÿÿÿÿ
+Osquid:S1197"8Move the array designator from the variable to the type.(ìĞ­Ê
+asquid:S2095"JUse try-with-resources or close this "ServerSocket" in a "finally" clause.(ûû¡
+`squid:UnusedPrivateMethod'"6Remove this unused private "sendBytesToClient" method.(ï·®ÿüÿÿÿÿ
+Qsquid:S1481"5Remove this unused "enclaveClassName" local variable.(‚ºÌ¾şÿÿÿÿ
+»%squid:RedundantThrowsDeclarationCheck"‚Remove the declaration of thrown exception 'com.r3.conclave.host.EnclaveLoadException', as it cannot be thrown from method's body.(ìĞ­Ê8˜ú›Ì˜/

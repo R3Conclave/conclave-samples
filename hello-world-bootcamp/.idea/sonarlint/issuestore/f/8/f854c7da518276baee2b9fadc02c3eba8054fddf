@@ -1,0 +1,15 @@
+
+O
+squid:S106"9Replace this use of System.out or System.err by a logger.(ù©ùø
+[squid:S2095"DUse try-with-resources or close this "Socket" in a "finally" clause.(ø×†é
+?squid:S14813"(Remove this unused "key" local variable.(Çåâ
+Gsquid:S1481"+Remove this unused "toHost" local variable.(ôÂı­øÿÿÿÿ
+Osquid:S1197"8Move the array designator from the variable to the type.(œİã¤
+O
+squid:S106="9Replace this use of System.out or System.err by a logger.(ÇÍÚÉ
+N
+squid:S106"9Replace this use of System.out or System.err by a logger.(ËÈ¬k
+Jsquid:S1481".Remove this unused "toReverse" local variable.(éïÌ¯ıÿÿÿÿ
+N
+squid:S106%"9Replace this use of System.out or System.err by a logger.(Ü¬€
+À%squid:RedundantThrowsDeclarationCheck"‡Remove the declaration of thrown exception 'com.r3.conclave.client.InvalidEnclaveException', as it cannot be thrown from method's body.(œİã¤8˜ú›Ì˜/
