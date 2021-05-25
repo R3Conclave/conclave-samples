@@ -246,6 +246,9 @@
       </pane>
     </panes>
   </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -259,37 +262,10 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.MockTest">
-    <configuration name="MockTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hello-world-bootcamp.enclave.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.r3.conclave.sample.enclave.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.r3.conclave.sample.enclave" />
-      <option name="MAIN_CLASS_NAME" value="com.r3.conclave.sample.enclave.MockTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MockTest.reverseNumber" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hello-world-bootcamp.enclave.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.r3.conclave.sample.enclave.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.r3.conclave.sample.enclave" />
-      <option name="MAIN_CLASS_NAME" value="com.r3.conclave.sample.enclave.MockTest" />
-      <option name="METHOD_NAME" value="reverseNumber" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+    <list>
+      <item itemvalue="JUnit.MockTest" />
+      <item itemvalue="JUnit.MockTest.reverseNumber" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.MockTest" />
