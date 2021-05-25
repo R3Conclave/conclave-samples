@@ -1,11 +1,7 @@
 package com.r3.conclave.sample.client;
 
-import com.r3.conclave.client.EnclaveConstraint;
 import com.r3.conclave.client.InvalidEnclaveException;
-import com.r3.conclave.common.EnclaveInstanceInfo;
 import com.r3.conclave.mail.Curve25519PrivateKey;
-import com.r3.conclave.mail.EnclaveMail;
-import com.r3.conclave.mail.PostOffice;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -48,25 +44,17 @@ public class Client {
         fromHost.readFully(attestationBytes);
 
         //STEP 4: Convert byte[] received from host to EnclaveInstanceInfo object
-        EnclaveInstanceInfo instanceInfo = EnclaveInstanceInfo.deserialize(attestationBytes);
 
         //STEP 4: Verify the attestation against set of constraints
-        //TODO
 
         //STEP 5: Create a dummy key pair for sending via mail to enclave
         PrivateKey key = Curve25519PrivateKey.random();
 
         //STEP 5: Create PostOffice specifying - clients public key, topic name , enclaves public key
 
-        PostOffice postOffice = instanceInfo.createPostOffice(key, "topic");
-
         //STEP 6: Encrypt the message using enclave's public key
 
-        byte[] encryptedRequest = postOffice.encryptMail(toReverse.getBytes());
-
         //STEP 7: Send the encrypted Mail to To Host to relay it to enclave
-        toHost.writeInt(encryptedRequest.length);
-        toHost.write(encryptedRequest);
 
         //STEP 8: Get the reply back from host via the socket
         byte[] encryptedReply = new byte[fromHost.readInt()];
@@ -74,10 +62,6 @@ public class Client {
         fromHost.readFully(encryptedReply);
 
         //STEP 8: Use Post Office to decrypt back the mail sent by the enclave
-        EnclaveMail mail =  postOffice.decryptMail(encryptedReply);
-        System.out.println("Reversed String on client side : " + new String(mail.getBodyAsBytes()));
 
-        toHost.close();
-        fromHost.close();
     }
 }

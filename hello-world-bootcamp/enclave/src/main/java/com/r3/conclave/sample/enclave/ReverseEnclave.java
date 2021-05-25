@@ -18,13 +18,10 @@ public class ReverseEnclave extends Enclave {
     protected void receiveMail(long id, EnclaveMail mail, String routingHint) {
 
         //STEP 3: Perform Computation
-        byte[]  reversedString = reverse(new String(mail.getBodyAsBytes()));
 
         //STEP 4: Create PostOffice and encrypt the reply to be sent to client
-        byte[] encryptedMailReply = postOffice(mail).encryptMail(reversedString);
 
         //STEP 5: Send the encrypted Mail back to client using routing hint
-        postMail(encryptedMailReply, routingHint);
 
     }
 
