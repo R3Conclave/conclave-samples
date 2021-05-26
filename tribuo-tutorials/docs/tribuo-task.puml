@@ -1,0 +1,40 @@
+@startuml "tribuo-task"
+skinparam linetype ortho
+
+annotation Serializable
+
+package common {
+    abstract TribuoTask {
+        + execute(): ByteArray
+        + encode(): ByteArray
+    }
+    abstract TribuoObject {
+        + id: Int
+        + objects: HashMap<Int, TribuoObject>
+        + <T: TribuoObject> encode(function: () -> T): ByteArray
+    }
+    TribuoObject -u-> TribuoTask
+
+    class "Classification" as common_classification
+    class "Clustering" as common_clustering
+    class "Regression" as common_regression
+    class "AnomalyDetection" as common_anomaly_detection
+    class "Configuration" as common_configuration
+
+    common_classification -u-> TribuoObject
+    common_clustering -u-> TribuoObject
+    common_regression -u-> TribuoObject
+    common_anomaly_detection -u-> TribuoObject
+    common_configuration -u-> TribuoObject
+
+    class DataStats
+    ClassificationInitializeImpl -r-> TribuoTask
+    DataStats -r-> TribuoTask
+    TrainerInfo -r-> TribuoTask
+    TrainAndEvaluate -r-> TribuoTask
+}
+
+!include classification.puml
+
+
+@enduml

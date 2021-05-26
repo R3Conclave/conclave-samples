@@ -1,0 +1,13 @@
+@startuml "modules"
+skinparam linetype ortho
+
+component client
+component common
+component enclave
+component host
+
+client -u-> common
+enclave -u-> common
+host -u-> enclave
+
+@enduml

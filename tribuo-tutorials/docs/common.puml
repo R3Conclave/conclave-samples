@@ -1,0 +1,56 @@
+@startuml "common"
+skinparam linetype ortho
+
+package common {
+    interface IClassification {
+        + dataStats(): DataStatsResponse
+        + trainerInfo(): String
+        + trainAndEvaluate(): EvaluationResponse
+        + confusionMatrix(): ConfusionMatrixResponse
+        + serializedModel(): ModelWrapper
+    }
+    class  "Classification" as common_classification
+    common_classification -u-> IClassification
+
+    interface IClustering {
+        + train(centroids: Int, iterations: Int, distanceType: KMeansTrainer.Distance,
+                numThreads: Int, seed: Long): ClusteringEvaluationResponse
+        + centroids(): CentroidsResponse
+        + evaluate(): ClusteringEvaluationResponse
+    }
+    class "Clustering" as common_clustering
+    common_clustering -u-> IClustering
+
+    interface IRegression {
+        + trainSGD(epochs: Int, seed: Long): RegressionEvaluationResponse
+        + trainAdaGrad(epochs: Int, seed: Long): RegressionEvaluationResponse
+        + trainCART(maxDepth: Int): RegressionEvaluationResponse
+    }
+    class "Regression" as common_regression
+    common_regression -u-> IRegression
+
+    interface IAnomalyDetection {
+        + trainAndEvaluate(): AnomalyEvaluationResult
+        + confusionMatrix(): String
+    }
+    class "AnomalyDetection" as common_anomaly_detection
+    common_anomaly_detection -u-> IAnomalyDetection
+
+    interface IConfiguration {
+        + dataStats(): String
+        + initializeLogisticTrainer(): String
+        + mnistLogisticConfig(): ByteArray
+        + lrEvaluator(): EvaluationResponse
+        + lrEvaluatorConfusionMatrix(): ConfusionMatrixResponse
+        + newEvaluator(): EvaluationResponse
+        + newEvaluatorConfusionMatrix(): ConfusionMatrixResponse
+        + newEvaluatorProvenance(): String
+        + transformedEvaluator(): EvaluationResponse
+        + transformedEvaluatorConfusionMatrix(): ConfusionMatrixResponse
+        + mnistTransformedLogisticConfig(): ByteArray
+    }
+    class "Configuration" as common_configuration
+    common_configuration -u-> IConfiguration
+}
+
+@enduml
