@@ -29,7 +29,7 @@ open class TribuoTest {
                 }
                 while (!hostFailed.get()) {
                     try {
-                        client = Client()
+                        client = Client(arrayOf("1", "4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4", "INSECURE"))
                         break
                     } catch (e: Exception) {
                         println("Retrying: " + e.message)

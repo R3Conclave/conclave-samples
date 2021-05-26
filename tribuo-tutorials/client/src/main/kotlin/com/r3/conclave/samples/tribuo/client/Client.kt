@@ -18,7 +18,10 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
 
-class Client : Closeable {
+/**
+ * @param args [EnclaveConfiguration] arguments. See [EnclaveConfiguration] to understand how they are being processed.
+ */
+class Client(args: Array<String>) : Closeable {
     companion object {
         private val DEFAULT_ADDRESS = InetAddress.getLoopbackAddress()!!
         private const val DEFAULT_PORT = 9999
@@ -27,7 +30,7 @@ class Client : Closeable {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            Client().use { client ->
+            Client(args).use { client ->
                 classification(client)
                 clustering(client)
                 regression(client)
@@ -104,7 +107,7 @@ class Client : Closeable {
         }
     }
 
-    val enclaveConfiguration = EnclaveConfiguration(this, EnclaveMode.valueOf(System.getProperty("enclaveMode").toUpperCase()))
+    val enclaveConfiguration = EnclaveConfiguration(this, EnclaveMode.valueOf(System.getProperty("enclaveMode").toUpperCase()), args)
     private var socket: Socket
     private var fromHost: DataInputStream
     private var toHost: DataOutputStream
