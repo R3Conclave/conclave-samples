@@ -31,7 +31,7 @@ class Classification(private val client: Client) : IClassification, Closeable {
      * The enclave returns the unique id of the tutorial to use when
      * executing the remote procedure calls.
      */
-    private val id: Int = client.sendAndReceive(ClassificationInitializeImpl(irisDataPath, 0.7, 1L))
+    private val id: Int = client.sendAndReceive(InitializeClassification(irisDataPath, 0.7, 1L))
 
     lateinit var model: ModelWrapper
 

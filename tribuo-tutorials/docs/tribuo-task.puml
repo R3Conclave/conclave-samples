@@ -5,13 +5,13 @@ annotation Serializable
 
 package common {
     abstract TribuoTask {
-        + execute(): ByteArray
+        + {abstract} execute(): ByteArray
         + encode(): ByteArray
     }
     abstract TribuoObject {
-        + id: Int
-        + objects: HashMap<Int, TribuoObject>
-        + <T: TribuoObject> encode(function: () -> T): ByteArray
+        + {static} id: Int
+        + {static} objects: HashMap<Int, TribuoObject>
+        + {static} <T: TribuoObject> encode(function: () -> T): ByteArray
     }
     TribuoObject -u-> TribuoTask
 
@@ -27,8 +27,7 @@ package common {
     common_anomaly_detection -u-> TribuoObject
     common_configuration -u-> TribuoObject
 
-    class DataStats
-    ClassificationInitializeImpl -r-> TribuoTask
+    InitializeClassification -r-> TribuoTask
     DataStats -r-> TribuoTask
     TrainerInfo -r-> TribuoTask
     TrainAndEvaluate -r-> TribuoTask

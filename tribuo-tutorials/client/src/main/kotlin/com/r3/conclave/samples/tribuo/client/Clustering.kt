@@ -21,7 +21,7 @@ class Clustering(private val client: Client) : IClustering {
      * The enclave returns the unique id of the tutorial to use when
      * executing the remote procedure calls.
      */
-    private val id: Int = client.sendAndReceive(ClusteringInitializeImpl(500L, 1L))
+    private val id: Int = client.sendAndReceive(InitializeClustering(500L, 1L))
 
     /**
      * Request model training and evaluation results.

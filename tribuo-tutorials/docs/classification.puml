@@ -4,14 +4,14 @@ skinparam linetype ortho
 annotation Serializable
 
 package common {
-    class ClassificationInitializeImpl
+    class InitializeClassification
     class DataStats
     class DataStatsResponse
     class TrainerInfo
     class TrainAndEvaluate
 }
 
-ClassificationInitializeImpl -u-> Serializable
+InitializeClassification -u-> Serializable
 DataStats -u-> Serializable
 DataStatsResponse -u-> Serializable
 TrainerInfo -u-> Serializable

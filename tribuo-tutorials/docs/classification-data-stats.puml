@@ -2,7 +2,7 @@
 
 participant Client
 participant "client.Classification" as client_classification
-participant "common.ClassificationInitializationImpl" as common_classification_initialization_impl
+participant "common.InitializeClassification" as common_initialize_classification
 participant "common.Classification" as common_classification
 participant Host
 participant TribuoEnclave
@@ -22,9 +22,9 @@ Client -> client_classification : constructor
 activate client_classification
 
 ' Classification initialization
-client_classification -> common_classification_initialization_impl : constructor(irisDataPath, trainProportion, seed)
-activate common_classification_initialization_impl
-common_classification_initialization_impl --> client_classification
+client_classification -> common_initialize_classification : constructor(irisDataPath, trainProportion, seed)
+activate common_initialize_classification
+common_initialize_classification --> client_classification
 
 ' Sending the request to the Host
 client_classification -> Client : sendAndReceive
@@ -36,14 +36,14 @@ Client -> Host : write
 Host -> TribuoEnclave: deliverMail
 
 ' Enclave processes mail
-TribuoEnclave -> common_classification_initialization_impl : execute
-common_classification_initialization_impl -> common_classification : constructor
+TribuoEnclave -> common_initialize_classification : execute
+common_initialize_classification -> common_classification : constructor
 activate common_classification
-common_classification --> common_classification_initialization_impl
+common_classification --> common_initialize_classification
 
-common_classification_initialization_impl -> TribuoObject : encode(Classification)
-TribuoObject --> common_classification_initialization_impl : id
-common_classification_initialization_impl --> TribuoEnclave : id
+common_initialize_classification -> TribuoObject : encode(Classification)
+TribuoObject --> common_initialize_classification : id
+common_initialize_classification --> TribuoEnclave : id
 
 ' Enclave writes back to Host
 TribuoEnclave --> Host: postMail(id)

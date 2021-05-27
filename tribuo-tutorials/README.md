@@ -97,7 +97,7 @@ These data classes representing the requests and responses are part of the `comm
 module. Using `Classification` as an example, there is a set of data classes in
 `common/Classification.kt` used for serializing the requests and responses:
 
-* `ClassificationInitializeImpl`
+* `InitializeClassification`
 * `DataStats`
 * `DataStatsResponse`
 * `TrainerInfo`
@@ -126,12 +126,12 @@ When `client.Classification` is initialized, it will start by initializing the
      * The enclave returns the unique id of the tutorial to use when
      * executing the remote procedure calls.
      */
-    private val id: Int = client.sendAndReceive(ClassificationInitializeImpl(irisDataPath, 0.7, 1L))
+    private val id: Int = client.sendAndReceive(InitializeClassification(irisDataPath, 0.7, 1L))
 ```
 
 First, the `client` sends the iris dataset file, storing the file path of the
 file as per the enclave's in-memory file system in `irisDataPath`. Secondly,
-the `common.ClassificationInitializeImpl` request is sent, which is used to
+the `common.InitializeClassification` request is sent, which is used to
 create an instance of `common.Classification` in the enclave, which will be
 identified by the returned `id`. This creates a 1:1 relationship between
 `client` and `enclave` classes, sharing a common interface, where the `client`
@@ -174,7 +174,7 @@ When the `client` sends a request, it uses the `Client.sendAndReceive` function.
 This function invokes the `TribuoTask.encode()` function, responsible for serializing
 the task into a `ByteArray`. The function then sends a [Mail](https://docs.conclave.net/mail.html) message, which will be processed by the enclave, waits until
 receiving a [Mail](https://docs.conclave.net/mail.html) with the response, which will
-be serialized, and invokes the `decode` function, in `TribuoTask.kt` in order
+be serialized, and invokes the `decode` function in `TribuoTask.kt` in order
 to deserialize the response to the correct type.
 
 When the `enclave` receives a [Mail](https://docs.conclave.net/mail.html) message, it
@@ -235,7 +235,7 @@ inline fun <reified T> serializeJavaObject(encoder: Encoder, value: T) {
 
 ### Requests and responses
 When initialization requests are executed by the `enclave`, for example the
-`ClassificationInitializeImpl` request, which creates an instance of
+`InitializeClassification` request, which creates an instance of
 `common.Classification`, their `execute()` implementation will invoke
 `TribuoObject.encode()`, which takes the `TribuoObject`'s initialization
 function and returns the instance's `id`, serialized as a `ByteArray`.
@@ -246,7 +246,7 @@ in `objects` and returns the task's `execute()` result, which will be the serial
 
 ```kotlin
 @Serializable
-data class ClassificationInitializeImpl(val irisDataPath: String, val trainProportion: Double, val seed: Long) : TribuoTask() {
+data class InitializeClassification(val irisDataPath: String, val trainProportion: Double, val seed: Long) : TribuoTask() {
     /**
      * Initializes a [Classification] instance in the enclave.
      * @return The unique id of the [Classification] instance.

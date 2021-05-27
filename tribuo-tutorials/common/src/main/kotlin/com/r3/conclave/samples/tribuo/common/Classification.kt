@@ -145,7 +145,7 @@ class Classification(id: Int, irisDataPath: String, trainProportion: Double, see
  * @param seed The seed for the RNG.
  */
 @Serializable
-data class ClassificationInitializeImpl(val irisDataPath: String, val trainProportion: Double, val seed: Long) : TribuoTask() {
+data class InitializeClassification(val irisDataPath: String, val trainProportion: Double, val seed: Long) : TribuoTask() {
     /**
      * Initializes a [Classification] instance in the enclave.
      * @return The unique id of the [Classification] instance.

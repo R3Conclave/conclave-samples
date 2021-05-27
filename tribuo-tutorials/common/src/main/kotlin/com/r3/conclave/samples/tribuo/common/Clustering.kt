@@ -79,7 +79,7 @@ class Clustering(id: Int, size: Long, seed: Long): IClustering, TribuoObject(id)
  * @param seed The RNG seed.
  */
 @Serializable
-class ClusteringInitializeImpl(private val size: Long, private val seed: Long) : TribuoTask() {
+class InitializeClustering(private val size: Long, private val seed: Long) : TribuoTask() {
     /**
      * Initializes a [Clustering] instance in the enclave.
      * @return The unique id of the [Clustering] instance.

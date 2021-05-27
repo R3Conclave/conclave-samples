@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 val messageModule = SerializersModule {
     polymorphic(TribuoTask::class) {
-        subclass(ClassificationInitializeImpl::class, ClassificationInitializeImpl.serializer())
+        subclass(InitializeClassification::class, InitializeClassification.serializer())
         subclass(DataStats::class, DataStats.serializer())
         subclass(TrainerInfo::class, TrainerInfo.serializer())
         subclass(TrainAndEvaluate::class, TrainAndEvaluate.serializer())
@@ -31,7 +31,7 @@ val messageModule = SerializersModule {
         subclass(EnclaveFile::class, EnclaveFile.serializer())
         subclass(DeleteFile::class, DeleteFile.serializer())
         // Clustering tasks
-        subclass(ClusteringInitializeImpl::class, ClusteringInitializeImpl.serializer())
+        subclass(InitializeClustering::class, InitializeClustering.serializer())
         subclass(Train::class, Train.serializer())
         subclass(Centroids::class, Centroids.serializer())
         subclass(Evaluate::class, Evaluate.serializer())
