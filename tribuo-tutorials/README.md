@@ -341,6 +341,16 @@ Encoding and decoding on the client side have been omitted.
 
 ![classification-data-stats](docs/classification-data-stats.svg "Classification data stats")
 
+## Serialization and Reflection configuration
+Tribuo uses Java Serialization and Reflection, which requires configuration in order
+to work with Conclave.
+
+To know more about how to configure them, check our documentation on
+[reflection configuration files](https://docs.conclave.net/enclave-configuration.html#reflectionconfigurationfiles)
+and [serialization configuration files](https://docs.conclave.net/enclave-configuration.html#serializationconfigurationfiles).
+
+The files used on this project can be found in `enclave/serialization-config.json`
+and `enclave/reflect-config.json`.
 
 ## Acknowledgments
 The tutorials use the [Iris](https://archive.ics.uci.edu/ml/datasets/Iris) and
