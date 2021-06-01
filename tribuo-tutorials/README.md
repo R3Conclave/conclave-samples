@@ -35,9 +35,19 @@ This project is compatible with Conclave v1.1. To run it, execute the following 
 
 * Set the `conclaveRepo` property in `gradle.properties` or override it on the command line,
 so it points to your Conclave distribution.
+
+On Linux:
 * Run `./gradlew host:run`, which will launch the host and wait for the client to connect.
 * Run `./gradlew client:run --args "<productID> <codeSigner> <securityInfoSummary>"`,
 which will launch the client, connect to the host and execute all tutorials.
+
+On macOS:
+* Run `<path to conclave-sdk>/scripts/container-gradle host:run`
+* Run `<path to conclave-sdk>/scripts/container-gradle client:run --args "<productID> <codeSigner> <securityInfoSummary>"`
+
+On Windows:
+* Run `gradlew -PenclaveMode=mock host:run`
+* Run `gradlew -PenclaveMode=mock client:run --args "<productID> <codeSigner> <securityInfoSummary>"`
 
 When running on a non-secure mode, `--args` can be set to
 `"1 4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 INSECURE"`, if
