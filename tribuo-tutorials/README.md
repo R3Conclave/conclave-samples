@@ -46,6 +46,25 @@ is required, while `<codeSigner>` and `securityInfoSummary` are ignored and set 
 `0000000000000000000000000000000000000000000000000000000000000000` and `INSECURE`
 respectively in the code.
 
+### Enclave modes
+The gradle property `enclaveMode` can be set on the `host` **and**
+`client` modules to switch between `mock`, `simulation`, `debug` or
+`release` modes.
+
+The `client/data/enclave-config.json`, used in the Configuration
+tutorial, contains the paths where the enclave will expect the data
+files. The original file contains paths to the root (`/`) of the
+enclave's in-memory file system, but when running in `mock` mode
+the `client` code will substitute them to the absolute path of the
+`client`'s `data` directory, since in `mock` mode the JVM's default
+file system is used.
+The `client` code will restore the file when the execution is
+successful in `mock` mode, however, in case an exception is thrown
+the file may not be restored and you may need to revert it manually.
+Check the `MockFileManager` class and the
+`client.Configuration.configurationFile` property to understand
+how the substitutions are being done.
+
 ## Structure
 
 This project is composed of the following modules:
