@@ -352,6 +352,10 @@ and [serialization configuration files](https://docs.conclave.net/enclave-config
 The files used on this project can be found in `enclave/serialization-config.json`
 and `enclave/reflect-config.json`.
 
+## Limitations
+It is currently not possible to work with [external models](https://tribuo.org/learn/4.0/tutorials/external-models-tribuo-v4.html)
+in Conclave.
+
 ## Acknowledgments
 The tutorials use the [Iris](https://archive.ics.uci.edu/ml/datasets/Iris) and
 [Wine](https://archive.ics.uci.edu/ml/datasets/Wine) datasets, from
