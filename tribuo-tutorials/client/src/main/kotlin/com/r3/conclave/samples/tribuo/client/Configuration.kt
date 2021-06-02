@@ -20,7 +20,8 @@ class Configuration(private val client: Client) : IConfiguration, Closeable {
      */
     private val configurationFile: String = client.sendResource("example-config.json") {
         String(it)
-                .replace(": \"/".toRegex(), ": \"${client.enclaveConfiguration.fileManager.dataDir}${File.separator}")
+                .replace(": \"/", ": \"${client.enclaveConfiguration.fileManager.dataDir}${File.separator}")
+                .replace("\\","\\\\")
                 .toByteArray()
     }
 
@@ -133,7 +134,7 @@ class Configuration(private val client: Client) : IConfiguration, Closeable {
     override fun close() {
         client.deleteFile(configurationFile) {
             String(it)
-                    .replace(": \"${client.enclaveConfiguration.fileManager.dataDir}${File.separator}".toRegex(), ": \"/")
+                    .replace(": \"${client.enclaveConfiguration.fileManager.dataDir}${File.separator}".replace("\\","\\\\"), ": \"/")
                     .toByteArray()
         }
         client.deleteFile(t10kImagesResourceFile)

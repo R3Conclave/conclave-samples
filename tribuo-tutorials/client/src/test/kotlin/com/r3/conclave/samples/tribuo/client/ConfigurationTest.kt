@@ -58,7 +58,7 @@ class ConfigurationTest : TribuoTest() {
     @Order(2)
     @Test
     fun mnistLogisticConfig() {
-        val mnistLogisticConfig = String(configuration.mnistLogisticConfig())
+        val mnistLogisticConfig = String(configuration.mnistLogisticConfig()).trimIndent()
         assertThat(mnistLogisticConfig).isEqualTo("""
             {
               "config" : {
@@ -68,9 +68,9 @@ class ConfigurationTest : TribuoTest() {
                   "export" : "false",
                   "import" : "false",
                   "properties" : {
-                    "outputPath" : "${client.resolve(TRAIN_LABELS_IDX_1_FILE_NAME)}",
+                    "outputPath" : "${client.resolve(TRAIN_LABELS_IDX_1_FILE_NAME).replace("\\","\\\\")}",
                     "outputFactory" : "labelfactory-4",
-                    "featuresPath" : "${client.resolve(TRAIN_IMAGES_IDX_3_FILE_NAME)}"
+                    "featuresPath" : "${client.resolve(TRAIN_IMAGES_IDX_3_FILE_NAME).replace("\\","\\\\")}"
                   }
                 }, {
                   "name" : "linearsgdtrainer-0",
