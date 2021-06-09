@@ -15,3 +15,16 @@ dependencies {
 
     runtimeOnly project(path: ":enclave", configuration: enclaveMode)
 }
+
+def graalVMDir = tasks.getByPath(":enclave:untarGraalVM").outputs.files.first()
+def enclaveProjectDir = project(":enclave").projectDir
+def filterFile = enclaveProjectDir.toPath().resolve("filter.json")
+application {
+    run.dependsOn(":enclave:untarGraalVM")
+    if (project.hasProperty("generateConfigFiles") && properties.get("enclaveMode").toString().toLowerCase() == "mock" != null) {
+        applicationDefaultJvmArgs = [
+                "-agentpath:$graalVMDir/jre/lib/amd64/libnative-image-agent.so=config-output-dir=$enclaveProjectDir," +
+                "caller-filter-file=$filterFile"
+        ]
+    }
+}
