@@ -53,7 +53,7 @@ public class Client {
         List<UserDetails> userDetailsList = null;
         List<AdDetails> adDetailsList= null;
         if (args.length == 0) {
-            System.err.println("Please pass [MERCHANT/SERVICE-PROVIDER] [CONSTRAINT] followed by list of credit card numbers separated by spaces");
+            System.err.println("Please pass [MERCHANT/SERVICE-PROVIDER] followed by list of credit card numbers separated by spaces");
             return;
         }
 
