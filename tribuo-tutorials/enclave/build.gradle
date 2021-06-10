@@ -32,6 +32,4 @@ conclave {
     }
 
     maxHeapSize = "4g"
-    reflectionConfigurationFiles.from("reflect-config.json")
-    serializationConfigurationFiles.from("serialization-config.json")
 }

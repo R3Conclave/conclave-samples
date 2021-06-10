@@ -378,8 +378,7 @@ To know more about how to configure them, check our documentation on
 [reflection configuration files](https://docs.conclave.net/enclave-configuration.html#reflectionconfigurationfiles)
 and [serialization configuration files](https://docs.conclave.net/enclave-configuration.html#serializationconfigurationfiles).
 
-The files used on this project can be found in `enclave/serialization-config.json`
-and `enclave/reflect-config.json`.
+The files used on this project can be found on `enclave/src/main/resources/META-INF/native-image/`.
 
 ## Limitations
 It is currently not possible to work with [external models](https://tribuo.org/learn/4.0/tutorials/external-models-tribuo-v4.html)
