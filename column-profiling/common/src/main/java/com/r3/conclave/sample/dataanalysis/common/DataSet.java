@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class DataSet implements Serializable {
     ArrayList<UserProfile> data;
+
     //creating a parameterized constructor
     public DataSet(ArrayList<UserProfile> u) {
 

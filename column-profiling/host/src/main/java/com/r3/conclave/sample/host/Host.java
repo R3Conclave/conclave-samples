@@ -5,7 +5,9 @@ import com.r3.conclave.host.AttestationParameters;
 import com.r3.conclave.host.EnclaveHost;
 import com.r3.conclave.host.EnclaveLoadException;
 import com.r3.conclave.host.MailCommand;
+
 import java.net.ServerSocket;
+
 import com.r3.conclave.host.MockOnlySupportedException;
 
 
@@ -19,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
 
 
 /**
@@ -69,10 +70,10 @@ public class Host {
             System.out.println("Connected with client");
             DataOutputStream outputToClient = new DataOutputStream(clientSocket.getOutputStream());
             System.out.println("Output stream for client");
-            try{
+            try {
                 initializeEnclave(outputToClient);
-            }catch(Exception e){
-                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
             }
 
             final EnclaveInstanceInfo attestation = enclaveHost.getEnclaveInstanceInfo();
@@ -80,7 +81,7 @@ public class Host {
             sendMessageToClient(outputToClient, attestationBytes);
             recieveMailFromClientAndDeliverToEnclave(clientSocket);
         } catch (IOException e) {
-            System.out.println("I/O error: " + e);
+            System.err.println("I/O error: " + e);
             throw e;
         }
 
@@ -112,7 +113,7 @@ public class Host {
             EnclaveHost.checkPlatformSupportsEnclaves(true);
             System.out.println("This platform supports enclaves in simulation, debug and release mode.");
         } catch (EnclaveLoadException e) {
-            System.out.println("This platform does not support hardware enclaves: " + e.getMessage());
+            System.err.println("This platform does not support hardware enclaves: " + e.getMessage());
         }
     }
 
@@ -131,7 +132,7 @@ public class Host {
                     }
             );
         } catch (Exception e) {
-            System.out.println("Error occurred while starting up the enclave " + e.getMessage());
+            System.err.println("Error occurred while starting up the enclave " + e.getMessage());
         }
 
 

@@ -12,9 +12,4 @@ dependencies {
     implementation "com.r3.conclave:conclave-client:$conclaveVersion"
 }
 
-task runClient(type: JavaExec, dependsOn: assemble) {
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    main = 'com.r3.conclave.sample.client.Client';
-}
 

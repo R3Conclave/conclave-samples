@@ -1,31 +1,31 @@
 package com.r3.conclave.sample.dataanalysis.common;
 
 public class UserProfile {
-    private String name;
-    private Integer age;
-    private String country;
-    private String gender;
+    private final String name;
+    private final Integer age;
+    private final String country;
+    private final String gender;
 
-    public UserProfile(String name, Integer age, String country, String gender){
+    public UserProfile(String name, Integer age, String country, String gender) {
         this.name = name;
         this.age = age;
         this.country = country;
         this.gender = gender;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public Integer getAge(){
+    public Integer getAge() {
         return age;
     }
 
-    public String getCountry(){
+    public String getCountry() {
         return country;
     }
 
-    public String getGender(){
+    public String getGender() {
         return gender;
     }
 
