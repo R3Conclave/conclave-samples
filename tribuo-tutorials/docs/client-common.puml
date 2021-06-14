@@ -1,0 +1,19 @@
+@startuml "client-common"
+skinparam linetype ortho
+
+!include client.puml
+!include common.puml
+
+client_classification -u--> IClassification
+client_clustering -u--> IClustering
+client_regression -u--> IRegression
+client_anomaly_detection -u--> IAnomalyDetection
+client_configuration -u--> IConfiguration
+
+client_classification - common_classification
+client_clustering - common_clustering
+client_regression - common_regression
+client_anomaly_detection - common_anomaly_detection
+client_configuration - common_configuration
+
+@enduml

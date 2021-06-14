@@ -1,0 +1,106 @@
+@startuml "classification-data-stats"
+
+participant Client
+participant "client.Classification" as client_classification
+participant "common.InitializeClassification" as common_initialize_classification
+participant "common.Classification" as common_classification
+participant Host
+participant TribuoEnclave
+participant DataStats
+participant DataStatsResponse
+participant TribuoObject
+
+' Host and Enclave start
+activate Host
+Host -> TribuoEnclave: start
+activate TribuoEnclave
+TribuoEnclave --> Host
+
+' Client start
+activate Client
+Client -> client_classification : constructor
+activate client_classification
+
+' Classification initialization
+client_classification -> common_initialize_classification : constructor(irisDataPath, trainProportion, seed)
+activate common_initialize_classification
+common_initialize_classification --> client_classification
+
+' Sending the request to the Host
+client_classification -> Client : sendAndReceive
+Client -> Client : sendMail
+activate Client
+Client -> Host : write
+
+' Host delivers mails
+Host -> TribuoEnclave: deliverMail
+
+' Enclave processes mail
+TribuoEnclave -> common_initialize_classification : execute
+common_initialize_classification -> common_classification : constructor
+activate common_classification
+common_classification --> common_initialize_classification
+
+common_initialize_classification -> TribuoObject : encode(Classification)
+TribuoObject --> common_initialize_classification : id
+common_initialize_classification --> TribuoEnclave : id
+
+' Enclave writes back to Host
+TribuoEnclave --> Host: postMail(id)
+
+' Host writes back to Client
+Host --> Client : write(id)
+
+Client --> Client : id
+deactivate Client
+
+Client --> client_classification : id
+client_classification --> Client : client.Classification instance
+' Client now has the id for the Classification instance and can use it to send requests
+
+' Client sends DataStats request
+Client -> client_classification : dataStats
+client_classification -> DataStats : constructor
+activate DataStats
+DataStats --> client_classification
+
+' Sending the request to the Host
+client_classification -> Client : sendAndReceive
+Client -> Client : sendMail
+activate Client
+Client -> Host : write(DataStats(id))
+
+' Host delivers mail to the Enclave
+Host -> TribuoEnclave : deliverMail
+
+' Enclave processes mail
+TribuoEnclave -> DataStats : execute
+DataStats -> TribuoObject : objects[id]
+TribuoObject --> DataStats : Classification
+DataStats -> common_classification : dataStats
+common_classification -> DataStatsResponse : constructor
+activate DataStatsResponse
+DataStatsResponse --> common_classification
+common_classification --> DataStats : DataStatsResponse
+DataStats -> DataStatsResponse : encode(DataStatsResponse)
+DataStatsResponse --> DataStats : DataStatsResponse as ByteArray
+DataStats --> TribuoEnclave : DataStatsResponse as ByteArray
+
+' Enclave writes back to Host
+TribuoEnclave --> Host : postMail(DataStatsResponse as ByteArray)
+
+' Host writes back to Client
+Host --> Client : write(DataStatsResponse as ByteArray)
+
+Client --> Client : DataStatsResponse as ByteArray
+deactivate Client
+Client --> client_classification : DataStatsResponse
+client_classification --> Client
+
+' Client logs the response to data stats
+note left
+Client logs DataStatsResponse and
+proceeds to the next request
+end note
+
+@enduml

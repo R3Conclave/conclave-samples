@@ -1,0 +1,20 @@
+@startuml "classification"
+skinparam linetype ortho
+
+annotation Serializable
+
+package common {
+    class InitializeClassification
+    class DataStats
+    class DataStatsResponse
+    class TrainerInfo
+    class TrainAndEvaluate
+}
+
+InitializeClassification -u-> Serializable
+DataStats -u-> Serializable
+DataStatsResponse -u-> Serializable
+TrainerInfo -u-> Serializable
+TrainAndEvaluate -u-> Serializable
+
+@enduml

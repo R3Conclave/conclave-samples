@@ -1,0 +1,18 @@
+@startuml "client"
+skinparam linetype ortho
+
+package client {
+    class Client
+    class "Classification" as client_classification
+    class "Clustering" as client_clustering
+    class "Regression" as client_regression
+    class "AnomalyDetection" as client_anomaly_detection
+    class "Configuration" as client_configuration
+    Client -u- client_classification
+    Client -u- client_clustering
+    Client -u- client_regression
+    Client -u- client_anomaly_detection
+    Client -u- client_configuration
+}
+
+@enduml

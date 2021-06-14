@@ -1,0 +1,30 @@
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+mainClassName = "com.r3.conclave.samples.tribuo.host.Host"
+
+// Create a task that can be used for generating signing materials
+tasks.register("prepareForSigning") {
+    it.dependsOn(":enclave:generateEnclaveSigningMaterial" + enclaveMode.capitalize())
+}
+
+dependencies {
+    implementation "com.r3.conclave:conclave-host:$conclaveVersion"
+
+    runtimeOnly project(path: ":enclave", configuration: enclaveMode)
+}
+
+def graalVMDir = tasks.getByPath(":enclave:untarGraalVM").outputs.files.first()
+def configurationDir = project(":enclave").projectDir.toPath().resolve("src/main/resources/META-INF/native-image")
+def filterFile = configurationDir.resolve("filter.json")
+application {
+    run.dependsOn(":enclave:untarGraalVM")
+    if (project.hasProperty("generateConfigFiles") && properties.get("enclaveMode").toString().toLowerCase() == "mock" != null) {
+        applicationDefaultJvmArgs = [
+                "-agentpath:$graalVMDir/jre/lib/amd64/libnative-image-agent.so=config-output-dir=$configurationDir," +
+                "caller-filter-file=$filterFile"
+        ]
+    }
+}
