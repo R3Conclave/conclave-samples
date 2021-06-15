@@ -1,7 +1,7 @@
 ## Conclave Sample: Private Set Intersection
 
 <p align="center">
-  <img src="./psi.png.png" alt="Corda" width="500">
+  <img src="./psi.png" alt="Corda" width="500">
 </p>
 
 
