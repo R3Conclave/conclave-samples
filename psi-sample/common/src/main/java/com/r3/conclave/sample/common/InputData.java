@@ -8,15 +8,26 @@ import java.util.List;
  */
 public class InputData implements Serializable {
 
-    List<UserDetails> userDetailsList;
-    List<AdDetails> adDetailsList;
+
+    private String clientType;
+    private List<UserDetails> userDetailsList;
+    private List<AdDetails> adDetailsList;
 
     public InputData() {
     }
 
-    public InputData(List<UserDetails> userDetailsList, List<AdDetails> adDetailsList) {
+    public InputData(String clientType, List<UserDetails> userDetailsList, List<AdDetails> adDetailsList) {
+        this.clientType = clientType;
         this.userDetailsList = userDetailsList;
         this.adDetailsList = adDetailsList;
+    }
+
+    public String getClientType() {
+        return clientType;
+    }
+
+    public void setClientType(String clientType) {
+        this.clientType = clientType;
     }
 
     public List<UserDetails> getUserDetailsList() {

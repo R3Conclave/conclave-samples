@@ -14,10 +14,14 @@ import java.util.List;
 public class InputDataSerializer extends Serializer<InputData> {
 
     @Override
-    public void write(Kryo kryo, Output output, InputData object) {
-        List<UserDetails> userDetailsList  = object.getUserDetailsList();
-        List<AdDetails> adDetailsList  = object.getAdDetailsList();
+    public void write(Kryo kryo, Output output, InputData inputData) {
+        List<UserDetails> userDetailsList  = inputData.getUserDetailsList();
+        List<AdDetails> adDetailsList  = inputData.getAdDetailsList();
 
+        //write client type to output
+        output.writeString(inputData.getClientType());
+
+        //depending on clientType write merchant data or service provider data
         if(userDetailsList != null) {
             output.writeInt(userDetailsList.size());
             for (int i=0; i < userDetailsList.size(); i++) {
@@ -40,6 +44,8 @@ public class InputDataSerializer extends Serializer<InputData> {
 
     @Override
     public InputData read(Kryo kryo, Input input, Class<InputData> type) {
+        String clientType = input.readString();
+
         Integer userListSize = input.readInt();
 
         List<UserDetails> userDetailsList = new ArrayList<>(userListSize);
@@ -55,7 +61,7 @@ public class InputDataSerializer extends Serializer<InputData> {
             adDetailsList.add(userDetails);
         }
 
-        return new InputData(userDetailsList, adDetailsList);
+        return new InputData(clientType, userDetailsList, adDetailsList);
     }
 
 }

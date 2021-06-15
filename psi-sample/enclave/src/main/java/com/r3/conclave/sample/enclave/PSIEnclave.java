@@ -15,9 +15,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This class is the Enclave class. To create an enclave in Conclave extend your class by Enclave interface.
- * This class will contain the our business logic to calculate the ad conversion rate by using the list of credit card numbers given by the merchant
- * and the service provider. Since the lists are shared with the enclave and not with anyone else, complete privacy of data is guaranteed.
+ * This class is the Enclave class. To create an enclave in Conclave use a class that extends Enclave abstract class
+ * and override the receiveMail method to receive the mail from the client.
+ * This class contains the business logic to calculate the ad conversion rate, using the list of credit card numbers
+ * given by the merchant and the service provider. Since the lists are shared with the enclave and not with anyone else,
+ * complete privacy of data is guaranteed.
  */
 public class PSIEnclave extends Enclave {
 
@@ -26,14 +28,16 @@ public class PSIEnclave extends Enclave {
     private List<UserDetails> userDetailsList;
     private List<AdDetails> adDetailsList;
 
-    private Map<String , String> routingHintMap = new HashMap();
+    private Map<String , String> clientToRoutingHint = new HashMap();
     private Map<String, PublicKey> clientToPublicKey = new HashMap();
     private Kryo kryo = new Kryo();
 
 
     /**
-     * This method gets called when client wants to communicate to enclave, and sends a message wrapped in a mail to host. Host in turn calls deliverMail method which in turn
-     * calls this method. In this method, we will deserialize the mail message, perform the computation and send the result back to the clients.
+     * This method gets called when client wants to communicate to enclave, and sends a message wrapped in a mail to host.
+     * Host in turn calls deliverMail method which in turn
+     * calls this method. In this method, we will deserialize the mail message, perform the computation and send the
+     * result back to the clients.
      * @param id
      * @param mail
      * @param routingHint
@@ -44,40 +48,46 @@ public class PSIEnclave extends Enclave {
         //deserialize the mail object using custom deserializers
         InputData inputData = deserialize(mail);
 
-        //retrieve the envelope from mail. envelope is not encrypted
-        String envelope = new String(mail.getEnvelope());
+        //retrieve the clientType from mail. clientType is not encrypted
+        String clientType = inputData.getClientType();
 
-        //use routingHintMap to store client routing information, whcih can be used while sending reply back to client
-        routingHintMap.put(envelope, routingHint);
+        //use clientToRoutingHint to store client routing information, which can be used
+        //while sending reply back to client
+        clientToRoutingHint.put(clientType, routingHint);
 
-        //use clientToPublicKey which identifies the key of the client, which can be used by postoffice to encrypt data and send to client
-        clientToPublicKey.put(envelope, mail.getAuthenticatedSender());
+        //use clientToPublicKey which identifies the key of the client, which can be used by
+        // postoffice to encrypt data and send to client
+        clientToPublicKey.put(clientType, mail.getAuthenticatedSender());
 
-        //depending on the client type populate the two lists
-        if (SERVICE_PROVIDER.equals(envelope)) {
+        //depending on the client type populate one of the two lists
+        if (SERVICE_PROVIDER.equals(clientType)) {
             adDetailsList = new ArrayList(inputData.getAdDetailsList().size());
             adDetailsList.addAll(inputData.getAdDetailsList());
-        } else if (MERCHANT.equals(envelope)) {
+        } else if (MERCHANT.equals(clientType)) {
             userDetailsList = new ArrayList(inputData.getUserDetailsList().size());
             userDetailsList.addAll(inputData.getUserDetailsList());
         }
 
-        //once both the lists are populated, peform the ad conversion rate calculation
-        if(userDetailsList != null && adDetailsList != null && userDetailsList.size() > 0 && adDetailsList.size() > 0) {
+        //once both the lists are populated, perform the ad conversion rate calculation
+        if (userDetailsList != null && adDetailsList != null && !userDetailsList.isEmpty() && !adDetailsList.isEmpty()) {
             Double adConversionRate = getAdConversionRate(userDetailsList, adDetailsList);
 
-            //send the ad conversion rate to merchant. use merchants public key to encrypt the message such that only merchant will be able to decrypt it
-            byte[] encryptedReply = postOffice(clientToPublicKey.get(MERCHANT)).encryptMail(adConversionRate.toString().getBytes());
-            postMail(encryptedReply, routingHintMap.get(MERCHANT));
+            //send the ad conversion rate to merchant. use merchant's public key to encrypt the message
+            //such that only merchant will be able to decrypt it
+            byte[] encryptedReply = postOffice(clientToPublicKey.get(MERCHANT)).
+                    encryptMail(adConversionRate.toString().getBytes());
+            postMail(encryptedReply, clientToRoutingHint.get(MERCHANT));
 
-            //send the ad conversion rate to service provider. use service providers public key to encrypt the message such that only merchant will be able to decrypt it
-            encryptedReply = postOffice(clientToPublicKey.get(SERVICE_PROVIDER)).encryptMail(adConversionRate.toString().getBytes());
-            postMail(encryptedReply, routingHintMap.get(SERVICE_PROVIDER));
+            //send the ad conversion rate to service provider. use service provider's public key to
+            //encrypt the message such that only merchant will be able to decrypt it
+            encryptedReply = postOffice(clientToPublicKey.get(SERVICE_PROVIDER)).
+                    encryptMail(adConversionRate.toString().getBytes());
+            postMail(encryptedReply, clientToRoutingHint.get(SERVICE_PROVIDER));
         }
     }
 
     /**
-     * Thsi calculates ad conversion rate.
+     * This calculates ad conversion rate.
      * ad conversion rate = users who have made purchases / total users who have clicked the ads
      * @param userDetailsList
      * @param adDetailsList
@@ -101,7 +111,7 @@ public class PSIEnclave extends Enclave {
                 .filter(serviceProviderCreditCardNumbers::contains)
                 .collect(Collectors.toSet());
 
-        return  (new Double(usersWhoPurchasedAfterClickingAd.size()) / new Double(adDetailsList.size()));
+        return  (new Double(usersWhoPurchasedAfterClickingAd.size()) / new Double(adDetailsList.size())) * 100;
     }
 
     /**

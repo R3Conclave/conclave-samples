@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class AdDetails implements Serializable {
 
     private String creditCardNumber;
-    private String adDetails;
+    private String details;
 
     public AdDetails(String creditCardNumber) {
         this.creditCardNumber = creditCardNumber;
@@ -19,11 +19,11 @@ public class AdDetails implements Serializable {
         this.creditCardNumber = creditCardNumber;
     }
 
-    public String getAdDetails() {
-        return adDetails;
+    public String getDetails() {
+        return details;
     }
 
-    public void setAdDetails(String adDetails) {
-        this.adDetails = adDetails;
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

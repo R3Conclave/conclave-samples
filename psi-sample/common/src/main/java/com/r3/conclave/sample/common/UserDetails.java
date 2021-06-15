@@ -1,7 +1,5 @@
 package com.r3.conclave.sample.common;
 
-import com.esotericsoftware.kryo.KryoSerializable;
-
 import java.io.Serializable;
 
 public class UserDetails implements Serializable {
