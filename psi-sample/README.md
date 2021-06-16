@@ -90,7 +90,7 @@ Once both the clients pass in the credit card numbers, the host calculates the a
 Please note:
 The enclave constraint to be passed to the client arguments can be found printed during the build process as below:
 
-    `Enclave code hash:   DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F`
+    Enclave code hash:   DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F`
 In this case the hash `DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F` is the enclave constraint.
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net
