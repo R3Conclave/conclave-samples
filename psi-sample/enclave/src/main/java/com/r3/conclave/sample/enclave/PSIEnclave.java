@@ -93,7 +93,7 @@ public class PSIEnclave extends Enclave {
      * @param adDetailsList
      * @return ad conversion rate
      */
-    private Double getAdConversionRate(List<UserDetails> userDetailsList, List<AdDetails> adDetailsList) {
+    public Double getAdConversionRate(List<UserDetails> userDetailsList, List<AdDetails> adDetailsList) {
 
         List<String> merchantCreditCardNumbers = new ArrayList<>();
 
