@@ -12,10 +12,6 @@ copy/paste it to act as the basis of your own commercial or open source apps.
 Use below link to start download Conclave and start building Conclave apps:
 
 https://conclave.net/get-conclave/
-
-For more information on PSI, kindly take a look at the below blog:
-
-https://medium.com/p/abbd3413567d/edit //TODO change the link once blog is published
         
 # What is Private Set Intersection (PSI) problem?
 
