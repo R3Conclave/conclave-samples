@@ -27,7 +27,7 @@ the models are indeed being executed in a mode that is protected from the owner 
 To keep the communication between the client and enclave secure, [Mail](https://docs.conclave.net/mail.html)
 is being used. Each mail contains a serialized request for the enclave to execute some action, i.e.,
 sending configuration parameters for training models and obtaining evaluation results.
-[Kotlin's serialization](https://github.com/Kotlin/kotlinx.serialization/tree/v1.0.1/docs) is used to serialize
+[Kotlin's serialization](https://github.com/Kotlin/kotlinx.serialization/tree/v1.0.1#readme) is used to serialize
 requests and responses.
 
 ## Running
@@ -179,7 +179,7 @@ the `id` and any necessary input parameters.
 
 ### Serialization
 A lot of the `client`/`enclave` communication revolves around serialization, in
-particular, [Kotlin's serialization](https://github.com/Kotlin/kotlinx.serialization/tree/v1.0.1/docs). Most of the relevant serialization logic is in the
+particular, [Kotlin's serialization](https://github.com/Kotlin/kotlinx.serialization/tree/v1.0.1#readme). Most of the relevant serialization logic is in the
 `TribuoTask.kt` and `Serializers.kt` files, as well as in each
 categories' files and classes, for example, `common/Classification.kt`, where
 `common.Classification` and its related requests and responses are, such as,
