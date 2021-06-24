@@ -14,7 +14,7 @@ dependencies {
     implementation "com.r3.conclave:conclave-enclave"
     implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
         //testImplementation group: 'junit', name: 'junit', version: '5.4.2'
-    implementation "com.r3.conclave:conclave-testing"
+    testImplementation "com.r3.conclave:conclave-host"
     implementation "org.slf4j:slf4j-api:1.7.30"
     implementation "org.slf4j:slf4j-simple:1.7.30"
 }
