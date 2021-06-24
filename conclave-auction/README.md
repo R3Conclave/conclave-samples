@@ -32,7 +32,9 @@ Use `-PenclaveMode` if you wish to specify an enclave mode, default is simulatio
 
 `./gradlew host:assemble -PenclaveMode=debug`
 
-### Running the host
+### Running in Simulation Mode
+
+#### Running the host
 
 `./gradlew host:installDist`
 
@@ -46,7 +48,7 @@ For linux system, you could skip the above docker command.
 
 `./host/bin/host`
 
-### Running the client
+#### Running the client
 
 Run the client to sumbit a bid using the below command:
 
@@ -62,6 +64,34 @@ You could run multiple clients to submit different bids.
 To process the bid run the below command:
 
 `./gradlew runClient PROCESS-BID <enclave_constraint>`
+
+The enclave should reply with a response message indicating 
+the auction winner to the admin client, and each individual bidders
+should get a response from the enclave regarding their bid status.
+
+
+### Running in Mock Mode
+
+#### Running the host
+
+`./gradlew -PenclaveMode=mock host:run`
+
+#### Running the client
+
+Run the client to submit a bid using the below command:
+
+`./gradlew runClient --args="BID <enclave_constraint>"`
+
+If you are building an enclave in mock mode then the enclave reports it is using a signing key hash 
+consisting of all zeros. 
+
+`./gradlew runClient --args="BID 0000000000000000000000000000000000000000000000000000000000000000"`
+
+You could run multiple clients to submit different bids.
+
+To process the bid run the below command:
+
+`./gradlew runClient PROCESS-BID 0000000000000000000000000000000000000000000000000000000000000000`
 
 The enclave should reply with a response message indicating 
 the auction winner to the admin client, and each individual bidders
