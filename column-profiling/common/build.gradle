@@ -1,8 +1,3 @@
 plugins {
     id 'java'
 }
-
-
-dependencies {
-    compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.0'
-}

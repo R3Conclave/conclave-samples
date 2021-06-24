@@ -1,0 +1,11 @@
+[
+  {
+    "name": "com.r3.conclave.sample.dataanalysis.common.UserProfile"
+  },
+  {
+    "name": "java.lang.Number"
+  },
+  {
+    "name": "java.lang.Integer"
+  }
+]

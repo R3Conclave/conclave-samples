@@ -15,22 +15,18 @@ import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.UUID;
+import java.util.List;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Output;
-import com.r3.conclave.sample.dataanalysis.common.DataSetSerializer;
 import com.r3.conclave.shaded.kotlin.Pair;
 import com.r3.conclave.sample.dataanalysis.common.UserProfile;
-import com.r3.conclave.sample.dataanalysis.common.DataSet;
 
 
 public class Client {
-    private static Kryo kryo;
+
 
     public static void main(String[] args) throws Exception {
         // This is the client that will upload secrets to the enclave for processing.
 
-        kryo = new Kryo();
         if (args.length == 0) {
             System.err.println("Please pass the user data for processing as argument to the command line using --args=\"data fields with space separation \"");
             return;
@@ -60,10 +56,28 @@ public class Client {
         System.out.println("Connected to " + attestation);
 
         // Serialize and send the data to enclave.
-        Output serializedOutput = serializeMessage(l);
+        // Reference for stream of bytes
+        byte[] stream = null;
+        // ObjectOutputStream is used to convert a Java object into OutputStream
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            for (int i = 0; i < l.size(); i++) {
+                oos.writeObject(l.get(i));
+            }
+            oos.writeObject(null);
+            oos.close();
+            baos.close();
+            stream = baos.toByteArray();
+
+
+        } catch (IOException e) {
+            // Error in serialization
+            e.printStackTrace();
+        }
         PrivateKey myKey = Curve25519PrivateKey.random();
         PostOffice postOffice = attestation.createPostOffice(myKey, UUID.randomUUID().toString());
-        byte[] encryptedMail = postOffice.encryptMail(serializedOutput.getBuffer());
+        byte[] encryptedMail = postOffice.encryptMail(stream);
 
         System.out.println("Sending the encrypted mail to the host.");
         toHost.writeInt(encryptedMail.length);
@@ -79,16 +93,6 @@ public class Client {
         toHost.close();
         fromHost.close();
 
-    }
-
-    private static Output serializeMessage(ArrayList<UserProfile> l) {
-        System.out.println("Size of list received by serializeMessage method" + l.size());
-        DataSet d = new DataSet(l);
-        Output output = new Output(new ByteArrayOutputStream());
-        kryo.register(DataSet.class, new DataSetSerializer());
-        kryo.writeObject(output, d);
-        output.close();
-        return output;
     }
 
     private static Pair<DataInputStream, DataOutputStream> establishConnection() throws Exception {

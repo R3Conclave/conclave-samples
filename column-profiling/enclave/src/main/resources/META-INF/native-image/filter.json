@@ -1,0 +1,10 @@
+{
+  "rules": [
+    {
+      "excludeClasses": "nonapi.**"
+    },
+    {
+      "excludeClasses": "com.r3.conclave.host.**"
+    }
+  ]
+}

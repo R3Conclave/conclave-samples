@@ -8,7 +8,7 @@ application {
 }
 
 dependencies {
-    implementation project(":common");
+    implementation project(":common")
     implementation "com.r3.conclave:conclave-client:$conclaveVersion"
 }
 

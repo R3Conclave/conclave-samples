@@ -69,3 +69,25 @@ response will look like below:
 The example could further be extended to include complex data fields and to perform other data operations. Though this
 example demonstrates the use of Conclave for data analysis by a single organization, Conclave is equally well suited for
 multi-party computation and collaboration.
+
+The repository includes configuration and serialization files for native-image builds -
+enclave/src/main/resources/META-INF/native-image. These files could be generated
+using [native-image-agent](https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds)
+. The agent tracks usage of dynamic features and generates configuration files when run against a regular JVM. If you
+make any changes to the Enclave code, you may want to either manually append these configuration files or run the
+native-agent again. Steps for running the agent are:
+
+1. Download [GraalVM](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.0.0) for you Operating system
+   and [install](https://www.graalvm.org/docs/getting-started/) it.
+2. After setting up the GraalVM, install native-image
+   `$JAVA_HOME/bin/gu install native-image`
+3. enable native-image-agent on the command line of the GraalVM java command:
+   `$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=/path/to/enclave/src/main/resources/META-INF/native-image/ ...`
+4. Add the Shadow Gradle plugin to the plugins section of the host's build.gradle:
+   `plugins { id 'com.github.johnrengelman.shadow' version '6.1.0' }`
+5. Generate the shadow jar. This will create a host-all.jar under host/build/libs
+   `./gradlew -PenclaveMode=mock host:shadowJar`
+6. Run the host with the native-agent enabled to generate the configuration files.
+   `$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=/path/to/enclave/src/main/resources/META-INF/native-image/,caller-filter-file=/path/to/enclave/src/main/resources/META-INF/native-image/filter.json -jar /path/to/host/build/libs/host-all.jar`
+7. Trigger your enclave by sending client requests
+   `./gradlew client:run`

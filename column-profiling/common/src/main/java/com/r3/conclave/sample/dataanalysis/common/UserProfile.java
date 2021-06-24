@@ -1,6 +1,8 @@
 package com.r3.conclave.sample.dataanalysis.common;
 
-public class UserProfile {
+import java.io.Serializable;
+
+public class UserProfile implements Serializable {
     private final String name;
     private final Integer age;
     private final String country;
@@ -30,3 +32,4 @@ public class UserProfile {
     }
 
 }
+
