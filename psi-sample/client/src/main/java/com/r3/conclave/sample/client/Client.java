@@ -89,7 +89,7 @@ public class Client {
         EnclaveInstanceInfo instanceInfo = EnclaveInstanceInfo.deserialize(attestationBytes);
 
         //verify attestation received by enclave against the enclave code hash which we have
-        EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE").check(instanceInfo);
+        EnclaveConstraint.parse("S:"+ constraint +" PROD:1 SEC:INSECURE" ).check(instanceInfo);
 
         //create a dummy key pair for sending via mail to enclave
         PrivateKey key = Curve25519PrivateKey.random();

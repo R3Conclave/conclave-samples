@@ -1,9 +1,9 @@
 package com.r3.conclave.sample.enclave;
 
+import com.r3.conclave.host.EnclaveHost;
 import com.r3.conclave.host.EnclaveLoadException;
 import com.r3.conclave.sample.common.AdDetails;
 import com.r3.conclave.sample.common.UserDetails;
-import com.r3.conclave.testing.MockHost;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,9 +19,10 @@ public class MockTest {
 
     @Test
     void calculateAdConversionRate() throws EnclaveLoadException {
-        MockHost<PSIEnclave> mockHost = MockHost.loadMock(PSIEnclave.class);
-        mockHost.start(null, null);
-        PSIEnclave psiEnclave = mockHost.getEnclave();
+        EnclaveHost enclaveHost = EnclaveHost.load("com.r3.conclave.sample.enclave.PSIEnclave");
+        enclaveHost.start(null, null);
+
+        PSIEnclave psiEnclave = (PSIEnclave) enclaveHost.getMockEnclave();
 
         List<UserDetails> userDetailsList = new ArrayList();
         UserDetails userDetails1 = new UserDetails("123");
