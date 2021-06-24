@@ -51,7 +51,9 @@ Merchant - Merchant passes credit card numbers of all users who have made a purc
 
 Service Provider - Service Provider passes credit card numbers of all users who have clicked the ad.
 
-## How to run on a non-linux based system
+## How to run in simulation mode
+
+### How to run on a non-linux based system
 
 Start the host on a non-Linux system, which will build the enclave and host:
 
@@ -67,7 +69,7 @@ On your terminal, start Service Provider and pass in the credit card numbers of 
 
 Once both the clients pass in the credit card numbers, the host calculates the ad conversion rate within the enclave and sends it to both the clients.
 
-## How to run on a linux based system
+### How to run on a linux based system
 
 Start the host on a non-Linux system, which will build the enclave and host:
 
@@ -88,5 +90,25 @@ The enclave constraint to be passed to the client arguments can be found printed
 
     Enclave code hash:   DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F`
 In this case the hash `DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F` is the enclave constraint.
+
+
+## How to run in mock mode
+
+We don't need to use the container-gradle plugin to load an enclave in mock mode.
+
+Start the host on a non-Linux system, which will build the enclave and host:
+
+    ./gradlew -PenclaveMode=mock host:run
+
+On your terminal, once the host starts, pass in the credit card numbers via Merchant terminal
+
+    ./gradlew client:run --args="MERCHANT <CONSTRAINT> 1123 4456 777998 88988898"
+
+On your terminal, start Service Provider and pass in the credit card numbers of users who have clicked the ad
+
+    ./gradlew client:run --args="SERVICE-PROVIDER <CONSTRAINT> 88988898 77879 00989"
+
+Once both the clients pass in the credit card numbers, the host calculates the ad conversion rate within the enclave and sends it to both the clients.
+For mock mode specify 0000000000000000000000000000000000000000000000000000000000000000 for the <CONSTRAINT> parameter.
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net
