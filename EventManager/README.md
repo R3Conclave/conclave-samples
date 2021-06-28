@@ -26,7 +26,7 @@ Running
 
 The project is set up with a default of 'mock' mode so that it can be used immediately without any SGX hardware or need for a native-image build.  To run a simple example, open two terminals and change to the root directory for this project. The following instructions have been tested only on Mac, and probably only work on Mac:
 
-1. In the first terminal, start the host: `./gradlew host:run`. The host should start in mock mode, listening on port 9999
+1. In the first terminal, start the host: `./gradlew host:run`. The host will start listening on port 9999.
 2. In the second terminal, build and package the client: `./gradlew client:shadowJar`
 3. In the same terminal, change to the client subdirectory
 4. Execute each of the scripts prefixed with 1 to 5 in order. 
@@ -36,7 +36,7 @@ The project is set up with a default of 'mock' mode so that it can be used immed
     * `4.get-results.sh` iterates through the participants and retrieves any results they are entitled to see
     * Finally, `5.clean-up.sh` deletes the identity files
     
-To run the host in non-mock mode, add `-PenclaveMode=[simulation|debug|Release]` to the end of the gradlew command line in the usual manner.  If running on a Mac, you can use `container-gradle`, also in the usual way.  
+To run the host in any other mode, add `-PenclaveMode=[mock|simulation|debug|Release]` to the end of the gradlew command line in the usual manner.  If running on a Mac, you can use `container-gradle`, also in the usual way.  
 
 Note that the host has been configured by default to listen on port 9999 (versus the Spring Boot default of 8080) in order to be compatible with the default in the container-gradle script.  If connecting to a non mock-mode enclave you will need to ensure the enclave constraint used by the client matches the enclave that is actually running.  See `EventManagerClient.properties` to see how the client constraint is set.
 

@@ -3,7 +3,6 @@ package me.gendal.conclave.eventmanager.host
 import com.r3.conclave.host.EnclaveHost
 import com.r3.conclave.host.EnclaveLoadException
 import com.r3.conclave.host.MailCommand
-import com.r3.conclave.testing.MockHost
 import org.slf4j.LoggerFactory
 import me.gendal.conclave.eventmanager.enclave.EventManagerEnclave
 import org.springframework.web.bind.annotation.*
@@ -15,6 +14,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 import me.gendal.conclave.eventmanager.common.SignedData
 import java.lang.System.*
+import kotlin.jvm.Throws
 
 @ExperimentalSerializationApi
 @RestController
@@ -38,13 +38,7 @@ class EventManagerHost {
             logger.info("This platform does not support hardware enclaves: " + e.message)
         }
 
-        enclave = if (mockMode) {
-            logger.info("Loaded enclave in mock mode")
-            MockHost.loadMock(EventManagerEnclave::class.java)
-        } else {
-            logger.info("Loaded enclave in non-mock mode")
-            EnclaveHost.load(EventManagerEnclave::class.java.canonicalName)
-        }
+        enclave = EnclaveHost.load(EventManagerEnclave::class.java.canonicalName);
 
         enclave.start(null) { commands: List<MailCommand?> ->
             for (command in commands) {

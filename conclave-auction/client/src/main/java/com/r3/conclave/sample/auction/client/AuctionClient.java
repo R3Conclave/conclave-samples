@@ -109,7 +109,7 @@ public class AuctionClient {
 
         System.out.println("Attestation Info received:  " + attestation);
 
-        EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE").check(attestation);
+        EnclaveConstraint.parse("S:"+ constraint +" PROD:1 SEC:INSECURE" ).check(attestation);
 
         return attestation;
     }

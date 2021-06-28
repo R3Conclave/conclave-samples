@@ -5,7 +5,6 @@ import com.r3.conclave.host.EnclaveHost
 import com.r3.conclave.host.MailCommand
 import com.r3.conclave.mail.Curve25519PrivateKey
 import com.r3.conclave.mail.PostOffice
-import com.r3.conclave.testing.MockHost
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -33,7 +32,7 @@ class EventManagerEnclaveTest {
 
     @BeforeEach
     fun startup() {
-        enclave = MockHost.loadMock(EventManagerEnclave::class.java)
+        enclave = EnclaveHost.load("me.gendal.conclave.eventmanager.enclave.EventManagerEnclave");
         enclave.start(null) { commands: List<MailCommand?> ->
             for (command in commands) {
                 if (command is MailCommand.PostMail) {
