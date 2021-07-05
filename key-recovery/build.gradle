@@ -1,0 +1,36 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10' apply false
+}
+
+subprojects {
+    apply plugin: "java-library"
+    apply plugin: "org.jetbrains.kotlin.jvm"
+    apply plugin: 'idea'
+
+    idea {
+        module {
+            downloadJavadoc = true
+        }
+    }
+
+    repositories {
+        maven {
+            url = rootProject.file(conclaveRepo)
+        }
+        mavenCentral()
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjvm-default=enable', '-Xopt-in=kotlin.RequiresOptIn']
+            jvmTarget = "1.8"
+        }
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}

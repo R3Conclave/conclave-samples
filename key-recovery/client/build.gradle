@@ -1,0 +1,14 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClassName = "com.r3.conclave.sample.client.AppClient"
+}
+
+dependencies {
+    implementation project(":common")
+    implementation "com.r3.conclave:conclave-client:$conclaveVersion"
+    implementation "org.apache.httpcomponents:httpclient:4.5.13"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.1"
+}
