@@ -17,7 +17,7 @@ dependencies {
 
     testCompile "junit:junit:$junit_version"
 
-    implementation project(":common")
+    // implementation project(":common")
     // Corda dependencies.
 
     // Corda dependencies.
