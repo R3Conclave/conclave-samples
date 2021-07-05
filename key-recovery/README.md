@@ -81,7 +81,7 @@ https://docs.conclave.net/architecture.html#remote-attestation
 Every time you do any changes to an enclave, you need to update the constraints!
 You should put constraints in `AppKeyRecoveryEnclave` in `keyDerivationEnclaveCodeSigningHash` (KDE enclave code signer value)
 and in `KeyDistributionEnclave` in `constraintDemo` variable (enclave code hash for app enclave).
-Or vice versa, this is for demo purposes. TODO write something more about constraints + add todo
+Or vice versa, this is for demo purposes.
 
 1. First run
 
@@ -172,15 +172,71 @@ Enclave> ENCLAVE: Saving data from client [93, 13, -2, 93, 20, -104, 123, -28, -
 6. Check that files with shared key and data from client were saved, kill application host
 Look for self.dat and sharedKey.dat under `app-host` sample directory.
 
-7. Swap the signing key and restart host TODO HOW TO DO THAT AND WHY
+7. Swap the signing key and restart host. We swap the code signing key, because we are running this demo on a single machine.
+To force change of encryption key used by the application enclave we need to force change in code signing key (it's related to 
+MRSIGNER key policy - Conclave team should be helpful with explanation). To do this, go to app-enclave/build.gradle and 
+change line 21 with 22:
+simulation {
+        signingType = privateKey
+//        signingKey = file("../signing/sample_private_key.pem")
+        signingKey = file("../signing/my_private_key.pem")
+    }
+in the above part change the signing key.    
+
+Then run the application enclave again, check that encryption key is different and that `Enclave code signer` value is different as well:
 
 ./gradlew app-host:run
 
-TODO RETURN logs
+Now you should see that file with the shared key is loaded in the enclave, but enclave fails to decrypt it, so key recovery
+process starts again, as before.
 
-8. Look at the magic happening, the new enclave can't read the saved shared key, then requests that key from KDE, KDE sends it back
-Now it can read the saved data
+HOST: READ SHARED KEY
+HOST: Delivering shared key from file to the enclave
+HOST: Could not read shared key: java.io.IOException: javax.crypto.AEADBadTagException: Tag mismatch!
+HOST: Key recovery started
+HOST: calling enclave with KDE attestation
+Enclave> ENCLAVE: received kde attestation from host
+Enclave> ENCLAVE: KDE attestation Remote attestation for enclave BE182C666D081B4BBE7B5E397FA192D2007C60A0534E580E683AA4C60FEE7AE2:
+Enclave>   - Mode: SIMULATION
+Enclave>   - Code signing key hash: 4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4
+Enclave>   - Public signing key: 302A300506032B6570032100A4CE81C8A44AE48562905EC79A53E00DD53C3B64E2A03B28BFAB9BB21D50AA54
+Enclave>   - Public encryption key: 75B294A19FE8FFA4CEC4FCB7EBEDB573A8F66B7ED4D7934DCE4F0A3A9E3A9764
+Enclave>   - Product ID: 2
+Enclave>   - Revocation level: 0
+Enclave> 
+Assessed security level at 2021-07-05T14:08:01.946Z is INSECURE
+Enclave>   - Enclave is running in simulation mode.
+Enclave> ENCLAVE: check attestation constraints
+Enclave> ENCLAVE: requesting key from KDE
+Enclave> ENCLAVE: check attestation constraints
+Enclave> ENCLAVE: sending key request mail to KDE
+HOST: Key request from enclave to be passed to the KDE 
+HOST: Route key request
+HOST: query for data
+HOST: received response from KDE with routing hint: responseKey
+Enclave> ENCLAVE: Received mail with response key hint
+Enclave> ENCLAVE: load shared key
+Enclave> ENCLAVE: check attestation constraints
+    HOST: LOAD STORED DATA
+Enclave> ENCLAVE: Received mail with self hint
+Enclave> ENCLAVE: Handling mail to self
+Enclave> ENCLAVE: Read stored data [93, 13, -2, 93, 20, -104, 123, -28, -5, -100, -20, 66, 13, 99, 51, 127, -37, -89, 54, 39, -42, 78, 25, 112, 27, 0, 92, 53, -14, -59, -110, 3]
 
-TODO RETURN logs
+In the above logs the application enclave can't read the saved shared key, then requests that key from KDE, KDE sends it back
+Now it can read the saved data that was previously sent to it by the client.
+
+8. Let's check if client can request the saved data from the restarted enclave:
+
+./gradlew client:run --args="http://localhost:8080 read-data"
+
 
 ## Appendix: Changes to Conclave sdk
+
+To make this demo possible, some changes to Conclave sdk had to be introduced.
+
+1. `Enclave::setSharedKeyPair(newKeyPair: KeyPair)` was added to set new shared key pair to be used by this enclave.
+2. `Enclave::sharedPostOffice()` to create post office using shared key
+3. From client perspective, `EnclaveInstanceInfo::createClusterPostOffice` to create post office using given cluster key for communication
+with the enclave.
+4. Additionally, decryption within the enclave changed, to use shared key if key derivation parameter is set to null.
+
