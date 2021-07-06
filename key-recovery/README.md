@@ -83,6 +83,10 @@ You should put constraints in `AppKeyRecoveryEnclave` in `keyDerivationEnclaveCo
 and in `KeyDistributionEnclave` in `constraintDemo` variable (enclave code hash for app enclave).
 Or vice versa, this is for demo purposes.
 
+TODO Note: For simplicity, I put in the Application enclave a signer hash for the KDE. This was only for demo purposes, and should
+be changed to code hash. Signer hash is easier, because it doesn't change that much. Additionally, the goal is that KDE
+doesn't have hardcoded constraints, just gets them from the client.
+
 1. First run
 
 To start host and enclaves and show key recovery run:
@@ -235,8 +239,9 @@ Now it can read the saved data that was previously sent to it by the client.
 To make this demo possible, some changes to Conclave sdk had to be introduced.
 
 1. `Enclave::setSharedKeyPair(newKeyPair: KeyPair)` was added to set new shared key pair to be used by this enclave.
-2. `Enclave::sharedPostOffice()` to create post office using shared key
-3. From client perspective, `EnclaveInstanceInfo::createClusterPostOffice` to create post office using given cluster key for communication
+2. `Enclave::sharedPostOffice(destinationPublicKey: PublicKey)` to create post office using shared key aimed at destination public key
+3. `Enclave::getSharedPublicKey` to obtain shared public key information
+4. From client perspective, `EnclaveInstanceInfo::createClusterPostOffice` to create post office using given cluster key for communication
 with the enclave.
-4. Additionally, decryption within the enclave changed, to use shared key if key derivation parameter is set to null.
+5. Additionally, decryption within the enclave changed, to use shared key if key derivation parameter is set to null.
 

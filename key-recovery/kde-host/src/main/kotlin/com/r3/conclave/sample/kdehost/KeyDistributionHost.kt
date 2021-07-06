@@ -89,8 +89,6 @@ object KeyDistributionHost {
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
-//                    } else if (command.routingHint == RESPONSE_KEY_HINT) { // TODO think if this could be done with separate mail command
-//                        routeKeyResponse(command.encryptedBytes) // TODO make it async
                     } else {
                         // Client request handling
                         println("KDE HOST: routing hint: ${command.routingHint}")
@@ -112,24 +110,7 @@ object KeyDistributionHost {
         println(EnclaveInstanceInfo.deserialize(attestationBytes))
     }
     ///////////////////////////////////////////// END ENCLAVE BOILERPLATE
-
-    private fun routeKeyResponse(mailBytes: ByteArray) {
-        println("KDE HOST: Routing key response")
-//        Thread.sleep(3000)
-        // TODO pass mail to the the enclave that sent key request
-        //  For demo this will be ugly ;) but normally you should implement proper routing handling
-        //  It can be done for ecample by putting the address in the routing hint, and then extracting it back
-        val post = HttpPost("$appEnclaveAddress/deliver-mail").apply {
-            addHeader("Routing-Hint", RESPONSE_KEY_HINT)
-            entity = EntityBuilder.create().setBinary(mailBytes).build()
-        }
-        httpClient.execute(post)
-    }
-
-    private fun pollForServerStartup() {
-        // TODO
-    }
-
+    // TODO remove
     private fun loadConfigConstraints() {
         println("KDE HOST: load config constraints")
         try {
@@ -166,7 +147,7 @@ object KeyDistributionHost {
         return synchronized(inboxes) { inboxes[routingHint] } ?: emptyList()
     }
 
-    // TODO endpoint for distribution of the identity to the clients
+    // TODO endpoint for distribution of the shared key identity to the clients
     @PostMapping("/enclaveIdentity")
     fun keyInformation(@RequestHeader() enclaveInstanceInfo: EnclaveInstanceInfo) {
         // distribution of the key information for clients

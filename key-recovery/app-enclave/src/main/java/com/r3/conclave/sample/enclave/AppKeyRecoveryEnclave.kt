@@ -20,13 +20,9 @@ import java.security.PublicKey
 /**
  * This is sample application enclave, that requests additional key
  */
-// TODO no enclave init - JIRA for discussion Shams
 @ExperimentalSerializationApi
 class AppKeyRecoveryEnclave : Enclave() {
     private val simpleKeyStore = SimpleInMemoryKeyStore()
-    // TODO just a placeholder, for coding, I will integrate it later with
-    //  the Enclave class of SDK
-    private var sharedKey: KeyPair? = null
 
     // We need this for attesting the KDE, so we either obtain it from the file
     // or, we ask for the attestation passed via host and then we check with the constraints
@@ -77,7 +73,6 @@ class AppKeyRecoveryEnclave : Enclave() {
         }
     }
 
-    //OK
     private fun handleClientRequest(mail: EnclaveMail, routingHint: String) {
         val request = ProtoBuf.decodeFromByteArray(ClientRequest.serializer(), mail.bodyAsBytes)
         when (request) {
@@ -102,7 +97,6 @@ class AppKeyRecoveryEnclave : Enclave() {
         return null
     }
 
-    //OK
     private fun checkHeaderConstraints(mail: EnclaveMail): EnclaveInstanceInfo {
         val envelope: ByteArray? = mail.envelope // extract the enclave instance info
         if (envelope == null) {
@@ -126,13 +120,13 @@ class AppKeyRecoveryEnclave : Enclave() {
         }
     }
 
-    // TODO this doesn't make sense, because we have case when we changed machine
-    //  we could use the key derivation trick maybe?
     private fun checkSender(mail: EnclaveMail, headerInstanceInfo: EnclaveInstanceInfo) {
         val sender: PublicKey = mail.authenticatedSender
+        // Sender of the shared key mail can be either
+        // 1. this enclave when it was mail to self
+        // 2. KDE when it was key response
         if (this.enclaveInstanceInfo.encryptionKey != sender) {
             if (headerInstanceInfo.encryptionKey != sender) {
-                // TODO think of attacks here
                 throw IllegalArgumentException("Sender doesn't match the header")
             }
         }
@@ -144,8 +138,7 @@ class AppKeyRecoveryEnclave : Enclave() {
     //  - means that host fed us old message (replay) - request a new key too
     //  - message is malformed, ie EnclaveInstanceInfo deserialization fails
     // 2. sender doesn't match
-    //  - TODO check with Shams, it should probably throw immediately?
-    // 3. We cannot decrypt the body - this will throw before the receive TODO check it
+    // 3. We cannot decrypt the body - this will throw before the receive
     //  - scenario handled by host
 
     // If this one is called, then it means that initial mail was successfully decrypted, so we need to check constraints
@@ -157,14 +150,12 @@ class AppKeyRecoveryEnclave : Enclave() {
         // Verify that sender is us/or KDE, from above we already trust KDE
         checkSender(mail, kdeInstanceInfo)
         val keyResponse: KeyResponse = ProtoBuf.decodeFromByteArray(KeyResponse.serializer(), mail.bodyAsBytes)
-        // TODO call internal function to load shared key in conclave mail
-        if (sharedKey == null) {
-//            saveSharedKey(keyResponse, kdeInstanceInfo)
-            sharedKey = keyResponse.keyPair
-            setSharedKeyPair(keyResponse.keyPair) // Extension to Conclave itself
-        } else {
-            TODO("This is the case to implement key migration")
-        }
+        // Call internal function to load shared key in conclave mail
+        // TODO this will throw, if the shared key is set already - there should be key migration case
+        //  This is also the case where we may want to have multiple keys in the Enclave, then key store should be implemented
+        setSharedKeyPair(keyResponse.keyPair)
+        // TODO If we call saveSharedKeyToSelf here, this causes java.util.ConcurrentModificationException in Conclave sdk!
+//        saveSharedKeyToSelf(keyResponse, kdeInstanceInfo)
         // We need to also swap RA because KDE is sending out/advertising new attestation
         // TODO this isn't necessary probably THINK ABOUT THIS
         if (keyDerivationEnclaveInstanceInfo == null) {
@@ -176,6 +167,7 @@ class AppKeyRecoveryEnclave : Enclave() {
                 keyDerivationEnclaveInstanceInfo = kdeInstanceInfo
             }
         }
+
     }
 
     // This approach is application enclave driven... which complicates issue
@@ -186,27 +178,23 @@ class AppKeyRecoveryEnclave : Enclave() {
         println("ENCLAVE: requesting key from KDE")
         val keyRequest = KeyRequest(1, this.enclaveInstanceInfo.serialize())
         checkAttestationConstraints(keyDerivationEnclaveInstanceInfo!!)
-        // TODO add it to JIRA as a feedback for guys, because it's confusing as hell which function to chose
-        // is it createPostOffice or is it postOffice
+        // TODO add it to JIRA as a feedback, because it's confusing from documentation which function to chose
+        //  is it createPostOffice or is it postOffice
         if (kdePostOffice == null) {
             kdePostOffice = postOffice(keyDerivationEnclaveInstanceInfo!!, "kde")
         }
-//        val mailBytes = kdePostOffice!!.encrypt(keyRequest, KDERequest.serializer())
         val mailBytes = kdePostOffice!!.encrypt(keyRequest, KeyRequest.serializer())
         println("ENCLAVE: sending key request mail to KDE")
         keyRequested = true
         postMail(mailBytes, REQUEST_KEY_HINT)
     }
 
-    private fun saveSharedKey(keyResponse: KeyResponse, keyDerivationRA: EnclaveInstanceInfo) {
+    // Saves shared key to storage, by sending mail to self.
+    // It should be used from loadSharedKey function... but, because I hit concurrent modification exception in Conclave sdk,
+    // it's not used now, until that bug is fixed.
+    private fun saveSharedKeyToSelf(keyResponse: KeyResponse, keyDerivationRA: EnclaveInstanceInfo) {
         println("ENCLAVE: save shared key")
-        if (sharedKey == null) { // TODO clean it up after i fix the issue with concurrent modification
-            sharedKey = keyResponse.keyPair
-            setSharedKeyPair(keyResponse.keyPair)
-        }
-        // Get shared key - that would be call on Enclave.sharedKey, for now I just have mock key service here
-        // TODO add support for key store save/read
-//        val sharedKey = simpleKeyStore.retrieveKey(1) ?: throw IllegalArgumentException("TODO")
+        // Now, save the shared key as a mail to self with the KDE EnclaveInstanceInfo as a header
         val header = keyDerivationRA.serialize() // header - EnclaveInstanceInfo of the KDE (any)
         if (selfPostOffice == null)
             selfPostOffice  = postOffice(this.enclaveInstanceInfo, "self")
@@ -217,35 +205,27 @@ class AppKeyRecoveryEnclave : Enclave() {
 
     private fun handleKeyResponse(mail: EnclaveMail) {
         // TODO check if we requested key
-        //  also check if we have shared key, what happens now, we don't want to overwrite it
-        //  check that we trust the KDE by constraints we put in code
+        //  also check if we already have shared key - this can be migration case, but also... can be a case when someone
+        //  replays old message with potentially compromised key
         if (keyRequested) {
             loadSharedKey(mail)
+//            saveSharedKeyToSelf(keyResponse: KeyResponse, keyDerivationRA: EnclaveInstanceInfo)
         } else {
             TODO()
         }
     }
 
-    private fun proveKeyGeneration() {
-        // TODO think of that case, we need to have transitive attestation
-    }
-
     ///////////////////////////////////////////// CLIENT HANDLERS
-    // TODO refactor out that mail from all these handlers...
     private fun handleSaveDataRequest(mail: EnclaveMail, saveDataReq: SaveDataRequest, routingHint: String) {
         println("ENCLAVE: Handling save data from client request")
         secretData = saveDataReq.data
-        // TODO CREATE POST OFFICE WITH SHARED KEY
+        val sharedKey = sharedPublicKey
         if (sharedKey != null) { // TODO construct it when saving the key
-            // TODO this will change, to be correct
-            sharedPostOffice = sharedPostOffice(this.enclaveInstanceInfo, sharedKey!!.private) // Again extension I added to Conclave
-        }
-        // TODO change this
-//        val fakeSharedPostOffice = postOffice(this.enclaveInstanceInfo)
+            sharedPostOffice = sharedPostOffice(sharedKey) // Again extension I added to Conclave
+        } //TODO else case - use normal post office
         val dataToSeal = sharedPostOffice!!.encryptMail(secretData!!) // TODO handle null case
-        println("ENCLAVE: Saving data from client ${secretData!!.toList()} using shared key ${sharedKey?.public}")
+        println("ENCLAVE: Saving data from client ${secretData!!.toList()} using shared key $sharedKey")
         postMail(dataToSeal, SELF_HINT)
-        // todo send response to the client?
         val clientResponse = postOffice(mail).encrypt(SaveDataResponse(SaveDataResponse.ResponseCode.OK), SaveDataResponse.serializer())
         postMail(clientResponse, routingHint)
     }
@@ -253,8 +233,8 @@ class AppKeyRecoveryEnclave : Enclave() {
     private fun handleReadDataRequest(mail: EnclaveMail, readDataReq: ReadDataRequest, routingHint: String) {
         println("ENCLAVE: Handling read client data request")
         val responseBytes = if (secretData == null) {
-            // TODO write better handling of this case
-            //  For demo we can assume that it is read on startup, otherwise not :(
+            // TODO write better handling of this case, where enclave requests data from host
+            //  For demo we assume that it is read on startup
             postOffice(mail).encrypt(ReadDataResponse(DecrytpionErrorCode), ReadDataResponse.serializer())
         } else {
             postOffice(mail).encrypt(ReadDataResponse(OkCode(secretData!!)), ReadDataResponse.serializer())
@@ -264,17 +244,16 @@ class AppKeyRecoveryEnclave : Enclave() {
 
     private fun handleGetPublicKeyRequest(mail: EnclaveMail, routingHint: String) {
         println("ENCLAVE: Handling get shared public key request")
-        sharedKey!!
+        val sharedKey = sharedPublicKey
         // TODO should be signed
-        val publicKey = Curve25519PublicKey(sharedKey!!.public.encoded) // TODO change type
+        val publicKey = Curve25519PublicKey(sharedKey!!.encoded)
         val responseBytes = postOffice(mail).encrypt(PublicSharedKeyResponse(publicKey), PublicSharedKeyResponse.serializer())
         postMail(responseBytes, routingHint)
         // TODO HACK
-        val keyResponse = KeyResponse(0, sharedKey!!)
-        saveSharedKey(keyResponse, keyDerivationEnclaveInstanceInfo!!) // TODO HACK
+//        val keyResponse = KeyResponse(0, sharedKey!!)
+//        saveSharedKey(keyResponse, keyDerivationEnclaveInstanceInfo!!) // TODO HACK
     }
 
-    // TODO REUSE SHARED KEY FOR DECRYPTION
     private fun handleMailToSelf(mail: EnclaveMail) {
         println("ENCLAVE: Handling mail to self")
         val sealedData = mail.bodyAsBytes

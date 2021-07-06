@@ -34,7 +34,7 @@ class KeyDistributionEnclave : Enclave() {
     // TODO implement constraint policy provider
     // TODO clients can send policy, because they are the ones that need to trust the application enclaves
     private val constraintDemo: EnclaveConstraint = EnclaveConstraint.parse(
-            "C:7993AC204613AFA70C89030BBC627E80B8A1255A65450AE4533C6AD05987A611 REVOKE:0 SEC:INSECURE"
+            "C:C506E03A7CF6AE25994995A17ECD5EEF392D34A88EECA56529D238E2B77C63E0 REVOKE:0 SEC:INSECURE"
     )
     private val constraintsList: MutableList<EnclaveConstraint> = mutableListOf(constraintDemo)
 
@@ -54,7 +54,7 @@ class KeyDistributionEnclave : Enclave() {
         }
     }
 
-    // TODO
+    // TODO get rid of
     // This is not nice, but I haven't found better thing so far to receive configuration so this will do
     override fun receiveFromUntrustedHost(bytes: ByteArray): ByteArray? {
         println("KDE ENCLAVE: receive from untrusted host")
