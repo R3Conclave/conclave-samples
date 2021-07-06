@@ -74,7 +74,7 @@ class AppKeyRecoveryEnclave : Enclave() {
     }
 
     private fun handleClientRequest(mail: EnclaveMail, routingHint: String) {
-        val request = ProtoBuf.decodeFromByteArray(ClientRequest.serializer(), mail.bodyAsBytes)
+        val request = ProtoBuf.decodeFromByteArray(Request.serializer(), mail.bodyAsBytes)
         when (request) {
             // TODO refactor those handlers, so they don't take mail as parameter
             is SaveDataRequest -> handleSaveDataRequest(mail, request, routingHint)
@@ -183,7 +183,7 @@ class AppKeyRecoveryEnclave : Enclave() {
         if (kdePostOffice == null) {
             kdePostOffice = postOffice(keyDerivationEnclaveInstanceInfo!!, "kde")
         }
-        val mailBytes = kdePostOffice!!.encrypt(keyRequest, KeyRequest.serializer())
+        val mailBytes = kdePostOffice!!.encrypt(keyRequest, Request.serializer())
         println("ENCLAVE: sending key request mail to KDE")
         keyRequested = true
         postMail(mailBytes, REQUEST_KEY_HINT)

@@ -32,10 +32,11 @@ class KeyDistributionEnclave : Enclave() {
 
     // If we want to limit access to the keys produced by this KDE
     // TODO implement constraint policy provider
-    // TODO clients can send policy, because they are the ones that need to trust the application enclaves
+    // TODO clients can send constraints, because they are the ones that need to trust the application enclaves
     private val constraintDemo: EnclaveConstraint = EnclaveConstraint.parse(
-            "C:C506E03A7CF6AE25994995A17ECD5EEF392D34A88EECA56529D238E2B77C63E0 REVOKE:0 SEC:INSECURE"
+            "C:321910A3094E87F3A3E047D438147CA7EB0571D8FD91653B8AE509F658A92DC2 REVOKE:0 SEC:INSECURE"
     )
+    // TODO make it hash map, have proper handling of swapping constraints
     private val constraintsList: MutableList<EnclaveConstraint> = mutableListOf(constraintDemo)
 
     override fun receiveMail(id: Long, mail: EnclaveMail, routingHint: String?) {
@@ -44,13 +45,12 @@ class KeyDistributionEnclave : Enclave() {
         if (routingHint == SELF_HINT) {
             handleMailToSelf(mail)
         } else {
-            handleKeyRequest(mail)
-//            val request = ProtoBuf.decodeFromByteArray(Request.serializer(), mail.bodyAsBytes)
-//            println("KDE ENCLAVE request: ${request.javaClass}")
-//            when (request) {
-//                is ProvideConstraintsRequest -> handleConstraintsRequest(request)
-//                is KeyRequest -> handleKeyRequest(mail)
-//            }
+            val request = ProtoBuf.decodeFromByteArray(Request.serializer(), mail.bodyAsBytes)
+            println("KDE ENCLAVE request: ${request.javaClass}")
+            when (request) {
+                is ProvideConstraintsRequest -> handleConstraintsRequest(request)
+                is KeyRequest -> handleKeyRequest(mail)
+            }
         }
     }
 
@@ -64,12 +64,11 @@ class KeyDistributionEnclave : Enclave() {
         return null
     }
 
-    // multiple key request handling
     private fun handleKeyRequest(mail: EnclaveMail) {
         println("KDE ENCLAVE: Handle key request")
         try {
             println("KDE ENCLAVE: Deserializing key request")
-            val request: KeyRequest = ProtoBuf.decodeFromByteArray(KeyRequest.serializer(), mail.bodyAsBytes)
+            val request = ProtoBuf.decodeFromByteArray(Request.serializer(), mail.bodyAsBytes) as KeyRequest
             // Check attestation is valid
             // TODO replay attack mitigation? how do we protect ourselves from someone replaying this message
             //  apart from this message and response being encrypted?
@@ -82,22 +81,24 @@ class KeyDistributionEnclave : Enclave() {
             check(mail.authenticatedSender == requesterInstanceInfo.encryptionKey)
             // Get constraints for that attestation
             println("KDE ENCLAVE: Obtain constraints for this attestation")
-            // TODO improve the filtering of constraints, they can be of different form
-//            val constraints: EnclaveConstraint? = constraintsList.filter {
-//                requesterInstanceInfo.enclaveInfo.codeHash in it.acceptableCodeHashes
-//            }.firstOrNull()
-            val constraints = constraintsList.firstOrNull()
-            println("KDE ENCLAVE: Constraints: $constraints")
+            // TODO improve the filtering of constraints, they can be of different form - store them in the hash map
+            //  Also, there should be constraint loading policy, but hey, it's demo
+            println("TODO: ${requesterInstanceInfo.enclaveInfo.codeHash}")
+            val constraint: EnclaveConstraint? = constraintsList.filter {
+                println("TODO: ${it.acceptableCodeHashes}")
+                requesterInstanceInfo.enclaveInfo.codeHash in it.acceptableCodeHashes
+            }.firstOrNull()
+            println("KDE ENCLAVE: Constraints: $constraint")
             // Check attestation against the constraints - that this application enclave is authorised to request the key
-            constraints!!.check(requesterInstanceInfo)
+            constraint!!.check(requesterInstanceInfo)
             // Generate keys for that attestation
-            val keyPair = generateKey(request, constraintDemo)
+            val keyPair = generateKey(request, constraint)
             // Construct response
-            val serialisedKeyResponse: ByteArray = KeyResponse(1, keyPair).serialiseWith(KeyResponse.serializer())
+            val serialisedKeyResponse: ByteArray = KeyResponse(keyPair).serialiseWith(KeyResponse.serializer())
             // Add KDE EnclaveInstanceInfo as a header
             val header = this.enclaveInstanceInfo.serialize()
             val responseBytes = postOffice(requesterInstanceInfo).encryptMail(serialisedKeyResponse, header)
-            postMail(responseBytes, RESPONSE_KEY_HINT) // TODO maybe try with inbox id, we could have one hint btw
+            postMail(responseBytes, RESPONSE_KEY_HINT) // TODO maybe try with inbox id, we could have no response hint
         } catch (e: IllegalArgumentException) {
             throw e
         }
@@ -116,11 +117,14 @@ class KeyDistributionEnclave : Enclave() {
     private fun handleMailToSelf(mail: EnclaveMail) {
         mail.envelope
         val mailBody = mail.bodyAsBytes
-        // store secret data for key derivation
+        // store secret data for key derivation?
     }
 
     private fun handleConstraintsRequest(request: ProvideConstraintsRequest) {
-        constraintsList.addAll(request.constraintsList)
+        // TODO write proper serialiser for EnclaveConstraint
+        for (constraint in request.constraintsList) {
+            constraintsList.add(EnclaveConstraint.parse(constraint))
+        }
     }
 
     // This would be the identity sharing of Application Enclaves keys

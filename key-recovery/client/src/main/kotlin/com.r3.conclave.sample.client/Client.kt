@@ -26,7 +26,6 @@ object AppClient {
 
     private lateinit var appEnclaveDomain: String
     private lateinit var attestation: EnclaveInstanceInfo
-    private lateinit var constraintsFileName: String
     private lateinit var identityKey: PrivateKey
     private lateinit var postOffice: PostOffice
 
@@ -35,7 +34,6 @@ object AppClient {
         remainingArgs += args
 
         appEnclaveDomain = remainingArgs.remove()
-//        val constraint = EnclaveConstraint.parse(remainingArgs.remove())
 
         // Signature check on the attestation happens when you deserialize it
         attestation = httpClient.execute(HttpGet("$appEnclaveDomain/attestation")).use {
@@ -44,13 +42,7 @@ object AppClient {
         println("ATTESTATION")
         println(attestation)
 
-        // First make sure we're talking to the right enclave.
-//        constraint.check(attestation)
-//        constraintsFileName = remainingArgs.remove().toLowerCase()
-
         generateClientIdentity()
-
-//        restoreState()
 
         val cmd = remainingArgs.remove().toLowerCase()
         println("CLIENT: Executing command: $cmd")
@@ -108,6 +100,7 @@ object AppClient {
     // TODO
     // This is for providing constraints to KDE
     private fun provideConstraints() {
+        val constraintsFileName = remainingArgs.remove()
         val file = Paths.get(constraintsFileName)
         if (Files.exists(file)) {
             val constraintsSet = mutableSetOf<EnclaveConstraint>()
@@ -121,7 +114,7 @@ object AppClient {
                 }
             }
             println("CLIENT: Constraints from file: ${constraintsSet.toList()}")
-            val constraintsRequest = ProvideConstraintsRequest(constraintsSet.toList())
+            val constraintsRequest = ProvideConstraintsRequest(constraintsSet.toList().map { it.toString() })
             //  Send constraints to the enclave
             println("CLIENT: Sending constraints to the enclave")
             enclaveRequest(constraintsRequest, SaveDataResponse.serializer(), "constraints")
@@ -146,7 +139,7 @@ object AppClient {
     }
 
     private fun <T : EnclaveResponse> enclaveRequest(
-            request: ClientRequest,
+            request: Request,
             responseSerializer: KSerializer<T>,
             routingHint: String
     ): T? {
@@ -154,9 +147,8 @@ object AppClient {
         return queryForData(responseSerializer, routingHint)
     }
 
-    // OK
-    private fun deliverMail(request: ClientRequest, routingHint: String) {
-        val requestBody = ProtoBuf.encodeToByteArray(ClientRequest.serializer(), request)
+    private fun deliverMail(request: Request, routingHint: String) {
+        val requestBody = ProtoBuf.encodeToByteArray(Request.serializer(), request)
         val requestMail = postOffice.encryptMail(requestBody)
         val post = HttpPost("$appEnclaveDomain/deliver-mail").apply {
             addHeader("Routing-Hint", routingHint)

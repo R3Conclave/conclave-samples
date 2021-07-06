@@ -1,8 +1,15 @@
-* Add constraint loading to KDE by client
-* Application enclave hardcoded constraints for KDE should be hash constraints
+* Write better serialization for enclave constraints, now I hacked it by turning them toString, in DataTypes.kt add serialiser
+for ProvideConstraintsRequest
+* In AppKeyRecoveryEnclave::loadSharedKey there is commented line: saveSharedKeyToSelf(keyResponse, kdeInstanceInfo)
+This is due to a bug I hit with ConcurrentModificationException when mail handling and interleaving it with receiveFromUntrustedHost
+This saveSharedKeyToSelf is part of the protocol and should be there, after this bug is fixed :)
+* Application enclave hardcoded constraints for KDE should be hash constraints (for simplicity I used code signing hash, becuase
+I didn't want to change it all the time for demo)
 * Remove key response routing hint and just use mail + deserialisation; we can't really remove key request hint, because
 host is routing the message
-* Implement http polling, because now demo is glued using Thread.sleep in 2 places ;)
+* Implement http polling, because now demo is glued using Thread.sleep in 2 places, sorry ;)
 * Reuse HKDF from Noise library in Conclave to generate keys on Key Derivation Enclave
-* Sample doesn't work on MAC because script assumes that module is named "enclave", probably there can't be 2 modules with
+* Add asking about application enclave shared key on KDE - so Client can send request to KDE asking about the shared key of enclave
+with given EnclaveInstanceInfo
+* Sample doesn't work on MAC/Windows because script assumes that module is named "enclave", probably there can't be 2 modules with
 enclaves

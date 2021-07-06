@@ -11,32 +11,34 @@ import java.lang.IllegalArgumentException
 import java.security.KeyPair
 import java.util.*
 
-//@Serializable
-//open class Request
-
 @Serializable
-sealed class ClientRequest//: Request()
-
-@Serializable
-sealed class KDERequest//: Request()
+sealed class Request
 
 // TODO array override
 @Serializable
-data class SaveDataRequest(val data: ByteArray) : ClientRequest()
+data class SaveDataRequest(val data: ByteArray) : Request()
 
 // TODO change parameters
 @Serializable
-data class ReadDataRequest(val id: Int = 1): ClientRequest()
+data class ReadDataRequest(val id: Int = 1): Request()
 
-// Constraints KDE, TODO not implemented yet
-@Serializable(with = EnclaveConstraintSerializer::class)
-data class ProvideConstraintsRequest(val constraintsList: List<EnclaveConstraint>) : ClientRequest()
+// Constraints KDE, TODO FIX SERIALIZER FOR EnclaveConstraints
+//@Serializable
+//data class ProvideConstraintsRequest(
+//        @Serializable(with = EnclaveConstraintSerializer::class)
+//        val constraintsList: List<EnclaveConstraint>
+//) : Request()
+
+@Serializable
+data class ProvideConstraintsRequest(
+        val constraintsList: List<String>
+) : Request()
 
 /** Ask for a public shared key
 Used for mail encryption and data saving
 **/
 @Serializable
-object GetPublicSharedKey : ClientRequest()
+object GetPublicSharedKey : Request()
 
 @Serializable
 sealed class EnclaveResponse
@@ -49,11 +51,9 @@ data class SaveDataResponse(val code: ResponseCode) : EnclaveResponse () {
     }
 }
 
-// TODO array override
 @Serializable
 data class ReadDataResponse(val code: ResponseCode) : EnclaveResponse()
 
-// TODO change naming
 @Serializable
 sealed class ResponseCode
 
@@ -74,11 +74,10 @@ data class PublicSharedKeyResponse(
 // todo this should have separate serialiser using the enclave instance info serialisation, it seems they do signature check there?
 // TODO also, refactor name, because not really EnclaveResponse
 @Serializable
-data class KeyRequest(val id: Long, val instanceInfoBytes: ByteArray): KDERequest()
+data class KeyRequest(val id: Long, val instanceInfoBytes: ByteArray): Request()
 
 @Serializable
 data class KeyResponse(
-        val todo: Int, // todo remove
         @Serializable(with = KeyPairSerializer::class)
         val keyPair: KeyPair
 ) : EnclaveResponse()
@@ -148,41 +147,3 @@ private object EnclaveConstraintSerializer : KSerializer<EnclaveConstraint> {
         return EnclaveConstraint.parse(decoder.decodeString())
     }
 }
-
-//sealed class KeyRequest {
-//    enum class RequestType {
-//        AZURE, // Jason format
-//        KDE
-//    }
-//
-//    // Creates the keyRequest on the host side to trigger it from KDE
-//    // This function can return Azure format or KDE
-//    // For Azure we need to play with their attestation though... this will be part of a separate demo
-//    // TODO Make it factory
-//    companion object {
-//        fun createKeyRequest(type: RequestType, data: String): KeyRequest {
-//            return when (type) {
-//                RequestType.AZURE -> AzureKeyRequest.createKeyRequest(data)
-//                RequestType.KDE -> KeyDerivationEnclaveRequest.createKeyRequest(data)
-//            }
-//        }
-//    }
-//
-//    data class AzureKeyRequest(val todo: String) : KeyRequest() {
-//        companion object {
-//            fun createKeyRequest(data: String): KeyRequest {
-//                val newKeyRequest = AzureKeyRequest("Hello Azure!")
-//                return newKeyRequest
-//            }
-//        }
-//    }
-//
-//    data class KeyDerivationEnclaveRequest(val todo: String) : KeyRequest() {
-//        companion object {
-//            fun createKeyRequest(data: String): KeyRequest {
-//                val newKeyRequest = KeyDerivationEnclaveRequest("Hello KDE!")
-//                return newKeyRequest
-//            }
-//        }
-//    }
-//}

@@ -87,6 +87,19 @@ TODO Note: For simplicity, I put in the Application enclave a signer hash for th
 be changed to code hash. Signer hash is easier, because it doesn't change that much. Additionally, the goal is that KDE
 doesn't have hardcoded constraints, just gets them from the client.
 
+There is an *experimental* feature (as if the whole demo wasn't experimental enough...), where you can provide constraints to
+the KDE by calling on the client:
+
+ ./gradlew client:run --args="http://localhost:9001 provide-constraints pathToConstraintsFile"
+ 
+where pathToConstraintsFile is well, path to constraints file, format is the same as in Conclave EnclaveConstraint parse.
+ One constraint per line. See client/exampleConstraint.dat
+ 
+So instead of putting it in the KeyDistributionEnclave code, you can put constraint in the file, and run
+./gradlew client:run --args="http://localhost:9001 provide-constraints exampleConstraint.dat"
+
+Remember to run it before you start application enclave :)
+
 1. First run
 
 To start host and enclaves and show key recovery run:
