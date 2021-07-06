@@ -35,6 +35,8 @@ import kotlin.collections.HashMap
 @RestController
 object AppKeyRecoveryHost {
     private val idCounter = AtomicLong()
+    // TODO remove, this is hack to walk around a bug, see usage for explanation
+    private val keyRequestCounter = AtomicLong()
 
     private lateinit var enclaveHost: EnclaveHost
     private val ENCLAVE_CLASS_NAME = "com.r3.conclave.sample.enclave.AppKeyRecoveryEnclave"
@@ -111,8 +113,18 @@ object AppKeyRecoveryHost {
                         // TODO there is no nice way of doing it, key request has to be done in coordination with host
                         //  this opens side channel because we leak that information here
                     } else if (command.routingHint == REQUEST_KEY_HINT) {
-                        println("HOST: Key request from enclave to be passed to the KDE ")
-                        routeKeyRequest(command.encryptedBytes)
+                        // TODO this is another hack, I think it is related to the ConcurrentModificationException, but it seems that same key request message gets sent twice
+                        //  so to walk around that for demo here is this beautiful code :/
+                        //  If you remove this you will get:
+                        //  java.lang.IllegalStateException: Mail with sequence number 0 on topic default has already been seen, was expecting 1. Make sure the same PostOffice instance is used for the same sender key and topic, or if the sender key is long-term then a per-process topic is used. Otherwise it may be the host is replaying older messages.
+                        val counter = keyRequestCounter.incrementAndGet()
+                        if (counter == 1L) {
+                            println("HOST: Key request from enclave to be passed to the KDE ")
+                            routeKeyRequest(command.encryptedBytes)
+                        }
+//                        else {
+//                            println("HOST: TODO REMOVE this is debugging message, for some reason key request was sent twice")
+//                        }
                     } else {
                         // Client request handling
                         synchronized(inboxes) {

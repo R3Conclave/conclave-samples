@@ -3,7 +3,8 @@ for ProvideConstraintsRequest
 * In AppKeyRecoveryEnclave::loadSharedKey there is commented line: saveSharedKeyToSelf(keyResponse, kdeInstanceInfo)
 This is due to a bug I hit with ConcurrentModificationException when mail handling and interleaving it with receiveFromUntrustedHost
 This saveSharedKeyToSelf is part of the protocol and should be there, after this bug is fixed :)
-* Application enclave hardcoded constraints for KDE should be hash constraints (for simplicity I used code signing hash, becuase
+* Another ugly walk around is in com/r3/conclave/sample/host/AppKeyRecoveryHost.kt:116 go there for explanation
+* Application enclave hardcoded constraints for KDE should be hash constraints (for simplicity I used code signing hash, because
 I didn't want to change it all the time for demo)
 * Remove key response routing hint and just use mail + deserialisation; we can't really remove key request hint, because
 host is routing the message
