@@ -97,7 +97,6 @@ object AppClient {
         }
     }
 
-    // TODO
     // This is for providing constraints to KDE
     private fun provideConstraints() {
         val constraintsFileName = remainingArgs.remove()
@@ -129,7 +128,7 @@ object AppClient {
     private fun <T : EnclaveResponse> queryForData(serializer: KSerializer<T>, routingHint: String): T? {
         return httpClient.execute(HttpGet("$appEnclaveDomain/inbox/$routingHint")).use {
             val json = ObjectMapper().readTree(it.entity.content)
-            val returnValue = json.lastOrNull() // TODO it's not going to work ;) refactor
+            val returnValue = json.lastOrNull()
             val mailBytes = returnValue?.binaryValue()
             if (mailBytes != null) {
                 val responseBytes = postOffice.decryptMail(mailBytes).bodyAsBytes

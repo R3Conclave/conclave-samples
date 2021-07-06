@@ -13,3 +13,4 @@ host is routing the message
 with given EnclaveInstanceInfo
 * Sample doesn't work on MAC/Windows because script assumes that module is named "enclave", probably there can't be 2 modules with
 enclaves
+* Implement quering for results on KDE by id, so KDE can handle multiple requests from application enclaves, for demo I reused key request routing hint

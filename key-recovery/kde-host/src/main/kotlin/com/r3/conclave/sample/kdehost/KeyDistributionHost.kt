@@ -8,8 +8,6 @@ import com.r3.conclave.host.MailCommand
 import com.r3.conclave.host.MockOnlySupportedException
 import com.r3.conclave.sample.common.*
 import kotlinx.serialization.ExperimentalSerializationApi
-import org.apache.http.client.entity.EntityBuilder
-import org.apache.http.client.methods.HttpPost
 import org.apache.http.impl.client.HttpClients
 import org.springframework.web.bind.annotation.*
 import java.io.FileOutputStream
@@ -21,18 +19,16 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 /**
- * This class demonstrates how to load an enclave and exchange byte arrays with it.
+ * Host for the Key Distribution Enclave.
  */
 @ExperimentalSerializationApi
 @RestController
 object KeyDistributionHost {
     private lateinit var enclaveHost: EnclaveHost
     // TODO implement proper handling of application enclave addresses with mapping of requests - responses
-    private val appEnclaveAddress = "http://localhost:8080" // TODO change + routing handler:)
     private val ENCLAVE_CLASS_NAME = "com.r3.conclave.sample.kdeenclave.KeyDistributionEnclave"
     private val inboxes = HashMap<String, MutableList<ByteArray>>()
     private val idCounter = AtomicLong()
-    private val httpClient = HttpClients.createDefault()
     private val CONSTRAINTS_FILE = "constraints.dat"
 
     @PostConstruct
@@ -45,8 +41,6 @@ object KeyDistributionHost {
         printAttestationData()
         println("KDE HOST: Loading any data stored by enclave")
         loadStoredData()
-        println("KDE HOST: Loading configuration with EnclaveConstraints")
-        loadConfigConstraints()
         println("KDE HOST: Enclave started")
     }
 
@@ -110,18 +104,6 @@ object KeyDistributionHost {
         println(EnclaveInstanceInfo.deserialize(attestationBytes))
     }
     ///////////////////////////////////////////// END ENCLAVE BOILERPLATE
-    // TODO remove
-    private fun loadConfigConstraints() {
-        println("KDE HOST: load config constraints")
-        try {
-            // Read config file with constraints
-            val constraintsFile = Files.readAllBytes(Paths.get(CONSTRAINTS_FILE))
-            // Send constraints to the enclave
-            enclaveHost.callEnclave(constraintsFile)
-        } catch (e: IOException) {
-            println("KDE HOST: Could not read constraints config file: " + e.message)
-        }
-    }
 
     private fun loadStoredData() {
         try {

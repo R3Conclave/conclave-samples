@@ -54,16 +54,6 @@ class KeyDistributionEnclave : Enclave() {
         }
     }
 
-    // TODO get rid of
-    // This is not nice, but I haven't found better thing so far to receive configuration so this will do
-    override fun receiveFromUntrustedHost(bytes: ByteArray): ByteArray? {
-        println("KDE ENCLAVE: receive from untrusted host")
-        val asString = String(bytes) // TODO have serialiser for config data, for now it will do for demo
-        val constraint = EnclaveConstraint.parse(asString)
-        constraintsList.add(constraint)
-        return null
-    }
-
     private fun handleKeyRequest(mail: EnclaveMail) {
         println("KDE ENCLAVE: Handle key request")
         try {
@@ -83,14 +73,12 @@ class KeyDistributionEnclave : Enclave() {
             println("KDE ENCLAVE: Obtain constraints for this attestation")
             // TODO improve the filtering of constraints, they can be of different form - store them in the hash map
             //  Also, there should be constraint loading policy, but hey, it's demo
-            println("TODO: ${requesterInstanceInfo.enclaveInfo.codeHash}")
             val constraint: EnclaveConstraint? = constraintsList.filter {
-                println("TODO: ${it.acceptableCodeHashes}")
                 requesterInstanceInfo.enclaveInfo.codeHash in it.acceptableCodeHashes
             }.firstOrNull()
             println("KDE ENCLAVE: Constraints: $constraint")
             // Check attestation against the constraints - that this application enclave is authorised to request the key
-            constraint!!.check(requesterInstanceInfo)
+            constraint?.check(requesterInstanceInfo) ?: throw IllegalArgumentException("No application enclave constraints for enclave with instance info: $requesterInstanceInfo")
             // Generate keys for that attestation
             val keyPair = generateKey(request, constraint)
             // Construct response

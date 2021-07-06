@@ -5,16 +5,13 @@ import com.r3.conclave.client.InvalidEnclaveException
 import com.r3.conclave.common.EnclaveInstanceInfo
 import com.r3.conclave.enclave.Enclave
 import com.r3.conclave.enclave.EnclavePostOffice
-import com.r3.conclave.mail.Curve25519PrivateKey
 import com.r3.conclave.mail.Curve25519PublicKey
 import com.r3.conclave.mail.EnclaveMail
-import com.r3.conclave.mail.PostOffice
 import com.r3.conclave.sample.common.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.protobuf.ProtoBuf
-import java.security.KeyPair
 import java.security.PublicKey
 
 /**
@@ -22,7 +19,7 @@ import java.security.PublicKey
  */
 @ExperimentalSerializationApi
 class AppKeyRecoveryEnclave : Enclave() {
-    private val simpleKeyStore = SimpleInMemoryKeyStore()
+//    private val simpleKeyStore = SimpleInMemoryKeyStore()
 
     // We need this for attesting the KDE, so we either obtain it from the file
     // or, we ask for the attestation passed via host and then we check with the constraints
@@ -30,7 +27,7 @@ class AppKeyRecoveryEnclave : Enclave() {
     // TODO so we basically cache it, think what happens when this changes? What is recommended Conclave approach?
     //  This is possible security issue when we are using potentially compromised key for encryption.
     //  Upgraded KDE should be able to read those messages, but as a client we wish to have the freshest data we should have refresh policy
-    // TODO another issue is with the timestamp validation... Enclaves don't have notion of time, something that Rui raised with me
+    // TODO another issue is with the timestamp validation... Enclaves don't have notion of time, something that Rui raised with
     //  and I wasn't entirely aware of that problem... so this complicates a bit the issue of enclave to enclave authentication
     private var keyDerivationEnclaveInstanceInfo: EnclaveInstanceInfo? = null
 
@@ -57,7 +54,7 @@ class AppKeyRecoveryEnclave : Enclave() {
 
     override fun receiveMail(id: Long, mail: EnclaveMail, routingHint: String?) {
         routingHint!!  // Ensure that the routingHint isn't null
-        // TODO REFACTOR don't pass it as routing hint/reuse header/body
+        // TODO REFACTOR don't pass it as routing hint/reuse mail body
         if (routingHint == SHARED_KEY_HINT) {
             println("ENCLAVE: Received mail with shared key hint")
             loadSharedKey(mail)
@@ -83,8 +80,7 @@ class AppKeyRecoveryEnclave : Enclave() {
         }
     }
 
-    // TODO this approach is a bit worse than the one driven by host
-    //  Although they may be equivalent? We need timestamp provider? Enclaves can't initiate communication
+    // TODO Enclaves can't initiate communication
     // I need to rethink this approach, but now it seems the only working
     // When there is no file or the contraints fail check (for example because KDE got upgraded)
     override fun receiveFromUntrustedHost(bytes: ByteArray): ByteArray? {
@@ -92,19 +88,20 @@ class AppKeyRecoveryEnclave : Enclave() {
         val maybeValidKDEInstanceInfo = EnclaveInstanceInfo.deserialize(bytes)
         println("ENCLAVE: KDE attestation $maybeValidKDEInstanceInfo")
         checkAttestationConstraints(maybeValidKDEInstanceInfo)
+        // TODO update kde information based on last seen
         keyDerivationEnclaveInstanceInfo = maybeValidKDEInstanceInfo
         requestKey()
         return null
     }
 
     private fun checkHeaderConstraints(mail: EnclaveMail): EnclaveInstanceInfo {
-        val envelope: ByteArray? = mail.envelope // extract the enclave instance info
+        val envelope: ByteArray? = mail.envelope // Extract the KDE enclave instance info
         if (envelope == null) {
             // This is the case that shouldn't really happen, because our protocol assumes that we put EnclaveInstanceInfo
             // into the header, and then match it against the hardcoded constraints
             throw IllegalArgumentException("Malformed mail without EnclaveInstanceInfo in the header")
         } else {
-            val enclaveInstanceInfoFromMail: EnclaveInstanceInfo = EnclaveInstanceInfo.deserialize(envelope) // throws illegal argument exception
+            val enclaveInstanceInfoFromMail: EnclaveInstanceInfo = EnclaveInstanceInfo.deserialize(envelope)
             checkAttestationConstraints(enclaveInstanceInfoFromMail)
             return enclaveInstanceInfoFromMail
         }
@@ -157,7 +154,7 @@ class AppKeyRecoveryEnclave : Enclave() {
         // TODO If we call saveSharedKeyToSelf here, this causes java.util.ConcurrentModificationException in Conclave sdk!
 //        saveSharedKeyToSelf(keyResponse, kdeInstanceInfo)
         // We need to also swap RA because KDE is sending out/advertising new attestation
-        // TODO this isn't necessary probably THINK ABOUT THIS
+        // TODO is it necessary THINK ABOUT THIS
         if (keyDerivationEnclaveInstanceInfo == null) {
             keyDerivationEnclaveInstanceInfo = kdeInstanceInfo
         } else if (keyDerivationEnclaveInstanceInfo!= null) {
@@ -209,7 +206,6 @@ class AppKeyRecoveryEnclave : Enclave() {
         //  replays old message with potentially compromised key
         if (keyRequested) {
             loadSharedKey(mail)
-//            saveSharedKeyToSelf(keyResponse: KeyResponse, keyDerivationRA: EnclaveInstanceInfo)
         } else {
             TODO()
         }
@@ -249,9 +245,9 @@ class AppKeyRecoveryEnclave : Enclave() {
         val publicKey = Curve25519PublicKey(sharedKey!!.encoded)
         val responseBytes = postOffice(mail).encrypt(PublicSharedKeyResponse(publicKey), PublicSharedKeyResponse.serializer())
         postMail(responseBytes, routingHint)
-        // TODO HACK
+        // TODO HACK around ConcurrentModificationException in mail message handling, if we want to force saving of shared key into storage
 //        val keyResponse = KeyResponse(0, sharedKey!!)
-//        saveSharedKey(keyResponse, keyDerivationEnclaveInstanceInfo!!) // TODO HACK
+//        saveSharedKey(keyResponse, keyDerivationEnclaveInstanceInfo!!)
     }
 
     private fun handleMailToSelf(mail: EnclaveMail) {

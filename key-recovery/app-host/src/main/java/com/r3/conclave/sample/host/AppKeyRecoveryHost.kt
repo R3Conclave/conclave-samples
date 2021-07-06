@@ -7,11 +7,8 @@ import com.r3.conclave.host.EnclaveHost
 import com.r3.conclave.host.EnclaveLoadException
 import com.r3.conclave.host.MailCommand
 import com.r3.conclave.host.MockOnlySupportedException
-import com.r3.conclave.mail.EnclaveMail
 import com.r3.conclave.sample.common.*
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.protobuf.ProtoBuf
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
@@ -26,29 +23,27 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import javax.crypto.AEADBadTagException
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 /**
  * This class demonstrates how to do key recovery. It's proof of concept and by no means production ready. Extension in
- * EnclaveHost itself is kept minimal.
- * TODO
+ * EnclaveHost itself is kept minimal. See more information in README and the handover wiki, where you can also find
+ * links to 2 reports on that topic.
  */
 @ExperimentalSerializationApi
 @RestController
 object AppKeyRecoveryHost {
     private val idCounter = AtomicLong()
-    // TODO remove
-    private val keyRequestCounter = AtomicLong()
+
     private lateinit var enclaveHost: EnclaveHost
     private val ENCLAVE_CLASS_NAME = "com.r3.conclave.sample.enclave.AppKeyRecoveryEnclave"
     private val inboxes = HashMap<String, MutableList<ByteArray>>()
+
     // TODO have proper routing...
-    private val keyDerivationDomain: String = "http://localhost:9001" // TODO parameter
+    private val keyDerivationDomain: String = "http://localhost:9001" // TODO pass it as a parameter
     private lateinit var kdeAttestation: EnclaveInstanceInfo
 
-    // TODO check if I can reuse Spring Boot, as I don't know it well
     private val httpClient = HttpClients.createDefault()
 
     @PostConstruct
@@ -60,7 +55,8 @@ object AppKeyRecoveryHost {
         println("HOST: PRINT ATTESTATION")
         printAttestationData()
         println("HOST: Request attestation from KDE enclave")
-        requestKDEAttestation() // TODO add explanation why we need this attestation
+        requestKDEAttestation()
+        println("HOST: KDE attestation:")
         println(kdeAttestation)
         // On startup read all persisted data that we may wish to provide to the enclave
         println("HOST: READ SHARED KEY")
@@ -114,16 +110,9 @@ object AppKeyRecoveryHost {
                         }
                         // TODO there is no nice way of doing it, key request has to be done in coordination with host
                         //  this opens side channel because we leak that information here
-                        // TODO this could be done with separate mail command, not routing hint
                     } else if (command.routingHint == REQUEST_KEY_HINT) {
-                        val counter = keyRequestCounter.incrementAndGet()
-                        if (counter == 1L) {
-                            println("HOST: Key request from enclave to be passed to the KDE ")
-                            routeKeyRequest(command.encryptedBytes)
-                        }
-//                        else {
-//                            println("HOST: TODO REMOVE this is debugging message, for some reason key request was sent twice")
-//                        }
+                        println("HOST: Key request from enclave to be passed to the KDE ")
+                        routeKeyRequest(command.encryptedBytes)
                     } else {
                         // Client request handling
                         synchronized(inboxes) {
@@ -131,12 +120,8 @@ object AppKeyRecoveryHost {
                             inbox += command.encryptedBytes
                         }
                     }
-                }
-                else {
-                    // it would be this: MailCommand.AcknowledgeMail, For now we don't support the ack
-                    // we could have special command for key handling of it is part of the Conclave SDK, but it's not strictly necessary
-                    // it could even be considered a side channel, although we have routing hint...
-                    TODO()
+                } else {
+                    TODO("No handling of mail acknowledgement")
                 }
             }
         }
@@ -158,17 +143,17 @@ object AppKeyRecoveryHost {
         }
     }
 
-    // TODO this is other scenario, when host requests key... LATER
+    // TODO this is another way of doing ths, when host requests key...
+    //  there is no way to drive this key request from enclave, hosts has to be involved
     private fun requestKey() {
         println("HOST: calling enclave with KDE attestation")
         // Call enclave doesn't encrypt data, attestation is signed, also it's publicly known data
         enclaveHost.callEnclave(kdeAttestation.serialize())
     }
 
-    //OK
     private fun routeKeyRequest(requestBytes: ByteArray) {
         println("HOST: Route key request")
-        enclaveRequest(requestBytes, REQUEST_KEY_HINT) // TODO make it request by ids
+        enclaveRequest(requestBytes, REQUEST_KEY_HINT) // TODO make it request by ids, so KDE can handle more enclaves...
     }
     ///////////////////////////////////////////// END COMMUNICATION FUNCTIONS
 
@@ -181,7 +166,7 @@ object AppKeyRecoveryHost {
             val sharedKey = Files.readAllBytes(Paths.get(SHARED_KEY_FILE))
             println("HOST: Delivering shared key from file to the enclave")
             enclaveHost.deliverMail(idCounter.getAndIncrement(), sharedKey, SHARED_KEY_HINT)
-        } catch (e: Exception) { // TODO what is thrown when we can't decrypt it? There is no documentation on that :(
+        } catch (e: Exception) { // TODO what is thrown when we can't decrypt it? There is no documentation on that :( by trial and error, it will be runtime exception
             when (e) {
                 is RuntimeException, is IOException -> {
                     // This is the case when we can't decrypt the key that was saved in the shared key file
@@ -189,7 +174,7 @@ object AppKeyRecoveryHost {
                     //
                     println("HOST: Could not read shared key: " + e.message)
                     println("HOST: Key recovery started")
-                    requestKey() // TODO ping enclave to produce key request
+                    requestKey() // Ping enclave to produce key request
                 }
                 else -> throw e
             }
@@ -236,20 +221,18 @@ object AppKeyRecoveryHost {
 
     //////////////////////////////////////////// KDE CLIENT
     // TODO have handling for routing hints for outbound requests
-    //  Also, make it async
     // Query for result data
     private fun enclaveRequest(
             request: ByteArray,
             routingHint: String = UUID.randomUUID().toString()
     ) {
         deliverMail(request, routingHint)
-        Thread.sleep(6000) // TODO make it async
+        Thread.sleep(6000) // TODO Implement polling
         println("HOST: query for data")
 //        queryForData(routingHint)
-        queryForData(RESPONSE_KEY_HINT) // TODO this will be race condition
+        queryForData(RESPONSE_KEY_HINT) // TODO Handle random routing hints, not just RESPONSE_KEY_HINT, because we want KDE to be able to handle many application enclaves
     }
 
-    // OK
     private fun deliverMail(request: ByteArray, routingHint: String) {
         val post = HttpPost("$keyDerivationDomain/deliver-mail").apply {
             addHeader("Routing-Hint", routingHint)
@@ -260,7 +243,7 @@ object AppKeyRecoveryHost {
 
     // TODO implement polling for result
     private fun queryForData(routingHint: String) {
-        // TODO make it query by ids instead
+        // TODO make it query by ids instead of RESPONSE_KEY_HINT
         return httpClient.execute(HttpGet("$keyDerivationDomain/inbox/$routingHint")).use {
             val json = ObjectMapper().readTree(it.entity.content)
             val returnValue = json.lastOrNull() // TODO it's not going to work ;) refactor
@@ -269,7 +252,7 @@ object AppKeyRecoveryHost {
                 println("HOST: received response from KDE with routing hint: $routingHint")
                 enclaveHost.deliverMail(idCounter.getAndIncrement(), mailBytes, RESPONSE_KEY_HINT)
             } else {
-                println("HOST: didn't receive response from KDE :(") //TODO handle race conditions
+                println("HOST: didn't receive response from KDE :(")
             }
         }
     }

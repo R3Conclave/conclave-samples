@@ -14,11 +14,16 @@ import java.util.*
 @Serializable
 sealed class Request
 
-// TODO array override
+/**
+ * Sent by client to show data saving for demo purpose
+ */
 @Serializable
 data class SaveDataRequest(val data: ByteArray) : Request()
 
 // TODO change parameters
+/**
+ * Read data saved by client
+ */
 @Serializable
 data class ReadDataRequest(val id: Int = 1): Request()
 
@@ -29,14 +34,18 @@ data class ReadDataRequest(val id: Int = 1): Request()
 //        val constraintsList: List<EnclaveConstraint>
 //) : Request()
 
+/**
+ * Provide application enclave constraints from the client
+ */
 @Serializable
 data class ProvideConstraintsRequest(
         val constraintsList: List<String>
 ) : Request()
 
-/** Ask for a public shared key
-Used for mail encryption and data saving
-**/
+/**
+ * Ask for a public shared key
+ * Used for mail encryption and data saving
+ */
 @Serializable
 object GetPublicSharedKey : Request()
 
@@ -71,8 +80,7 @@ data class PublicSharedKeyResponse(
         val key: Curve25519PublicKey
 ) : EnclaveResponse() // TODO signed etc, but demo...
 
-// todo this should have separate serialiser using the enclave instance info serialisation, it seems they do signature check there?
-// TODO also, refactor name, because not really EnclaveResponse
+// TODO this should have separate serialiser using the enclave instance info serialisation, it seems they do signature check there?
 @Serializable
 data class KeyRequest(val id: Long, val instanceInfoBytes: ByteArray): Request()
 
@@ -119,7 +127,6 @@ object KeyPairSerializer: KSerializer<KeyPair> {
         }
     }
 
-    // todo reuse public/private serialisers
     override fun deserialize(decoder: Decoder): KeyPair {
         var public: Curve25519PublicKey? = null
         var private: Curve25519PrivateKey? = null
@@ -138,6 +145,7 @@ object KeyPairSerializer: KSerializer<KeyPair> {
     }
 }
 
+// TODO use it for the ProvideConstraintsRequest
 private object EnclaveConstraintSerializer : KSerializer<EnclaveConstraint> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("EnclaveConstraint", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: EnclaveConstraint) {
