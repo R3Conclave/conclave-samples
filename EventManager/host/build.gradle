@@ -18,11 +18,7 @@ dependencies {
     implementation project(":common")
     implementation "com.r3.conclave:conclave-host:$conclaveVersion"
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    if (mode == "mock") {
-        implementation project(path: ":enclave")
-    } else {
-        implementation project(path: ":enclave", configuration: mode)
-    }
+    implementation project(path: ":enclave")
     implementation "org.slf4j:slf4j-api:1.7.30"
     implementation "org.slf4j:slf4j-simple:1.7.30"
     implementation project(":enclave")  // needed in addition to line 22/24 (not sure why!!)
