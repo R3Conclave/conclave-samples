@@ -11,24 +11,22 @@ repositories {
     mavenCentral()
 }
 
-// Override the default (simulation) with -PenclaveMode=
+// Override the default (mock) with -PenclaveMode=
 def mode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "mock"
 
 dependencies {
     implementation project(":common")
     implementation "com.r3.conclave:conclave-host:$conclaveVersion"
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation project(path: ":enclave")
     implementation "org.slf4j:slf4j-api:1.7.30"
     implementation "org.slf4j:slf4j-simple:1.7.30"
-    implementation project(":enclave")  // needed in addition to line 22/24 (not sure why!!)
+    runtimeOnly project(path: ":enclave", configuration: mode)
 
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
 }
 
 application {
     mainClassName = "me.gendal.conclave.eventmanager.host.EventManagerMain"
-    applicationDefaultJvmArgs = ['-Dconclavemode=' + mode ]
 }
 
 test {

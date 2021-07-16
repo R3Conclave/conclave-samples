@@ -4,7 +4,6 @@ import com.r3.conclave.host.EnclaveHost
 import com.r3.conclave.host.EnclaveLoadException
 import com.r3.conclave.host.MailCommand
 import org.slf4j.LoggerFactory
-import me.gendal.conclave.eventmanager.enclave.EventManagerEnclave
 import org.springframework.web.bind.annotation.*
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicLong
@@ -38,7 +37,7 @@ class EventManagerHost {
             logger.info("This platform does not support hardware enclaves: " + e.message)
         }
 
-        enclave = EnclaveHost.load(EventManagerEnclave::class.java.canonicalName);
+        enclave = EnclaveHost.load("me.gendal.conclave.eventmanager.enclave.EventManagerEnclave");
 
         enclave.start(null) { commands: List<MailCommand?> ->
             for (command in commands) {
