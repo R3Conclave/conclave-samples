@@ -2,8 +2,7 @@ package me.gendal.conclave.eventmanager.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.r3.conclave.client.EnclaveConstraint
-import com.r3.conclave.common.EnclaveInstanceInfo
-import com.r3.conclave.common.SHA256Hash
+import com.r3.conclave.common.*
 import com.r3.conclave.mail.Curve25519PrivateKey
 import com.r3.conclave.mail.Curve25519PublicKey
 import com.r3.conclave.mail.PostOffice
@@ -29,7 +28,7 @@ import me.gendal.conclave.eventmanager.common.Computation.ComputationType as Com
 
 @Command(name = "Event Manager Client for Conclave",
     mixinStandardHelpOptions = true,
-    version = ["Event Manager Client for Conclave, 1.0"],
+    version = ["Event Manager Client for Conclave, 1.1"],
     description = ["Interacts with an Event Manager secure enclave."],
     subcommands = [
         CreateComputation::class,
@@ -57,33 +56,44 @@ class EventManagerClient : Callable<Int> {
 
     private val httpClient = HttpClients.createDefault()
     private lateinit var attestation: EnclaveInstanceInfo
-    lateinit var identityKey: Curve25519PrivateKey
-    lateinit var postOffice: PostOffice
     private lateinit var enclaveConstraint: String
     val keysByKnownActors = HashMap<String, Curve25519PublicKey>()
     val actorsByKnownKeys = HashMap<Curve25519PublicKey, String>()
+
+    // persisted/restored by persistState()/restoreState()
+    lateinit var identityKey: Curve25519PrivateKey
+    lateinit var postOffice: PostOffice
+    lateinit var lastEnclaveInfo: EnclaveInfo
 
     override fun call(): Int {
         throw Exception("You must provide a command")
     }
 
     fun establishEnclaveConnection() {
-        val propertiesFile = FileInputStream(configFile)
+       /* val propertiesFile = FileInputStream(configFile)
         val configProperties = Properties()
         configProperties.load(propertiesFile)
         enclaveConstraint = configProperties.getProperty("enclave-constraint")
-        val constraint = EnclaveConstraint.parse(enclaveConstraint)
+        val constraint = EnclaveConstraint.parse(enclaveConstraint)*/
+
         attestation = httpClient.execute(HttpGet("${host}/attestation")).use {
             EnclaveInstanceInfo.deserialize(it.entity.content.readBytes())
         }
-        constraint.check(attestation)
+
+        // TEMP: Remove constraint check. We're going to *DISPLAY* the info instead
+        // And then we'll also save/persist it.  So we're able to tell the user
+        // when something has changed
+        // constraint.check(attestation)
+
+        //println(attestation.enclaveInfo)
+
     }
 
     /*
     *
     * Helper functions for:
     *   * sending/receiving mail to Enclave
-    *   * managing persistent of client keys
+    *   * managing persistence of client keys
     *   * learning about and sharing identity files with other participants
     *
      */
@@ -127,14 +137,27 @@ class EventManagerClient : Callable<Int> {
             postOffice = attestation.createPostOffice(
                 identityKey, lines[1])
             postOffice.nextSequenceNumber = lines[2].toLong()
+            lastEnclaveInfo = EnclaveInfo(SHA256Hash.parse(lines[3]),
+                SHA256Hash.parse(lines[4]),
+                lines[5].toInt(),
+                lines[6].toInt(),
+                EnclaveMode.valueOf(lines[7])
+            )
         } else {
             println("Creating new identity key...")
             identityKey = Curve25519PrivateKey.random()
             postOffice = attestation.createPostOffice(
                 identityKey, UUID.randomUUID().toString())
+            lastEnclaveInfo = dummyEnclaveInfo
             persistState()
         }
     }
+
+    private val dummyEnclaveInfo =  EnclaveInfo(
+        SHA256Hash.hash(byteArrayOf()),
+        SHA256Hash.hash(byteArrayOf()),
+        0, 0, EnclaveMode.MOCK,
+    )
 
     private fun persistState() {
         Files.write(
@@ -143,6 +166,11 @@ class EventManagerClient : Callable<Int> {
                 Base64.getEncoder().encodeToString(identityKey.encoded),
                 postOffice.topic,
                 postOffice.nextSequenceNumber.toString(),
+                attestation.enclaveInfo.codeHash.toString(),
+                attestation.enclaveInfo.codeSigningKeyHash.toString(),
+                attestation.enclaveInfo.productID.toString(),
+                attestation.enclaveInfo.revocationLevel.toString(),
+                attestation.enclaveInfo.enclaveMode.toString()
             )
         )
     }
@@ -168,6 +196,34 @@ class EventManagerClient : Callable<Int> {
         // ensure my details are also in the lookup tables
         keysByKnownActors[name] = identityKey.publicKey
         actorsByKnownKeys[identityKey.publicKey] = name
+
+        // check if anything has changed at the server
+
+        when {
+            lastEnclaveInfo.equals(attestation.enclaveInfo) -> {
+                println("You are connected to the same enclave as before")
+            }
+            lastEnclaveInfo.equals(dummyEnclaveInfo) -> {
+                println("You are connected to this enclave for the first time: ")
+                println(attestation.enclaveInfo)
+            }
+            else -> {
+                println("*** WARNING!! THE BACKEND SERVICE HAS CHANGED ***")
+                println("The current attestation is: ")
+                println("")
+                println(attestation.enclaveInfo)
+                println("")
+                println("")
+                println("The previous attestation was: ")
+                println("")
+                println(lastEnclaveInfo)
+                println("")
+                println("")
+
+                
+
+            }
+        }
     }
 }
 
