@@ -1,0 +1,32 @@
+plugins {
+    id 'com.r3.conclave.enclave'
+}
+
+dependencies {
+    implementation project(path: ":client")
+    implementation project(path: ":common")
+
+    implementation "com.r3.conclave:conclave-enclave"
+
+    testImplementation "com.r3.conclave:conclave-host"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
+
+    implementation ("org.tribuo:tribuo-all:4.1.0@pom") {
+        transitive = true // for build.gradle (i.e., Groovy)
+        // isTransitive = true // for build.gradle.kts (i.e., Kotlin)
+    }
+
+    implementation "org.slf4j:slf4j-api:1.7.30"
+    runtimeOnly "org.slf4j:slf4j-simple:1.7.30"
+}
+
+conclave {
+    productID = 1
+    revocationLevel = 0
+
+    // you can use a privateKey to sign the enclave
+    debug {
+        signingType = privateKey
+        signingKey = file("../signing/sample_private_key.pem")
+    }
+}

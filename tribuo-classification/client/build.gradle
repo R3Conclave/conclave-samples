@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+sourceCompatibility = 1.8
+application {
+    mainClassName = "com.r3.conclave.sample.client.Client"
+}
+
+dependencies {
+    implementation project(":common");
+    implementation ("org.tribuo:tribuo-all:4.1.0@pom") {
+        transitive = true // for build.gradle (i.e., Groovy)
+        // isTransitive = true // for build.gradle.kts (i.e., Kotlin)
+    }
+    implementation "com.r3.conclave:conclave-client:$conclaveVersion"
+}
