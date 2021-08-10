@@ -72,8 +72,6 @@
 /common/build/classes/kotlin/main/me/gendal/conclave/eventmanager/common/GetComputationResult$Companion.class
 /common/build/classes/kotlin/main/me/gendal/conclave/eventmanager/common/GetComputationResult.class
 /.idea/gradle.xml
-/gradle/wrapper/gradle-wrapper.jar
-/gradle/wrapper/gradle-wrapper.properties
 /host/build/classes/kotlin/main/META-INF/host.kotlin_module
 /common/build/kotlin/compileKotlin/caches-jvm/lookups/id-to-file.tab
 /host/build/kotlin/compileKotlin/caches-jvm/lookups/id-to-file.tab
