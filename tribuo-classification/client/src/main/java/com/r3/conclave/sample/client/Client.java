@@ -1,5 +1,6 @@
 package com.r3.conclave.sample.client;
 
+import com.r3.conclave.client.EnclaveConstraint;
 import com.r3.conclave.client.InvalidEnclaveException;
 import com.r3.conclave.common.EnclaveInstanceInfo;
 import com.r3.conclave.mail.Curve25519PrivateKey;
@@ -16,7 +17,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.UUID;
@@ -34,10 +34,11 @@ public class Client {
     public static void main(String[] args) throws InterruptedException, IOException, InvalidEnclaveException {
 
         if (args.length == 0) {
-            System.err.println("Please pass [TRAIN/EVALUATE] [FILENAME] containing input dataset to train/test the model.");
+            System.err.println("Please pass [TRAIN/EVALUATE] [FILENAME] [CONSTRAINT] containing input dataset to train/test the model.");
             return;
         }
         String inputType = args[0];
+        String constraint = args[2];
 
         //connect to host server
         DataInputStream fromHost;
@@ -57,8 +58,7 @@ public class Client {
         }
 
         //take inputs from user, populate the input data object with training, testing data and input type - train or evaluate
-        InputData inputData = new InputData();
-        inputData.setInputType(inputType);
+        InputData inputData = new InputData(inputType);
 
         if(TRAIN.equals(inputType)) {
             //load the dataset to input type object using the csv loader
@@ -77,7 +77,6 @@ public class Client {
             MutableDataset trainingDataset = new MutableDataset<>(irisSplitter.getTrain());
             MutableDataset testingDataset = new MutableDataset<>(irisSplitter.getTest());
 
-            System.out.println("helooooooo" + trainingDataset.getOutputs().size());
             inputData.setTestingDataset(testingDataset);
             inputData.setTrainingDataset(trainingDataset);
         }
@@ -90,7 +89,7 @@ public class Client {
         EnclaveInstanceInfo instanceInfo = EnclaveInstanceInfo.deserialize(attestationBytes);
 
 //        //verify attestation received by enclave against the enclave code hash which we have
-//        EnclaveConstraint.parse("S:"+ constraint +" PROD:1 SEC:INSECURE" ).check(instanceInfo);
+        EnclaveConstraint.parse("S:"+ constraint +" PROD:1 SEC:INSECURE" ).check(instanceInfo);
 
         //create a dummy key pair for sending via mail to enclave
         PrivateKey key = Curve25519PrivateKey.random();
@@ -119,14 +118,14 @@ public class Client {
 
     /**
      * Serialise the input data object containing training and testing data for sending it to enclave.
-     * @param obj
-     * @return
+     * @param inputData inputData object containing attributes to train/test the model
+     * @return          serialised inputData object
      * @throws IOException
      */
-    public static byte[] serialize(Object obj) throws IOException {
+    public static byte[] serialize(Object inputData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(obj);
+        os.writeObject(inputData);
         os.reset();
         out.close();
         return out.toByteArray();

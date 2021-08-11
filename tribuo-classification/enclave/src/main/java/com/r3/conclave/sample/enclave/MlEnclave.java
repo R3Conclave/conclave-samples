@@ -30,8 +30,8 @@ import java.util.Map;
 public class MlEnclave extends Enclave {
 
     private static final String EVALUATE = "EVALUATE";
-    private MutableDataset trainingDataset;
-    private MutableDataset testingDataset;
+    protected static MutableDataset trainingDataset;
+    protected static MutableDataset testingDataset;
 
     private Map<String, PublicKey> routingHintToPublicKey = new HashMap();
 
@@ -54,30 +54,37 @@ public class MlEnclave extends Enclave {
        routingHintToPublicKey.put(routingHint, mail.getAuthenticatedSender());
 
        if (EVALUATE.equals(inputType)) {
-            Trainer<Label> trainer = new LogisticRegressionTrainer();
-            Model<Label> irisModel = trainer.train(trainingDataset);
-
-            LabelEvaluator evaluator = new LabelEvaluator();
-            LabelEvaluation evaluation = evaluator.evaluate(irisModel, testingDataset);
-
-            //send evaluation results back to all the clients using the routingHintToPublicKey mapping
-            for (String key : routingHintToPublicKey.keySet()) {
-                byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key)).
-                        encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
-                postMail(encryptedReply, key);
-            }
+           trainAndEvaluateModel();
        } else {
-            //add incoming training and testing data to existing set.
-            if (trainingDataset == null && testingDataset == null) {
-                trainingDataset = inputData.getTrainingDataset();
-                testingDataset = inputData.getTestingDataset();
-            } else {
-                inputData.getTrainingDataset().getData().stream().forEach(example -> trainingDataset.add((Example) example));
-                inputData.getTestingDataset().getData().stream().forEach(example -> testingDataset.add((Example) example));
-            }
-            System.out.println("Training dataset size : " + trainingDataset.size());
-            System.out.println("Testing  dataset size : " + testingDataset.size());
+           collectData(inputData);
+       }
+    }
+
+    private void trainAndEvaluateModel() {
+        Trainer<Label> trainer = new LogisticRegressionTrainer();
+        Model<Label> irisModel = trainer.train(trainingDataset);
+
+        LabelEvaluator evaluator = new LabelEvaluator();
+        LabelEvaluation evaluation = evaluator.evaluate(irisModel, testingDataset);
+
+        //send evaluation results back to all the clients using the routingHintToPublicKey mapping
+        for (String key : routingHintToPublicKey.keySet()) {
+            byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key)).
+                    encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
+            postMail(encryptedReply, key);
         }
+    }
+
+    protected void collectData(InputData inputData) {
+        if (trainingDataset == null && testingDataset == null) {
+            trainingDataset = inputData.getTrainingDataset();
+            testingDataset = inputData.getTestingDataset();
+        } else {
+            inputData.getTrainingDataset().getData().stream().forEach(example -> trainingDataset.add((Example) example));
+            inputData.getTestingDataset().getData().stream().forEach(example -> testingDataset.add((Example) example));
+        }
+        System.out.println("Training dataset size : " + trainingDataset.size());
+        System.out.println("Testing  dataset size : " + testingDataset.size());
     }
 
     public static Object deserialize(byte[] data) {

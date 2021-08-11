@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
 }
-sourceCompatibility = 1.8
+
 application {
     mainClassName = "com.r3.conclave.sample.client.Client"
 }

@@ -20,12 +20,8 @@ public class InputData implements Serializable {
         return serialVersionUID;
     }
 
-    public InputData() { }
-
-    public InputData(String inputType, MutableDataset trainingDataset, MutableDataset testingDataset) {
+    public InputData(String inputType) {
         this.inputType = inputType;
-        this.trainingDataset = trainingDataset;
-        this.testingDataset = testingDataset;
     }
     public MutableDataset getTrainingDataset() {
         return trainingDataset;
