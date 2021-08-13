@@ -60,6 +60,10 @@ public class MlEnclave extends Enclave {
        }
     }
 
+    /**
+     * Once the client sends EVALUATE via the terminal, this method trains the model using data collected by far from
+     * all the clients. It also evaluates the model, and sends the results back to all the clients.
+     */
     private void trainAndEvaluateModel() {
         Trainer<Label> trainer = new LogisticRegressionTrainer();
         Model<Label> irisModel = trainer.train(trainingDataset);
@@ -75,6 +79,10 @@ public class MlEnclave extends Enclave {
         }
     }
 
+    /**
+     * This method collects data from all clients which later will be used to train the model.
+     * @param inputData
+     */
     protected void collectData(InputData inputData) {
         if (trainingDataset == null && testingDataset == null) {
             trainingDataset = inputData.getTrainingDataset();
@@ -87,19 +95,18 @@ public class MlEnclave extends Enclave {
         System.out.println("Testing  dataset size : " + testingDataset.size());
     }
 
-    public static Object deserialize(byte[] data) {
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
+    /**
+     * This method deserializes input data from clients to be used by enclave.
+     * @param  inputData
+     * @return deserialized input data object
+     */
+    public static Object deserialize(byte[] inputData) {
+        ByteArrayInputStream in = new ByteArrayInputStream(inputData);
         ObjectInputStream is = null;
         try {
             is = new ObjectInputStream(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             return is.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;

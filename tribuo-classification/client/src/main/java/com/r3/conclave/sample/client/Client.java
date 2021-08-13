@@ -34,11 +34,14 @@ public class Client {
     public static void main(String[] args) throws InterruptedException, IOException, InvalidEnclaveException {
 
         if (args.length == 0) {
-            System.err.println("Please pass [TRAIN/EVALUATE] [FILENAME] [CONSTRAINT] containing input dataset to train/test the model.");
+            System.err.println("Please pass <TRAIN> <CONSTRAINT> <FILENAME> to train the model using the data from filename " +
+                    "or Please pass <EVALUATE> <CONSTRAINT> to evaluate the model. The constraint can be found" +
+                    " printed in console during the build process.");
+
             return;
         }
         String inputType = args[0];
-        String constraint = args[2];
+        String constraint = args[1];
 
         //connect to host server
         DataInputStream fromHost;
@@ -69,7 +72,7 @@ public class Client {
             String[] breastCancerHeaders = new String[]{"SampleCodeNumber", "ClumpThickness", "UniformityOfCellSize", "UniformityOfCellShape", "MarginalAdhesion",
                     "SingleEpithelialCell Size", "BareNuclei", "BlandChromatin", "NormalNucleoli", "Mitoses", "Class"};
 
-            String fileName = System.getProperty("user.dir")+"/data/"+args[1];
+            String fileName = System.getProperty("user.dir")+"/data/"+args[2];
             ListDataSource irisesSource = csvLoader.loadDataSource(Paths.get(fileName),"Class",breastCancerHeaders);
 
             //split the input loaded data into training and testing data
@@ -88,8 +91,13 @@ public class Client {
         //convert byte[] received from host to EnclaveInstanceInfo object
         EnclaveInstanceInfo instanceInfo = EnclaveInstanceInfo.deserialize(attestationBytes);
 
-//        //verify attestation received by enclave against the enclave code hash which we have
-        EnclaveConstraint.parse("S:"+ constraint +" PROD:1 SEC:INSECURE" ).check(instanceInfo);
+        //verify attestation received by enclave against the enclave code hash which we have
+        String enclaveMode = instanceInfo.getEnclaveInfo().getEnclaveMode().toString();
+        if("MOCK".equals(enclaveMode)) {
+            EnclaveConstraint.parse("S:0000000000000000000000000000000000000000000000000000000000000000"+" PROD:1 SEC:INSECURE" ).check(instanceInfo);
+        } else {
+            EnclaveConstraint.parse("S:"+constraint+" PROD:1 SEC:INSECURE" ).check(instanceInfo);
+        }
 
         //create a dummy key pair for sending via mail to enclave
         PrivateKey key = Curve25519PrivateKey.random();

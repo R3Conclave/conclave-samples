@@ -106,8 +106,11 @@ To read more on Conclave go to the documentation site - https://docs.conclave.ne
 Please note:
 The enclave constraint to be passed to the client arguments can be found printed during the build process as below:
 
-    Enclave code hash:   DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F`
-In this case the hash `DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F` is the enclave constraint.
+    Enclave code signer: AF89DF4211D742683C1CF940C78B7D5734CFAFA13EFAE65EC2A55643C0FE08CC
+In this case the code signer `AF89DF4211D742683C1CF940C78B7D5734CFAFA13EFAE65EC2A55643C0FE08CC` is the enclave constraint.
+For mock enclave, we will use S:0000000000000000000000000000000000000000000000000000000000000000 as the constraint.
+You can read more on the constraint here.
+https://docs.conclave.net/writing-hello-world.html#constraints
 
 Please note:
 R3 code is licensed under Apache 2 but the training data set has its own terms and conditions, which you can read in the
