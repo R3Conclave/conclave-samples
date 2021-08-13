@@ -73,8 +73,8 @@ public class MlEnclave extends Enclave {
 
         //send evaluation results back to all the clients using the routingHintToPublicKey mapping
         for (String key : routingHintToPublicKey.keySet()) {
-            byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key)).
-                    encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
+            byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key))
+                    .encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
             postMail(encryptedReply, key);
         }
     }

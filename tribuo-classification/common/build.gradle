@@ -2,12 +2,6 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.0'
 
