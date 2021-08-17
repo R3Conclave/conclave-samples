@@ -1,0 +1,53 @@
+import static org.gradle.api.JavaVersion.VERSION_1_8
+
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+    }
+}
+
+subprojects {
+    apply plugin: 'idea'
+    idea {
+        module {
+            downloadJavadoc = true
+        }
+    }
+
+    repositories {
+        maven {
+            url = rootProject.file(conclaveRepo)
+        }
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = VERSION_1_8
+        targetCompatibility = VERSION_1_8
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(AbstractCompile) {
+        // This is a bit ugly, but Gradle isn't recognising the KotlinCompile task
+        // as it does the built-in JavaCompile task.
+        if (it.class.name.startsWith('org.jetbrains.kotlin.gradle.tasks.KotlinCompile')) {
+            kotlinOptions {
+                jvmTarget = VERSION_1_8
+                apiVersion = '1.4'
+                languageVersion = '1.4'
+            }
+        }
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}
