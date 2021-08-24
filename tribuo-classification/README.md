@@ -1,36 +1,37 @@
 ## Conclave Sample: Breast Cancer Analysis using Tribuo Java ML Library
 
 Using this sample will see how Conclave (based on Intel SGX) can be used in training a ML model. 
-Most of the hospitals/doctors have lot of their patients data, which can be used to find if a tumor is malignant or begnin.
+Most of the hospitals/doctors have lot of their patients' data, which can be used to determine whether a tumor is malignant or begnin.
 Such data can be used to train an AI model. Once a model is trained, this model can be used to predict if a given tumor is malignant 
 or begnin given certain input attributes.
 
 This is a simple app using the Conclave API. It is licensed under the Apache 2 license, and therefore you may 
 copy/paste it to act as the basis of your own commercial or open source apps.
 
-Use below link to start download Conclave and start building Conclave apps:
+Use the link below to start download Conclave and start building Conclave apps:
 
 https://conclave.net/get-conclave/
 
 ##  Dataset sample used for this application.
-The dataset used for this sample has been taken from the below url. 
-https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)
+This sample uses the [Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)).
+
 There are 11 columns in the data set. The first 10 columns reflect different attributes which help in detecting 
 if the breast cancer is malignant or benign. The last column is the class 2 for benign, 4 for malignant.
 
-##  Attribute                     Domain
-   -- -----------------------------------------
-1. Sample code number            id number
-2. Clump Thickness               1 - 10
-3. Uniformity of Cell Size       1 - 10
-4. Uniformity of Cell Shape      1 - 10
-5. Marginal Adhesion             1 - 10
-6. Single Epithelial Cell Size   1 - 10
-7. Bare Nuclei                   1 - 10
-8. Bland Chromatin               1 - 10
-9. Normal Nucleoli               1 - 10
-10. Mitoses                       1 - 10
-11. Class:                        (2 for benign, 4 for malignant)
+
+|Attribute                       |  Domain
+---------------------------------|-----------
+|1. Sample code number           | id number
+|2. Clump Thickness              | 1 - 10
+|3. Uniformity of Cell Size      | 1 - 10
+|4. Uniformity of Cell Shape     | 1 - 10
+|5. Marginal Adhesion            | 1 - 10
+|6. Single Epithelial Cell Size  | 1 - 10
+|7. Bare Nuclei                  | 1 - 10
+|8. Bland Chromatin              | 1 - 10
+|9. Normal Nucleoli              | 1 - 10
+|10. Mitoses                     | 1 - 10
+|11. Class:                      | (2 for benign, 4 for malignant)
 
 ## Parties involved in the sample
 Hospitals, Host, Enclave.
