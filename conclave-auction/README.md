@@ -54,10 +54,14 @@ Run the client to sumbit a bid using the below command:
 
 `./gradlew runClient --args="BID <enclave_constraint>"`
 
-The enclave constraint can be found printed during the build process as below:
+The enclave constraint used in this sample is the `code signer`,  which can be found printed during the build process as in the example below:
 
-`Enclave code hash:   DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F`, In this 
-case the hash `DB2AF8DD327D18965D50932E08BE4CB663436162CB7641269A4E611FC0956C5F` is the enclave constraint.
+```
+Enclave code hash:   26037FC0370589FEA489110ED8124223650F5620B0732F94CDDEDDF207F07457
+Enclave code signer: 4502FEF2B5973A9DCF2F5C85358ED9F099C7738300364A7D7451371E43694A85
+```
+
+In this case the code signer `4502FEF2B5973A9DCF2F5C85358ED9F099C7738300364A7D7451371E43694A85` is the enclave constraint.
 
 You could run multiple clients to submit different bids.
 
@@ -96,3 +100,12 @@ To process the bid run the below command:
 The enclave should reply with a response message indicating 
 the auction winner to the admin client, and each individual bidders
 should get a response from the enclave regarding their bid status.
+
+#### More about enclave constraint
+In this sample the `code signer` is used as enclave constraint, but you can also use the `code hash`. If you want to use it, remember to change the code of the client to:
+
+`EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE" ).check(attestation);`
+
+Read more in the https://docs.conclave.net/enclave-configuration.html#productid. 
+
+You can read more on the constraint here. https://docs.conclave.net/writing-hello-world.html#constraints.
