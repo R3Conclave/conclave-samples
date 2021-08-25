@@ -82,7 +82,7 @@ train the model inside the enclave and retrieve the evaluation result.
 
 To run on a linux system, use gradlew instead of container-gradle. This will also start the host in simulation mode.
 
-    ./gradlew -PenclaveMode=mock host:run
+    ./gradlew host:run
 
 To run the host in a mock mode, use the below command.
 
