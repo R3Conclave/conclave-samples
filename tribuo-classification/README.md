@@ -56,6 +56,13 @@ Micro Average            | | | | |                                              
 Macro Average                        | | | | |                                         0.500   |     0.186    |    0.271| 
 Balanced Error Rate        | | | | |                                                   0.500
 
+This sample demonstrates how you can integrate Tribuo and Conclave, to load and train a model. The model is evaluated based
+off the testing data sent by the client. The evaluation result is sent back to the client, and we print it on the client's
+screen. 
+This sample can be extended further to tweak the model parameters, based off the evaluation result. The clients can send
+more training data to better train the model. 
+The clients can further send out some input data, and the model can predict if the input data tumor is malignant or benign.
+
 ## How to run on a non-linux/mac system
 
 Start the host on a non-Linux system, which will build the enclave and host by default in simulation mode.
@@ -77,7 +84,7 @@ On other terminal, start a new client and pass in a new file name
 You can start as many clients as you want. Pass in the file names each time. Once all the clients pass in the training data,
 train the model inside the enclave and retrieve the evaluation result.
 
-    ./gradlew client:run --args="EXECUTE <CONSTRAINT>"
+    ./gradlew client:run --args="EVALUATE <CONSTRAINT>"
 
 ## How to run on a linux based system
 
@@ -100,12 +107,16 @@ On other terminal, start a new client and pass in a new file name
 You can start as many clients as you want. Pass in the file names each time. Once all the clients pass in the training data,
 train the model inside the enclave and retrieve the evaluation result. 
 
-    ./gradlew client:run --args="EXECUTE <CONSTRAINT>"
+    ./gradlew client:run --args="EVALUATE <CONSTRAINT>"
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net
 
 
 #### More about enclave constraint
+The enclave constraint to be passed to the client arguments can be found printed during the build process as below:
+
+    Enclave code signer: AF89DF4211D742683C1CF940C78B7D5734CFAFA13EFAE65EC2A55643C0FE08CC
+
 In this sample the `code signer` is used as enclave constraint, but you can also use the `code hash`. If you want to use it, remember to change the code of the client to:
 
 `EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE" ).check(attestation);`
