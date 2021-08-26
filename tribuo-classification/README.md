@@ -1,11 +1,11 @@
 ## Conclave Sample: Breast Cancer Analysis using Tribuo Java ML Library
 
-Using this sample will see how Conclave (based on Intel SGX) can be used in training a ML model. 
+Using this sample will see how Conclave (based on Intel SGX) can be used in training a ML model.
 Most of the hospitals/doctors have lot of their patients' data, which can be used to determine whether a tumor is malignant or begnin.
-Such data can be used to train an AI model. Once a model is trained, this model can be used to predict if a given tumor is malignant 
+Such data can be used to train an AI model. Once a model is trained, this model can be used to predict if a given tumor is malignant
 or begnin given certain input attributes.
 
-This is a simple app using the Conclave API. It is licensed under the Apache 2 license, and therefore you may 
+This is a simple app using the Conclave API. It is licensed under the Apache 2 license, and therefore you may
 copy/paste it to act as the basis of your own commercial or open source apps.
 
 Use the link below to start download Conclave and start building Conclave apps:
@@ -15,7 +15,7 @@ https://conclave.net/get-conclave/
 ##  Dataset sample used for this application.
 This sample uses the [Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)).
 
-There are 11 columns in the data set. The first 10 columns reflect different attributes which help in detecting 
+There are 11 columns in the data set. The first 10 columns reflect different attributes which help in detecting
 if the breast cancer is malignant or benign. The last column is the class 2 for benign, 4 for malignant.
 
 
@@ -68,16 +68,17 @@ To run the host in a mock mode, use the below command.
 
 On your terminal, once the host starts, start the client, and pass in the file name to the breast cancer data to train the model
 
-    ./gradlew client:run --args="TRAIN breast-cancer.data <CONSTRAINT>"
+    ./gradlew client:run --args="TRAIN <CONSTRAINT> breast-cancer.data"
 
 On other terminal, start a new client and pass in a new file name
 
-    ./gradlew client:run --args="TRAIN breast-cancer-1.data <CONSTRAINT>"
+    ./gradlew client:run --args="TRAIN <CONSTRAINT> breast-cancer-1.data"
 
-You can start as many clients as you want. Pass in the file names each time. Once all the clients pass in the training data,
-train the model inside the enclave and retrieve the evaluation result.
+You can start as many clients as you want. Pass in the file names each time. 
 
-    ./gradlew client:run --args="EXECUTE <CONSTRAINT>"
+Once all the clients pass in the training data, train the model inside the enclave and retrieve the evaluation result.
+
+    ./gradlew client:run --args="EVALUATE <CONSTRAINT>"
 
 ## How to run on a linux based system
 
@@ -91,16 +92,16 @@ To run the host in a mock mode, use the below command.
 
 On your terminal, once the host starts, start the client, and pass in the file name to the breast cancer data to train the model
 
-    ./gradlew client:run --args="TRAIN breast-cancer.data <CONSTRAINT>"
+    ./gradlew client:run --args="TRAIN <CONSTRAINT> breast-cancer.data"
 
 On other terminal, start a new client and pass in a new file name
 
-    ./gradlew client:run --args="TRAIN breast-cancer-1.data <CONSTRAINT>"
+    ./gradlew client:run --args="TRAIN <CONSTRAINT> breast-cancer-1.data"
 
-You can start as many clients as you want. Pass in the file names each time. Once all the clients pass in the training data,
-train the model inside the enclave and retrieve the evaluation result. 
+You can start as many clients as you want. Pass in the file names each time. 
+Once all the clients pass in the training data, train the model inside the enclave and retrieve the evaluation result.
 
-    ./gradlew client:run --args="EXECUTE <CONSTRAINT>"
+    ./gradlew client:run --args="EVALUATE <CONSTRAINT>"
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net
 
