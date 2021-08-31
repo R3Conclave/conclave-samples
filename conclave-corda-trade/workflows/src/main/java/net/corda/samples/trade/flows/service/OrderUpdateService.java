@@ -26,7 +26,6 @@ public class OrderUpdateService extends SingletonSerializeAsToken {
 
     private void trackTradeUpdate(){
         Party self = serviceHub.getMyInfo().getLegalIdentities().get(0);
-        log.info("************* Self Node *************** " + self);
         serviceHub.getVaultService().trackBy(Trade.class).getUpdates().subscribe(tradeUpdate -> {
             tradeUpdate.getProduced().forEach(tradeStateAndRef -> {
                 Trade trade = tradeStateAndRef.getState().getData();

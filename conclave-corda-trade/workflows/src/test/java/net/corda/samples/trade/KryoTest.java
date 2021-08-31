@@ -19,7 +19,7 @@ public class KryoTest {
     @Before
     public void setup(){
         kryo = new Kryo();
-        tradeModel = new TradeModel(UUID.randomUUID().toString(), "buyOrderRef", 100, "TCS", 60.6, "buyer", "seller");
+        //tradeModel = new TradeModel(UUID.randomUUID().toString(), "buyOrderRef", 100, "TCS", 60.6, "buyer", "seller");
 
 
     }

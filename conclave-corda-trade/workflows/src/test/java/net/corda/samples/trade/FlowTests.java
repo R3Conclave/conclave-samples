@@ -18,9 +18,9 @@ import java.time.Instant;
 import java.util.Collections;
 
 public class FlowTests {
-    private  MockNetwork network;
-    private  StartedMockNode a;
-    private  StartedMockNode b;
+    private MockNetwork network;
+    private StartedMockNode a;
+    private StartedMockNode b;
 
     @Before
     public void setup() {
@@ -51,19 +51,4 @@ public class FlowTests {
         network.runNetwork();
     }
 
-//    @Test
-//    public void testCreateAuctionFlow() throws Exception {
-//        CreateAssetFlow assetflow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png");
-//        CordaFuture<SignedTransaction> future = a.startFlow(assetflow);
-//        network.runNetwork();
-//        SignedTransaction signedTransaction = future.get();
-//        Asset asset = (Asset) signedTransaction.getTx().getOutput(0);
-//        CreateAuctionFlow.CreateAuctionInitiator auctionFlow = new CreateAuctionFlow.CreateAuctionInitiator(Amount.parseCurrency("1000 USD"),
-//                asset.getLinearId().getId(), LocalDateTime.ofInstant(Instant.now().plusMillis(30000), ZoneId.systemDefault()));
-//        CordaFuture<SignedTransaction> future1 = a.startFlow(auctionFlow);
-//        network.runNetwork();
-//        SignedTransaction transaction = future1.get();
-//        AuctionState auctionState = (AuctionState) transaction.getTx().getOutput(0);
-//        assertNotNull(auctionState);
-//    }
 }

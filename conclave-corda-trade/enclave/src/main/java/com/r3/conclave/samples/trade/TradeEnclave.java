@@ -44,25 +44,6 @@ public class TradeEnclave extends Enclave {
         }
     }
 
-//    public void testEnclave(OrderModel order){
-//
-//        Map<String, Set<OrderModel>> orderMap;
-//        if(instrumentMap.get(order.getInstrument()) == null){
-//            Set<OrderModel> orders = new TreeSet<>();
-//            orderMap = new HashMap<>();
-//            orders.add(order);
-//            if(order.getTransactionType().equals("BUY")){
-//                orderMap.put("BUY", orders);
-//            }else{
-//                orderMap.put("SELL", orders);
-//            }
-//            instrumentMap.put(order.getInstrument(), orderMap);
-//        }else{
-//            orderMap = instrumentMap.get(order.getInstrument());
-//            matchOrder(order, orderMap);
-//        }
-//    }
-
     private void matchOrder(OrderModel thisOrder, Map<String, Set<OrderModel>> orderMap){
         List<OrderModel> matchedOrders = new ArrayList<>();
 
