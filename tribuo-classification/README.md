@@ -59,9 +59,10 @@ Balanced Error Rate        | | | | |                                            
 This sample demonstrates how you can integrate Tribuo and Conclave, to load and train a model. The model is evaluated based
 off the testing data sent by the client. The evaluation result is sent back to the client, and we print it on the client's
 screen. 
-This sample can be extended further to tweak the model parameters, based off the evaluation result. The clients can send
+This sample can be extended in a number of ways:
+* The clients can tweak the model parameters, based off the evaluation result. The clients can then send
 more training data to better train the model. 
-The clients can further send out some input data, and the model can predict if the input data tumor is malignant or benign.
+* The clients can further send out some input data, and the model can predict if the input data tumor is malignant or benign.
 
 ## How to run on a non-linux/mac system
 
