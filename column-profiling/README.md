@@ -15,6 +15,15 @@ look like this: Age Frequency Distribution: {20=2, 45=2} Country Frequency Distr
 Frequency Distribution: {na=1, f=1, m=2}. This means the value 20 and 45 have appeared 2 times in the age column. USA,
 UK , India has appeared 2,1 and 1 times respectively.
 
+### Initial SetUp
+
+In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
+This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+conclaveRepo=../conclave-sdk/1.1/repo.
+
+If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in
+gradle.properties for all the samples.
+
 ## Running the sample
 
 Kindly refer to our official documentation for machine requirements to run the sample.

@@ -30,11 +30,17 @@ sending configuration parameters for training models and obtaining evaluation re
 [Kotlin's serialization](https://github.com/Kotlin/kotlinx.serialization/tree/v1.0.1#readme) is used to serialize
 requests and responses.
 
-## Running
-This project is compatible with Conclave v1.1. To run it, execute the following instructions:
 
-* Set the `conclaveRepo` property in `gradle.properties` or override it on the command line,
-so it points to your Conclave distribution.
+## Initial SetUp
+
+In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
+This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+conclaveRepo=../conclave-sdk/1.1/repo.
+
+If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in
+gradle.properties for all the samples.
+
+## Running
 
 On Linux:
 * Run `./gradlew host:run`, which will launch the host and wait for the client to connect.

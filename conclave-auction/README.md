@@ -10,15 +10,16 @@ It allows bidders to confidentially submit their bids to an enclave (A protected
 region of memory which cannot be accessed by the OS, Kernel or BIOS). The bids are 
 processed confidentially in the enclave and the result is returned to concerned parties.
 
+### Initial SetUp
 
-## Conclave SDK Location
-In order to compile this sample successfully, kindly download the conclave SDK 
-and update the location in gradle.properties.
+In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
+This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+conclaveRepo=../conclave-sdk/1.1/repo.
 
-`conclaveRepo=<path_to_conclave_sdk>`
+If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in
+gradle.properties for all the samples.
 
-
-Conclave SDK can ve downloaded from here: https://conclave.net/get-conclave/
+Conclave SDK can be downloaded from here: https://conclave.net/get-conclave/
 
 ## Running the sample
 Kindly refer to our official documentation for machine requirements to run the sample.

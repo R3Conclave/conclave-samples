@@ -36,6 +36,15 @@ converted user details with the Service Provider.
 Service Provider has list of users who has clicked on the ad. Service Provider performs an intersection of these lists 
 on its side to check which converted users had clicked the ad.
 
+## Initial SetUp
+
+In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
+This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+conclaveRepo=../conclave-sdk/1.1/repo.
+
+If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in
+gradle.properties for all the samples.
+
 ## Parties involved in the sample
 Merchant, Service Provider, Host.
 

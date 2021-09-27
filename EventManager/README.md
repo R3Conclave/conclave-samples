@@ -21,6 +21,16 @@ The project also includes a command-line application for interacting with the en
 
 First, the client can be compiled to native (see below). Secondly, picocli has been integrated to make its use more intuitive. Thirdly, the identity persistence logic has been tweaked to make it possible to map between 'easy names' (eg Alice) and pubkeys. This is purely a convenience for demos.
 
+Initial Setup
+------------
+
+In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
+This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+conclaveRepo=../conclave-sdk/1.1/repo.
+
+If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in
+gradle.properties for all the samples.
+
 Running
 -------
 

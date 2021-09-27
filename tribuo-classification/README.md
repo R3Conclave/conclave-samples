@@ -56,6 +56,15 @@ Micro Average            | | | | |                                              
 Macro Average                        | | | | |                                         0.500   |     0.186    |    0.271| 
 Balanced Error Rate        | | | | |                                                   0.500
 
+## Initial SetUp
+
+In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
+This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+conclaveRepo=../conclave-sdk/1.1/repo.
+
+If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in
+gradle.properties for all the samples.
+
 ## How to run on a non-linux/mac system
 
 Start the host on a non-Linux system, which will build the enclave and host by default in simulation mode.
