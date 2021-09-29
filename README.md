@@ -43,14 +43,13 @@ This sample shows you how you can use the [Tribuo Java ML](https://tribuo.org/le
 
 ### Initial SetUp
 
-In order to compile, and run these samples successfully, kindly download the conclave SDK in conclave-samples/conclave-sdk/{version-number}/ folder.
-This sdk consists of a repo folder. You can find a reference to this repo path in gradle.properties as shown below.
+In order to compile, and run these samples successfully, kindly download the conclave SDK at the below location.
     
-    conclaveRepo=../conclave-sdk/1.1/repo
+    ~/conclave-sdk/{version-number}/
 
-If you wish to download the conclave sdk repo to another location, please update this conclaveRepo property in 
-gradle.properties for all the samples.
-
+If you wish to change this location, and download this sdk to a custom location, please update the conclaveRepo property in gradle.properties of your project 
+to point to the custom path. 
+Also change the defaultSdkLocation to false, which tells us whether to use the default path or a custom path.
 
 ## License
 The source code files are available under the Apache License, Version 2.0. 
