@@ -1,7 +1,7 @@
 pluginManagement {
     repositories {
         maven {
-            def repoPath = file(rootDir.relativePath(file(conclaveRepo)))
+            def repoPath = (defaultSdkLocation == false) ? conclaveRepo : (file(System.getProperty("user.home") +'/'+ conclaveRepo +'/'+ conclaveVersion +'/repo'))
             if (repoPath == null)
                 throw new Exception("Make sure the 'conclaveRepo' setting exists in gradle.properties, or your \$HOME/gradle.properties file. See the Conclave tutorial on https://docs.conclave.net")
             else if (!new File(repoPath, "com").isDirectory())

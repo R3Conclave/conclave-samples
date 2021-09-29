@@ -43,7 +43,7 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven { url 'https://repo.gradle.org/gradle/libs-releases' }
         maven {
-            url = rootProject.file(conclaveRepo)
+            url = (defaultSdkLocation == false) ? conclaveRepo : (file(System.getProperty("user.home") +'/'+ conclaveRepo +'/'+ conclaveVersion +'/repo'))
         }
     }
 

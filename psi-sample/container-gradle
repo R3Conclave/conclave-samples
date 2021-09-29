@@ -33,14 +33,24 @@ if [[ $(uname) != "Darwin" ]]; then
   exit 1
 fi
 
-REPO_PATH=$(cat gradle.properties | col -b | awk -F= '$1 ~ /^conclaveRepo$/ { print $2 }')
+CONCLAVE_VERSION=$(cat gradle.properties | col -b | awk -F= '$1 ~ /^conclaveVersion$/ { print $2 }')
+DEFAULT_SDK_LOCATION=$(cat gradle.properties | col -b | awk -F= '$1 ~ /^defaultSdkLocation/ { print $2 }')
+CONCLAVE_REPO=$(cat gradle.properties | col -b | awk -F= '$1 ~ /^conclaveRepo/ { print $2 }')
 
-if [ ! "$REPO_PATH" ]; then
-  echo "There should be a property called conclaveRepo in the gradle.properties file, pointing to the repo sub-directory of your Conclave SDK."
-  exit 1
-elif [ ! -d "$REPO_PATH" ]; then
-  echo "Could not resolve the directory '$REPO_PATH'. The conclaveRepo property in the gradle.properties file should point to the repo sub-directory of your Conclave SDK."
-  exit 1
+if $DEFAULT_SDK_LOCATION ; then
+  if [ ! -d $HOME'/conclave-sdk/'$CONCLAVE_VERSION'/repo' ]; then
+      echo "Please install Conclave SDK at ~/conclave-sdk/{version}"
+  else
+      REPO_PATH=$HOME'/conclave-sdk/'$CONCLAVE_VERSION'/repo'
+      echo $REPO_PATH
+  fi
+else
+if [ ! "$CONCLAVE_REPO" ]; then
+    echo "There should be a property called conclaveRepo in the gradle.properties file, pointing to the repo sub-directory of your Conclave SDK."
+  else
+    REPO_PATH=$CONCLAVE_REPO
+    echo $REPO_PATH
+  fi
 fi
 
 if [[ ${REPO_PATH:0:1} == "/" ]]; then

@@ -13,7 +13,7 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            url = rootProject.file(conclaveRepo)
+            url = (defaultSdkLocation == false) ? conclaveRepo : (file(System.getProperty("user.home") +'/'+ conclaveRepo +'/'+ conclaveVersion +'/repo'))
         }
     }
 }
