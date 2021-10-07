@@ -21,7 +21,7 @@ def configurationDir = project(":enclave").projectDir.toPath().resolve("src/main
 def filterFile = configurationDir.resolve("filter.json")
 application {
     run.dependsOn(":enclave:untarGraalVM")
-    if (project.hasProperty("generateConfigFiles") && properties.get("enclaveMode").toString().toLowerCase() == "mock" != null) {
+    if (project.hasProperty("generateConfigFiles") && properties.get("enclaveMode").toString().toLowerCase() == "mock") {
         applicationDefaultJvmArgs = [
                 "-agentpath:$graalVMDir/jre/lib/amd64/libnative-image-agent.so=config-output-dir=$configurationDir," +
                 "caller-filter-file=$filterFile"
