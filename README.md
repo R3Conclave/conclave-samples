@@ -44,11 +44,16 @@ This sample shows you how you can use the [Tribuo Java ML](https://tribuo.org/le
 ### Initial SetUp
 
 In order to compile and run all the samples successfully, kindly download the conclave SDK
-and update the conclaveRepo property in GRADLE_HOME/.gradle/gradle.properties as shown below
+and update the conclaveRepo property in GRADLE_USER_HOME/gradle.properties as shown below
             
-    conclaveRepo=<path-to-conclave-sdk>
+    conclaveRepo=<path-to-conclave-sdk-repo>
 
-Please note, if GRADLE_HOME is not set, it defaults to $USER_HOME/.gradle.
+Below is a sample gradle.properties file, which shows you how to set conclaveRepo to point to the repo folder inside conclave-sdk.
+
+    cat gradle.properties
+    conclaveRepo=/Users/sneha.damle/Documents/projects/conclave/conclave-sdk-1.1/repo
+
+Please note, if GRADLE_USER_HOME is not set, it defaults to $USER_HOME/.gradle.
 Once set, Conclave will always pick up the conclaveRepo from gradle.properties. To override this behaviour you can pass your own custom conclave sdk path via command line as show below.
 
     To override conclave sdk repo path and to load your enclave in mock mode
