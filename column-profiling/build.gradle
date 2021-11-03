@@ -3,6 +3,8 @@ plugins {
     id 'idea'
 }
 
+apply from: '../versions.gradle'
+
 idea {
     module {
         downloadJavadoc = true

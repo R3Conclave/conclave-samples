@@ -11,7 +11,7 @@ idea {
     }
 }
 
-apply from: 'versions.gradle'
+apply from: '../versions.gradle'
 
 subprojects {
     ext.enclaveMode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "simulation"

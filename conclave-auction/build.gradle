@@ -1,7 +1,7 @@
 plugins {
     id 'java'
 }
-
+apply from: '../versions.gradle'
 group 'com.r3.conclave.sample.tender'
 version '1.0'
 

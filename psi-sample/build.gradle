@@ -3,6 +3,8 @@ plugins {
     id 'idea'
 }
 
+apply from: '../versions.gradle'
+
 idea {
     module {
         downloadJavadoc = true
@@ -11,6 +13,7 @@ idea {
 
 subprojects {
     apply plugin: 'idea'
+
     idea {
         module {
             downloadJavadoc = true
@@ -31,3 +34,4 @@ subprojects {
         }
     }
 }
+

@@ -32,6 +32,8 @@ buildscript {
     }
 }
 
+apply from: '../versions.gradle'
+
 allprojects {
     apply plugin: 'java'
 

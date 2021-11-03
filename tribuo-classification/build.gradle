@@ -11,6 +11,8 @@ idea {
     }
 }
 
+apply from: '../versions.gradle'
+
 subprojects {
     apply plugin: 'idea'
     idea {
