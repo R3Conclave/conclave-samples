@@ -43,7 +43,7 @@ This sample shows you how you can use the [Tribuo Java ML](https://tribuo.org/le
 
 ### Initial SetUp 
 
-In order to compile and run all the samples successfully, kindly download the conclave SDK
+In order to compile and run all the samples successfully, download the conclave SDK
 and update the conclaveRepo property in conclave-samples/versions.gradle as shown below
             
     conclaveRepo=<path-to-conclave-sdk-repo>
