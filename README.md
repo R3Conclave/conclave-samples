@@ -48,7 +48,7 @@ and update the conclaveRepo property in conclave-samples/versions.gradle as show
             
     conclaveRepo=<path-to-conclave-sdk-repo>
 
-Below is a sample, which shows you how to set conclaveRepo to point to the repo folder inside conclave-sdk.
+Below is an example, which shows you how to set conclaveRepo to point to the repo folder inside conclave-sdk.
 
     conclaveRepo=/Users/Documents/projects/conclave/conclave-sdk-1.1/repo
 
