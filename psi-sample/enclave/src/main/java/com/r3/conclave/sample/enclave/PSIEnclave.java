@@ -38,17 +38,15 @@ public class PSIEnclave extends Enclave {
      * Host in turn calls deliverMail method which in turn
      * calls this method. In this method, we will deserialize the mail message, perform the computation and send the
      * result back to the clients.
-     * @param id
-     * @param mail
-     * @param routingHint
+     * @param mail decrypted and authenticated mail body
+     * @param routingHint used by enclave to tell host whom to send the reply back to
      */
     @Override
-    protected void receiveMail(long id, EnclaveMail mail, String routingHint) {
-
+    protected void receiveMail(EnclaveMail mail, String routingHint) {
         //deserialize the mail object using custom deserializers
         InputData inputData = deserialize(mail);
 
-        //retrieve the clientType from mail. clientType is not encrypted
+        //retrieve the clientType from mail.
         String clientType = inputData.getClientType();
 
         //use clientToRoutingHint to store client routing information, which can be used
