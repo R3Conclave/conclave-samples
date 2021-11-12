@@ -13,8 +13,6 @@ import com.r3.conclave.sample.common.UserDetails;
 import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -47,11 +45,6 @@ public class Client implements Callable<Void> {
                 converter = EnclaveConstraintConverter.class)
         private EnclaveConstraint constraint;
 
-        @CommandLine.Option(names = {"-f", "--file-state"},
-                required = true,
-                description = "File to store the state of the client. If the file doesn't exist a new one will be created.")
-        private Path file;
-
     /**
      * Use Kryo to serialize inputs from client to enclave
      */
@@ -66,17 +59,9 @@ public class Client implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
-        EnclaveClient enclaveClient;
-        if (Files.exists(file)) {
-            //exiting private kay is loaded from the previous saved state.
-            enclaveClient = new EnclaveClient(Files.readAllBytes(file));
-            System.out.println("Loaded previous client state and thus using existing private key.");
-        } else {
-            //a new private key is generated. Enclave Client is created using this private key and constraint.
-            //a corresponding public key will be used by the enclave to encrypt data to be sent to this client
-            System.out.println("No previous client state. Generating new state with new private key.");
-            enclaveClient = new EnclaveClient(constraint);
-        }
+        //a new private key is generated. Enclave Client is created using this private key and constraint.
+        //a corresponding public key will be used by the enclave to encrypt data to be sent to this client
+        EnclaveClient enclaveClient = new EnclaveClient(constraint);
 
         try (WebEnclaveTransport transport = new WebEnclaveTransport(url);
              EnclaveClient client = enclaveClient)
@@ -99,6 +84,7 @@ public class Client implements Callable<Void> {
                 {
                     //poll for reply to enclave
                     responseMail = enclaveClient.pollMail();
+                    Thread.sleep(10000);
                 } while (responseMail==null);
             }
             System.out.println("Ad Conversion Rate is : " + new String(responseMail.getBodyAsBytes()));
@@ -145,5 +131,6 @@ public class Client implements Callable<Void> {
 
     public static void main(String... args) {
         int exitCode = new CommandLine(new Client()).execute(args);
+        System.exit(exitCode);
     }
 }

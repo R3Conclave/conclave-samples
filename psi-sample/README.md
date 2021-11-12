@@ -126,11 +126,11 @@ You can also run both together like this
 Use below command to provide command line arguments to client
 Start the merchant client
 
-     java -jar client/build/libs/client.jar  --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --file-state "client-state-psi" --url "http://localhost:8080" MERCHANT 88
+     java -jar client/build/libs/client.jar  --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" MERCHANT 88
 
 Start the service provider client
 
-    java -jar client/build/libs/client.jar  --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --file-state "client-state-psi-1" --url "http://localhost:8080" SERVICE-PROVIDER 88
+    java -jar client/build/libs/client.jar  --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" SERVICE-PROVIDER 88
 
 Once you run both the clients, the enclave calculates the ad conversion rate and sends it to both the clients
 
