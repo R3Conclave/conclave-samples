@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class PSIEnclave extends Enclave {
 
     private static final String MERCHANT = "MERCHANT";
-    private static final String SERVICE_PROVIDER = "SERVICE-PROVIDER";
+    private static final String SERVICE_PROVIDER = "SERVICE_PROVIDER";
     private List<UserDetails> userDetailsList;
     private List<AdDetails> adDetailsList;
 

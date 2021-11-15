@@ -69,7 +69,7 @@ You can use this web server by adding a dependency to it in hosts build.gradle.
     runtimeOnly "com.r3.conclave:conclave-web-host:$conclaveVersion"
 
 We will package the host jar into a big fat jar containing all dependencies using the shadow jar plugin. Add this to 
-hosts build.gradle. Note that 
+hosts build.gradle.
 
     plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
@@ -105,7 +105,7 @@ Client is responsible to do below items:
 4. Verify this against the given constraint
 5. Send the request using EnclaveClient to the enclave
 
-Add conclave-client dependency to the client build.gradle. This consists of the EnclaveClient class which will be used 
+Add conclave-web-client dependency to the client build.gradle. This consists of the EnclaveClient class which will be used 
 to encrypt and send mails to enclave
 
     implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
@@ -126,23 +126,22 @@ You can also run both together like this
 Use below command to provide command line arguments to client
 Start the merchant client
 
-     java -jar client/build/libs/client.jar  --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" MERCHANT 88
+     java -jar client/build/libs/client.jar --role MERCHANT --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" 88
 
 Start the service provider client
 
-    java -jar client/build/libs/client.jar  --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" SERVICE-PROVIDER 88
+    java -jar client/build/libs/client.jar --role SERVICE_PROVIDER --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" 88
 
 Once you run both the clients, the enclave calculates the ad conversion rate and sends it to both the clients
 
     Ad Conversion Rate is : 100.0
 
-
 #### A note about enclave constraint
-In this sample the `code signer` is used as enclave constraint, but you can also use the `code hash`. 
-If you want to use it, remember to change the code of the client to:
+In this sample the `code signer` is used as enclave constraint, but you can also use the `code hash`.
+If you want to use it, pass in a different arg to the --constraint flag.
 
 `EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE" ).check(attestation);`
 
-Read more in the [documentation](https://docs.conclave.net/enclave-configuration.html#productid).
+Read more in the [documentation](https://docs.conclave.net/writing-hello-world.html#constraints).
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net

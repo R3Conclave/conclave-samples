@@ -27,8 +27,10 @@ import java.util.concurrent.Callable;
         mixinStandardHelpOptions = true,
         description = "Simple client that communicates with the PSIEnclave using the web host.")
 public class Client implements Callable<Void> {
-    private static final String MERCHANT = "MERCHANT";
-    private static final String SERVICE_PROVIDER = "SERVICE-PROVIDER";
+
+    @CommandLine.Option(names = {"-r", "--role"}
+            , description = "Role Options: ${MERCHANT/SERVICE_PROVIDER}")
+    Role role = null;
 
     //use picocli to provide command line parameters
     @CommandLine.Parameters( description = "List of credit card numbers to be sent to enclave")
@@ -39,11 +41,11 @@ public class Client implements Callable<Void> {
                 description = "URL of the web host running the enclave.")
         private String url;
 
-        @CommandLine.Option(names = {"-c", "--constraint"},
+    @CommandLine.Option(names = {"-c", "--constraint"},
                 required = true,
                 description = "Enclave constraint which determines the enclave's identity and whether it's acceptable to use.",
                 converter = EnclaveConstraintConverter.class)
-        private EnclaveConstraint constraint;
+    private EnclaveConstraint constraint;
 
     /**
      * Use Kryo to serialize inputs from client to enclave
@@ -55,6 +57,11 @@ public class Client implements Callable<Void> {
         kryo.writeObject(output, listOfCreditCardNumbers);
         output.close();
         return output;
+    }
+
+    enum Role {
+        MERCHANT,
+        SERVICE_PROVIDER
     }
 
     @Override
@@ -80,11 +87,10 @@ public class Client implements Callable<Void> {
 
             //responseMail is null till enclave doesn't reply back to the client
             if(responseMail == null) {
-                do
-                {
+                do {
+                    Thread.sleep(5000);
                     //poll for reply to enclave
                     responseMail = enclaveClient.pollMail();
-                    Thread.sleep(10000);
                 } while (responseMail==null);
             }
             System.out.println("Ad Conversion Rate is : " + new String(responseMail.getBodyAsBytes()));
@@ -97,23 +103,22 @@ public class Client implements Callable<Void> {
         List<UserDetails> userDetailsList = null;
         List<AdDetails> adDetailsList = null;
 
-        inputData.setClientType(creditCardNumbers.get(0));
+        inputData.setClientType(role.name());
 
-        System.out.println("string.length" + creditCardNumbers.size());
-        System.out.println("string.length" + creditCardNumbers.get(0));
-
-        if (MERCHANT.equals(creditCardNumbers.get(0))) {
+        if (Role.MERCHANT.name().equals(role.name())) {
             userDetailsList = new ArrayList(creditCardNumbers.size());
-            for (int i = 1; i < creditCardNumbers.size(); i++) {
+            for (int i = 0; i < creditCardNumbers.size(); i++) {
                 UserDetails userDetails = new UserDetails(creditCardNumbers.get(i));
                 userDetailsList.add(userDetails);
             }
             inputData.setUserDetailsList(userDetailsList);
 
         }
-        else if (SERVICE_PROVIDER.equals(creditCardNumbers.get(0))) {
+        else if (Role.SERVICE_PROVIDER.name().equals(role.name())) {
+            System.out.println("inside SERVICE_PROVIDER");
+
             adDetailsList = new ArrayList<>(creditCardNumbers.size());
-            for (int i = 1; i < creditCardNumbers.size(); i++) {
+            for (int i = 0; i < creditCardNumbers.size(); i++) {
                 AdDetails adDetails = new AdDetails(creditCardNumbers.get(i));
                 adDetailsList.add(adDetails);
             }
