@@ -4,10 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.r3.conclave.enclave.Enclave;
 import com.r3.conclave.mail.EnclaveMail;
-import com.r3.conclave.sample.common.AdDetails;
-import com.r3.conclave.sample.common.InputData;
-import com.r3.conclave.sample.common.InputDataSerializer;
-import com.r3.conclave.sample.common.UserDetails;
+import com.r3.conclave.sample.common.*;
 
 import java.io.ByteArrayInputStream;
 import java.security.PublicKey;
@@ -23,8 +20,8 @@ import java.util.stream.Collectors;
  */
 public class PSIEnclave extends Enclave {
 
-    private static final String MERCHANT = "MERCHANT";
-    private static final String SERVICE_PROVIDER = "SERVICE_PROVIDER";
+    private static final String MERCHANT = Role.MERCHANT.name();
+    private static final String SERVICE_PROVIDER = Role.SERVICE_PROVIDER.name();
     private List<UserDetails> userDetailsList;
     private List<AdDetails> adDetailsList;
 

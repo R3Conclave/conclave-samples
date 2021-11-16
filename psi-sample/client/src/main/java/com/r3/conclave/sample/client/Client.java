@@ -6,10 +6,7 @@ import com.r3.conclave.client.EnclaveClient;
 import com.r3.conclave.client.web.WebEnclaveTransport;
 import com.r3.conclave.common.EnclaveConstraint;
 import com.r3.conclave.mail.EnclaveMail;
-import com.r3.conclave.sample.common.AdDetails;
-import com.r3.conclave.sample.common.InputData;
-import com.r3.conclave.sample.common.InputDataSerializer;
-import com.r3.conclave.sample.common.UserDetails;
+import com.r3.conclave.sample.common.*;
 import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
@@ -59,11 +56,6 @@ public class Client implements Callable<Void> {
         return output;
     }
 
-    enum Role {
-        MERCHANT,
-        SERVICE_PROVIDER
-    }
-
     @Override
     public Void call() throws Exception {
         //a new private key is generated. Enclave Client is created using this private key and constraint.
@@ -88,7 +80,7 @@ public class Client implements Callable<Void> {
             //responseMail is null till enclave doesn't reply back to the client
             if(responseMail == null) {
                 do {
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                     //poll for reply to enclave
                     responseMail = enclaveClient.pollMail();
                 } while (responseMail==null);
