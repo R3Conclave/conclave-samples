@@ -112,5 +112,8 @@
   },
   {
   "name":"com.oracle.labs.mlrg.olcut.provenance.primitives.CharProvenance"
+  },
+  {
+    "name":"com.r3.conclave.sample.common.Role"
   }
 ]

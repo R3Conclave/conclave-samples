@@ -3,6 +3,7 @@ package com.r3.conclave.sample.enclave;
 import com.r3.conclave.host.EnclaveHost;
 import com.r3.conclave.host.EnclaveLoadException;
 import com.r3.conclave.sample.common.InputData;
+import com.r3.conclave.sample.common.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tribuo.MutableDataset;
@@ -22,13 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * This test class calculates the ad conversion rate given the inputs.
  */
 public class MockTest {
-    EnclaveHost enclaveHost;
-    MlEnclave mlEnclave;
+    private EnclaveHost enclaveHost;
+    private MlEnclave mlEnclave;
 
     @BeforeEach
     void setUp() throws EnclaveLoadException {
         enclaveHost = EnclaveHost.load("com.r3.conclave.sample.enclave.MlEnclave");
-        enclaveHost.start(null, null);
+        enclaveHost.start(null, null, null, (commands) -> {
+        });
         mlEnclave = (MlEnclave) enclaveHost.getMockEnclave();
     }
 
@@ -81,7 +83,7 @@ public class MockTest {
         MutableDataset trainingDataset = new MutableDataset<>(irisSplitter.getTrain());
         MutableDataset testingDataset = new MutableDataset<>(irisSplitter.getTest());
 
-        InputData inputData = new InputData("TRAIN");
+        InputData inputData = new InputData(Role.TRAIN);
         inputData.setTestingDataset(testingDataset);
         inputData.setTrainingDataset(trainingDataset);
         return inputData;

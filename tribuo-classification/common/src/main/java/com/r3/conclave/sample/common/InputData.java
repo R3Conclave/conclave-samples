@@ -1,10 +1,7 @@
 package com.r3.conclave.sample.common;
 
 import org.tribuo.MutableDataset;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is the custom object containing input data which is sent by client to enclave and vice versa
@@ -12,7 +9,7 @@ import java.util.List;
 public class InputData implements Serializable {
     private static final long serialVersionUID = 6529685098267757690L;
 
-    private String inputType;
+    private Role inputType;
     private MutableDataset trainingDataset;
     private MutableDataset testingDataset;
 
@@ -20,7 +17,7 @@ public class InputData implements Serializable {
         return serialVersionUID;
     }
 
-    public InputData(String inputType) {
+    public InputData(Role inputType) {
         this.inputType = inputType;
     }
     public MutableDataset getTrainingDataset() {
@@ -39,11 +36,11 @@ public class InputData implements Serializable {
         this.testingDataset = testingDataset;
     }
 
-    public String getInputType() {
+    public Role getInputType() {
         return inputType;
     }
 
-    public void setInputType(String inputType) {
+    public void setInputType(Role inputType) {
         this.inputType = inputType;
     }
 }
