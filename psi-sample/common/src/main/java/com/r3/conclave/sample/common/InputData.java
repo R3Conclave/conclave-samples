@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class InputData implements Serializable {
 
-
     private Role clientType;
     private List<UserDetails> userDetailsList;
     private List<AdDetails> adDetailsList;

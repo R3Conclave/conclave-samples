@@ -24,109 +24,109 @@ import java.util.concurrent.Callable;
  * Both the clients send the lists to enclave, which calculates the ad conversion rate and sends it back to the clients
  */
 @CommandLine.Command(name = "psi-client",
-		mixinStandardHelpOptions = true,
-		description = "Simple client that communicates with the PSIEnclave using the web host.")
+        mixinStandardHelpOptions = true,
+        description = "Simple client that communicates with the PSIEnclave using the web host.")
 public class Client implements Callable<Void> {
 
-	@CommandLine.Option(names = {"-r", "--role"}
-			, description = "Role Options: ${MERCHANT/SERVICE_PROVIDER}")
-	private static Role role = null;
+    @CommandLine.Option(names = {"-r", "--role"}
+            , description = "Role Options: ${MERCHANT/SERVICE_PROVIDER}")
+    private static Role role = null;
 
-	//use picocli to provide command line parameters
-	@CommandLine.Parameters(description = "List of credit card numbers to be sent to enclave")
-	private final List<String> creditCardNumbers = new ArrayList<>();
+    //Use picocli to provide command line parameters
+    @CommandLine.Parameters(description = "List of credit card numbers to be sent to enclave")
+    private final List<String> creditCardNumbers = new ArrayList<>();
 
-	@CommandLine.Option(names = {"-u", "--url"},
-			required = true,
-			description = "URL of the web host running the enclave.")
-	private String url;
+    @CommandLine.Option(names = {"-u", "--url"},
+            required = true,
+            description = "URL of the web host running the enclave.")
+    private String url;
 
-	@CommandLine.Option(names = {"-c", "--constraint"},
-			required = true,
-			description = "Enclave constraint which determines the enclave's identity and whether it's acceptable to use.",
-			converter = EnclaveConstraintConverter.class)
-	private EnclaveConstraint constraint;
+    @CommandLine.Option(names = {"-c", "--constraint"},
+            required = true,
+            description = "Enclave constraint which determines the enclave's identity and whether it's acceptable to use.",
+            converter = EnclaveConstraintConverter.class)
+    private EnclaveConstraint constraint;
 
-	@Override
-	public Void call() throws Exception {
-		//a new private key is generated. Enclave Client is created using this private key and constraint.
-		//a corresponding public key will be used by the enclave to encrypt data to be sent to this client
-		EnclaveClient enclaveClient = new EnclaveClient(constraint);
+    @Override
+    public Void call() throws Exception {
+        /*A new private key is generated. Enclave Client is created using this private key and constraint.
+        A corresponding public key will be used by the enclave to encrypt data to be sent to this client*/
+        EnclaveClient enclaveClient = new EnclaveClient(constraint);
 
-		try (WebEnclaveTransport transport = new WebEnclaveTransport(url);
-		     EnclaveClient client = enclaveClient) {
-			//retrieve the enclaveInstanceInfo object, i.e. the remote attestation object and verify it against the
-			//constraint
-			client.start(transport);
+        try (WebEnclaveTransport transport = new WebEnclaveTransport(url);
+             EnclaveClient client = enclaveClient) {
+            /*Retrieve the enclaveInstanceInfo object, i.e. the remote attestation object and verify it against the
+            constraint*/
+            client.start(transport);
 
-			//collect merchants and service providers credit card numbers list
-			InputData inputData = getInputData();
+            //Collect merchants and service providers credit card numbers list
+            InputData inputData = getInputData();
 
-			byte[] requestMailBody = serialize(inputData);
+            byte[] requestMailBody = serialize(inputData);
 
-			//client will send its credit card list to enclave and wait for other client to send their list
-			EnclaveMail responseMail = client.sendMail(requestMailBody);
+            //Client will send its credit card list to enclave and wait for other client to send their list
+            EnclaveMail responseMail = client.sendMail(requestMailBody);
 
-			//responseMail is null till enclave doesn't reply back to the client
-			if (responseMail == null) {
-				do {
-					Thread.sleep(2000);
-					//poll for reply to enclave
-					responseMail = enclaveClient.pollMail();
-				} while (responseMail == null);
-			}
-			System.out.println("Ad Conversion Rate is : " + new String(responseMail.getBodyAsBytes()));
-		}
-		return null;
-	}
+            //ResponseMail is null till enclave doesn't reply back to the client
+            if (responseMail == null) {
+                do {
+                    Thread.sleep(2000);
+                    //Poll for reply to enclave
+                    responseMail = enclaveClient.pollMail();
+                } while (responseMail == null);
+            }
+            System.out.println("Ad Conversion Rate is : " + new String(responseMail.getBodyAsBytes()));
+        }
+        return null;
+    }
 
-	private InputData getInputData() {
-		InputData inputData = new InputData();
-		List<UserDetails> userDetailsList;
-		List<AdDetails> adDetailsList;
+    private InputData getInputData() {
+        InputData inputData = new InputData();
+        List<UserDetails> userDetailsList;
+        List<AdDetails> adDetailsList;
 
-		inputData.setClientType(role);
+        inputData.setClientType(role);
 
-		if (role == Role.MERCHANT) {
-			userDetailsList = new ArrayList<>(creditCardNumbers.size());
-			for (String creditCardNumber : creditCardNumbers) {
-				UserDetails userDetails = new UserDetails(creditCardNumber);
-				userDetailsList.add(userDetails);
-			}
-			inputData.setUserDetailsList(userDetailsList);
+        if (role == Role.MERCHANT) {
+            userDetailsList = new ArrayList<>(creditCardNumbers.size());
+            for (String creditCardNumber : creditCardNumbers) {
+                UserDetails userDetails = new UserDetails(creditCardNumber);
+                userDetailsList.add(userDetails);
+            }
+            inputData.setUserDetailsList(userDetailsList);
 
-		} else if (role == Role.SERVICE_PROVIDER) {
-			adDetailsList = new ArrayList<>(creditCardNumbers.size());
-			for (String creditCardNumber : creditCardNumbers) {
-				AdDetails adDetails = new AdDetails(creditCardNumber);
-				adDetailsList.add(adDetails);
-			}
-			inputData.setAdDetailsList(adDetailsList);
-		}
-		return inputData;
-	}
+        } else if (role == Role.SERVICE_PROVIDER) {
+            adDetailsList = new ArrayList<>(creditCardNumbers.size());
+            for (String creditCardNumber : creditCardNumbers) {
+                AdDetails adDetails = new AdDetails(creditCardNumber);
+                adDetailsList.add(adDetails);
+            }
+            inputData.setAdDetailsList(adDetailsList);
+        }
+        return inputData;
+    }
 
-	public static byte[] serialize(Object obj) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ObjectOutputStream os;
-		try {
-			os = new ObjectOutputStream(out);
-			os.writeObject(obj);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return out.toByteArray();
-	}
+    public static byte[] serialize(Object obj) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os;
+        try {
+            os = new ObjectOutputStream(out);
+            os.writeObject(obj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
 
-	private static class EnclaveConstraintConverter implements CommandLine.ITypeConverter<EnclaveConstraint> {
-		@Override
-		public EnclaveConstraint convert(String value) {
-			return EnclaveConstraint.parse(value);
-		}
-	}
+    private static class EnclaveConstraintConverter implements CommandLine.ITypeConverter<EnclaveConstraint> {
+        @Override
+        public EnclaveConstraint convert(String value) {
+            return EnclaveConstraint.parse(value);
+        }
+    }
 
-	public static void main(String... args) {
-		int exitCode = new CommandLine(new Client()).execute(args);
-		System.exit(exitCode);
-	}
+    public static void main(String... args) {
+        int exitCode = new CommandLine(new Client()).execute(args);
+        System.exit(exitCode);
+    }
 }

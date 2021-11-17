@@ -21,7 +21,8 @@ public class MockTest {
     @Test
     void calculateAdConversionRate() throws EnclaveLoadException {
         EnclaveHost enclaveHost = EnclaveHost.load("com.r3.conclave.sample.enclave.PSIEnclave");
-        enclaveHost.start(null, null, null, (commands) -> { });
+        enclaveHost.start(null, null, null, (commands) -> {
+        });
 
         PSIEnclave psiEnclave = (PSIEnclave) enclaveHost.getMockEnclave();
 
