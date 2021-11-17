@@ -1,15 +1,15 @@
 package com.r3.conclave.sample.enclave;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
 import com.r3.conclave.enclave.Enclave;
 import com.r3.conclave.mail.EnclaveMail;
 import com.r3.conclave.sample.common.AdDetails;
 import com.r3.conclave.sample.common.InputData;
-import com.r3.conclave.sample.common.InputDataSerializer;
+import com.r3.conclave.sample.common.Role;
 import com.r3.conclave.sample.common.UserDetails;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.security.PublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,15 +23,11 @@ import java.util.stream.Collectors;
  */
 public class PSIEnclave extends Enclave {
 
-    private static final String MERCHANT = "MERCHANT";
-    private static final String SERVICE_PROVIDER = "SERVICE-PROVIDER";
     private List<UserDetails> userDetailsList;
     private List<AdDetails> adDetailsList;
 
-    private Map<String , String> clientToRoutingHint = new HashMap();
-    private Map<String, PublicKey> clientToPublicKey = new HashMap();
-    private Kryo kryo = new Kryo();
-
+    private Map<Role , String> clientToRoutingHint = new HashMap();
+    private Map<Role, PublicKey> clientToPublicKey = new HashMap();
 
     /**
      * This method gets called when client wants to communicate to enclave, and sends a message wrapped in a mail to host.
@@ -46,10 +42,17 @@ public class PSIEnclave extends Enclave {
     protected void receiveMail(long id, EnclaveMail mail, String routingHint) {
 
         //deserialize the mail object using custom deserializers
-        InputData inputData = deserialize(mail);
+        InputData inputData = null;
+        try {
+            inputData = (InputData) deserializeMsg(mail.getBodyAsBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         //retrieve the clientType from mail. clientType is not encrypted
-        String clientType = inputData.getClientType();
+        Role clientType = inputData.getClientType();
 
         //use clientToRoutingHint to store client routing information, which can be used
         //while sending reply back to client
@@ -60,10 +63,10 @@ public class PSIEnclave extends Enclave {
         clientToPublicKey.put(clientType, mail.getAuthenticatedSender());
 
         //depending on the client type populate one of the two lists
-        if (SERVICE_PROVIDER.equals(clientType)) {
+        if (Role.SERVICE_PROVIDER.equals(clientType)) {
             adDetailsList = new ArrayList(inputData.getAdDetailsList().size());
             adDetailsList.addAll(inputData.getAdDetailsList());
-        } else if (MERCHANT.equals(clientType)) {
+        } else if (Role.MERCHANT.equals(clientType)) {
             userDetailsList = new ArrayList(inputData.getUserDetailsList().size());
             userDetailsList.addAll(inputData.getUserDetailsList());
         }
@@ -74,15 +77,15 @@ public class PSIEnclave extends Enclave {
 
             //send the ad conversion rate to merchant. use merchant's public key to encrypt the message
             //such that only merchant will be able to decrypt it
-            byte[] encryptedReply = postOffice(clientToPublicKey.get(MERCHANT)).
+            byte[] encryptedReply = postOffice(clientToPublicKey.get(Role.MERCHANT)).
                     encryptMail(adConversionRate.toString().getBytes());
-            postMail(encryptedReply, clientToRoutingHint.get(MERCHANT));
+            postMail(encryptedReply, clientToRoutingHint.get(Role.MERCHANT));
 
             //send the ad conversion rate to service provider. use service provider's public key to
             //encrypt the message such that only merchant will be able to decrypt it
-            encryptedReply = postOffice(clientToPublicKey.get(SERVICE_PROVIDER)).
+            encryptedReply = postOffice(clientToPublicKey.get(Role.SERVICE_PROVIDER)).
                     encryptMail(adConversionRate.toString().getBytes());
-            postMail(encryptedReply, clientToRoutingHint.get(SERVICE_PROVIDER));
+            postMail(encryptedReply, clientToRoutingHint.get(Role.SERVICE_PROVIDER));
         }
     }
 
@@ -114,14 +117,9 @@ public class PSIEnclave extends Enclave {
         return  (new Double(usersWhoPurchasedAfterClickingAd.size()) / new Double(adDetailsList.size())) * 100;
     }
 
-    /**
-     * Using Kryo to deserialize object when passed from client to enclave
-     * @param mail
-     * @return deserialized input object
-     */
-    private InputData deserialize(EnclaveMail mail) {
-        kryo.register(InputData.class, new InputDataSerializer());
-        Input input = new Input(new ByteArrayInputStream(mail.getBodyAsBytes()));
-        return kryo.readObject(input, InputData.class);
+    public static Object deserializeMsg(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
     }
 }

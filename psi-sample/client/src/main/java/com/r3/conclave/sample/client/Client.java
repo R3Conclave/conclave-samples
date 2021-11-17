@@ -1,7 +1,5 @@
 package com.r3.conclave.sample.client;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Output;
 import com.r3.conclave.client.EnclaveConstraint;
 import com.r3.conclave.client.InvalidEnclaveException;
 import com.r3.conclave.common.EnclaveInstanceInfo;
@@ -10,7 +8,7 @@ import com.r3.conclave.mail.EnclaveMail;
 import com.r3.conclave.mail.PostOffice;
 import com.r3.conclave.sample.common.AdDetails;
 import com.r3.conclave.sample.common.InputData;
-import com.r3.conclave.sample.common.InputDataSerializer;
+import com.r3.conclave.sample.common.Role;
 import com.r3.conclave.sample.common.UserDetails;
 
 import java.io.*;
@@ -29,8 +27,6 @@ import java.util.UUID;
  * Both the clients send the lists to enclave, which calculates the ad conversion rate and sends it back to the clients
  */
 public class Client {
-    private static final String MERCHANT = "MERCHANT";
-    private static final String SERVICE_PROVIDER = "SERVICE-PROVIDER";
 
     public static void main(String[] args) throws InterruptedException, IOException, InvalidEnclaveException {
 
@@ -38,7 +34,7 @@ public class Client {
             System.err.println("Please pass [MERCHANT/SERVICE-PROVIDER] [CONSTRAINT] followed by list of credit card numbers separated by spaces");
             return;
         }
-        String clientType = args[0];
+        Role clientType = args[0].equals("MERCHANT") ? Role.MERCHANT : Role.SERVICE_PROVIDER;
         String constraint = args[1];
 
         //connect to host server
@@ -64,7 +60,8 @@ public class Client {
         List<AdDetails> adDetailsList= null;
 
         inputData.setClientType(clientType);
-        if(MERCHANT.equals(clientType)) {
+
+        if(Role.MERCHANT.equals(clientType)) {
             userDetailsList = new ArrayList<>(args.length);
             for (int i =2; i< args.length; i++) {
                 UserDetails userDetails = new UserDetails(args[i]);
@@ -72,7 +69,7 @@ public class Client {
             }
             inputData.setUserDetailsList(userDetailsList);
 
-        } else if(SERVICE_PROVIDER.equals(clientType)) {
+        } else if(Role.SERVICE_PROVIDER.equals(clientType)) {
             adDetailsList = new ArrayList<>(args.length);
             for (int i =2; i< args.length; i++) {
                 AdDetails adDetails = new AdDetails(args[i]);
@@ -98,7 +95,7 @@ public class Client {
         PostOffice postOffice = instanceInfo.createPostOffice(key, UUID.randomUUID().toString());
 
         //encrypt the message using enclave's public key
-        byte[] encryptedRequest = postOffice.encryptMail(serializeMessage(inputData).getBuffer());
+        byte[] encryptedRequest = postOffice.encryptMail(serialize(inputData));
 
         //send the encrypted mail to host to relay it to enclave
         toHost.writeInt(encryptedRequest.length);
@@ -117,15 +114,11 @@ public class Client {
         fromHost.close();
     }
 
-    /**
-     * Use Kryo to serialize inputs from client to enclave
-     */
-    private static Output serializeMessage(InputData listOfCreditCardNumbers){
-        Kryo kryo = new Kryo();
-        Output output = new Output(new ByteArrayOutputStream());
-        kryo.register(InputData.class, new InputDataSerializer());
-        kryo.writeObject(output, listOfCreditCardNumbers);
-        output.close();
-        return output;
+    public static byte[] serialize(Object obj) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
     }
+
 }

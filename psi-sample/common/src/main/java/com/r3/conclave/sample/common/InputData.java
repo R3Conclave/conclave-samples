@@ -9,24 +9,24 @@ import java.util.List;
 public class InputData implements Serializable {
 
 
-    private String clientType;
+    private Role clientType;
     private List<UserDetails> userDetailsList;
     private List<AdDetails> adDetailsList;
 
     public InputData() {
     }
 
-    public InputData(String clientType, List<UserDetails> userDetailsList, List<AdDetails> adDetailsList) {
+    public InputData(Role clientType, List<UserDetails> userDetailsList, List<AdDetails> adDetailsList) {
         this.clientType = clientType;
         this.userDetailsList = userDetailsList;
         this.adDetailsList = adDetailsList;
     }
 
-    public String getClientType() {
+    public Role getClientType() {
         return clientType;
     }
 
-    public void setClientType(String clientType) {
+    public void setClientType(Role clientType) {
         this.clientType = clientType;
     }
 
