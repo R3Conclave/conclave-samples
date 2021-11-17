@@ -30,7 +30,7 @@ public class Client implements Callable<Void> {
 
     @CommandLine.Option(names = {"-r", "--role"}
             , description = "Role Options: ${MERCHANT/SERVICE_PROVIDER}")
-    private static Role role = null;
+    private Role role = null;
 
     //Use picocli to provide command line parameters
     @CommandLine.Parameters(description = "List of credit card numbers to be sent to enclave")
