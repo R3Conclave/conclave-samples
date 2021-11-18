@@ -69,7 +69,7 @@ public class MlEnclave extends Enclave {
         LabelEvaluator evaluator = new LabelEvaluator();
         LabelEvaluation evaluation = evaluator.evaluate(irisModel, testingDataset);
 
-        //send evaluation results back to all the clients using the routingHintToPublicKey mapping
+        //Send evaluation results back to all the clients using the routingHintToPublicKey mapping
         for (String key : routingHintToPublicKey.keySet()) {
             byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key))
                     .encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
