@@ -46,11 +46,11 @@ public class MlEnclave extends Enclave {
 
        InputData inputData = (InputData) deserialize(mail.getBodyAsBytes());
        if(inputData != null) {
-           Role inputType = inputData.getInputType();
+           Role role = inputData.getInputType();
 
            routingHintToPublicKey.put(routingHint, mail.getAuthenticatedSender());
 
-           if (inputType == Role.EVALUATE) {
+           if (role == Role.EVALUATE) {
                trainAndEvaluateModel();
            } else {
                collectData(inputData);
@@ -70,10 +70,10 @@ public class MlEnclave extends Enclave {
         LabelEvaluation evaluation = evaluator.evaluate(irisModel, testingDataset);
 
         //send evaluation results back to all the clients using the routingHintToPublicKey mapping
-        for (Map.Entry<String, PublicKey> entry : routingHintToPublicKey.entrySet()) {
-            byte[] encryptedReply = postOffice(routingHintToPublicKey.get(entry.getKey()))
+        for (String key : routingHintToPublicKey.keySet()) {
+            byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key))
                     .encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
-            postMail(encryptedReply, entry.getKey());
+            postMail(encryptedReply, key);
         }
     }
 

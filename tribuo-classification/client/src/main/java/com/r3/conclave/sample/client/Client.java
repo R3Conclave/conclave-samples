@@ -26,9 +26,9 @@ import java.util.concurrent.Callable;
  * trained model can be used to make predictions of a given input tumor.
  *
  */
-@CommandLine.Command(name = "psi-client",
+@CommandLine.Command(name = "tribuo-client",
         mixinStandardHelpOptions = true,
-        description = "Simple client that communicates with the PSIEnclave using the web host.")
+        description = "Simple client that communicates with the MLEnclave using the web host.")
 public class Client implements Callable<Void> {
 
     @CommandLine.Option(names = {"-u", "--url"},
@@ -44,8 +44,8 @@ public class Client implements Callable<Void> {
 
     @CommandLine.Option(names = {"-f", "--file"},
             required = true,
-            description = "URL of the web host running the enclave.")
-    private String fileName;
+            description = "Training Data for training the AI model loaded in enclave")
+    private String trainingDataFileName;
 
     @CommandLine.Option(names = {"-r", "--role"}
             , description = "Role Options: ${TRAIN/EVALUATE}")
@@ -66,7 +66,6 @@ public class Client implements Callable<Void> {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
         os.writeObject(inputData);
-        os.reset();
         out.close();
         return out.toByteArray();
     }
@@ -113,7 +112,7 @@ public class Client implements Callable<Void> {
             String[] breastCancerHeaders = new String[]{"SampleCodeNumber", "ClumpThickness", "UniformityOfCellSize", "UniformityOfCellShape", "MarginalAdhesion",
                     "SingleEpithelialCell Size", "BareNuclei", "BlandChromatin", "NormalNucleoli", "Mitoses", "Class"};
 
-            String filePath = System.getProperty("user.dir") + "/client/data/" + fileName;
+            String filePath = System.getProperty("user.dir") + "/client/data/" + trainingDataFileName;
             ListDataSource irisesSource = csvLoader.loadDataSource(Paths.get(filePath), "Class", breastCancerHeaders);
 
             //Split the input loaded data into training and testing data
