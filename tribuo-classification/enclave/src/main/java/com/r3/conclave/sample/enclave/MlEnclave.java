@@ -44,18 +44,16 @@ public class MlEnclave extends Enclave {
     @Override
     protected void receiveMail(EnclaveMail mail, String routingHint) {
 
-       InputData inputData = (InputData) deserialize(mail.getBodyAsBytes());
-       if(inputData != null) {
-           Role role = inputData.getInputType();
+        InputData inputData = (InputData) deserialize(mail.getBodyAsBytes());
+        Role role = inputData.getRole();
 
-           routingHintToPublicKey.put(routingHint, mail.getAuthenticatedSender());
+        routingHintToPublicKey.put(routingHint, mail.getAuthenticatedSender());
 
-           if (role == Role.EVALUATE) {
-               trainAndEvaluateModel();
-           } else {
-               collectData(inputData);
-           }
-       }
+        if (role == Role.EVALUATE) {
+            trainAndEvaluateModel();
+        } else {
+            collectData(inputData);
+        }
     }
 
     /**
@@ -94,18 +92,17 @@ public class MlEnclave extends Enclave {
 
     /**
      * This method deserializes input data from clients to be used by enclave.
-     * @param  inputData
+     * @param inputData
      * @return deserialized input data object
      */
-    public static Object deserialize(byte[] inputData) {
+    public static Object deserialize(byte[] inputData) throws RuntimeException {
         ByteArrayInputStream in = new ByteArrayInputStream(inputData);
         ObjectInputStream is;
         try {
             is = new ObjectInputStream(in);
             return is.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class InputData implements Serializable {
     private static final long serialVersionUID = 6529685098267757690L;
 
-    private Role inputType;
+    private Role role;
     private MutableDataset trainingDataset;
     private MutableDataset testingDataset;
 
@@ -17,8 +17,8 @@ public class InputData implements Serializable {
         return serialVersionUID;
     }
 
-    public InputData(Role inputType) {
-        this.inputType = inputType;
+    public InputData(Role role) {
+        this.role = role;
     }
     public MutableDataset getTrainingDataset() {
         return trainingDataset;
@@ -36,11 +36,11 @@ public class InputData implements Serializable {
         this.testingDataset = testingDataset;
     }
 
-    public Role getInputType() {
-        return inputType;
+    public Role getRole() {
+        return role;
     }
 
-    public void setInputType(Role inputType) {
-        this.inputType = inputType;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
