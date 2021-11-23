@@ -40,11 +40,10 @@ Run the client to submit a bid using the below command:
 
 `./gradlew runClient --args="BIDDER <enclave_constraint> <host-url>, <bid-amount>"`
 
-If you are building an enclave in mock mode then the enclave reports it is using a signing key hash 
-consisting of all zeros. 
-
 The enclave constraint used in this sample is the `code signer`,  which is printed
-on the console as you run the host as shown in the example below:
+on the console as you run the host as shown in the example below. If you are building 
+an enclave in mock mode then the enclave reports it is using a signing key hash
+consisting of all zeros.
 
 ```
 Remote attestation for enclave 6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6DB61F76DE56C1F0:
