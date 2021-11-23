@@ -38,7 +38,7 @@ between client and enclave, etc. which can be called via exposed APIs.
 
 Run the client to submit a bid using the below command:
 
-`./gradlew runClient --args="BIDDER <enclave_constraint> <host-url>, <bid-amount>"`
+`./gradlew runClient --args="<role-type> <enclave_constraint> <host-url>, <bid-amount>"`
 
 The enclave constraint used in this sample is the `code signer`,  which is printed
 on the console as you run the host as shown in the example below. If you are building 
@@ -58,13 +58,12 @@ Remote attestation for enclave 6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6
 
 In this case the code signer `0000000000000000000000000000000000000000000000000000000000000000` is the enclave constraint.
 
-You could run multiple clients to submit different bids.
-
+You can submit bids using the below command with role type as bidder:
 `./gradlew runClient --args="'BIDDER' ’S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE' 'http://localhost:8080' 1000"`
 
 You could run multiple clients to submit different bids.
 
-To process the bid run the below command:
+To process the bid run the below command as admin:
 
 `./gradlew runClient --args="'ADMIN' 'S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE' 'http://localhost:8080'"`
 
