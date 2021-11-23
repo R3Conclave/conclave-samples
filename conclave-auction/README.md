@@ -38,7 +38,7 @@ between client and enclave, etc. which can be called via exposed APIs.
 
 Run the client to submit a bid using the below command:
 
-`./gradlew runClient --args="<role-type> <enclave_constraint> <host-url>, <bid-amount>"`
+`./gradlew runClient --args="<role-type> <enclave_constraint> <host-url> <bid-amount>"`
 
 The enclave constraint used in this sample is the `code signer`,  which is printed
 on the console as you run the host as shown in the example below. If you are building 
