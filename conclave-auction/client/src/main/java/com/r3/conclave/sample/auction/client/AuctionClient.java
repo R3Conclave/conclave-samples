@@ -75,18 +75,18 @@ public class AuctionClient {
         return out.toByteArray();
     }
 
-    private static int getUserBidInput(String type) throws Exception{
-        if(type.equals("BID")) {
-            System.out.println("Please enter your Bid Amount");
-            System.out.println();
-            System.out.println("---------------------------");
-            System.out.println("Bid Amount: ");
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(System.in));
-            String bidAmount = reader.readLine();
-            return Integer.parseInt(bidAmount);
-        }
-        return 0;
-    }
+//    private static int getUserBidInput(String type) throws Exception{
+//        if(type.equals("BID")) {
+//            System.out.println("Please enter your Bid Amount");
+//            System.out.println();
+//            System.out.println("---------------------------");
+//            System.out.println("Bid Amount: ");
+//            BufferedReader reader =
+//                    new BufferedReader(new InputStreamReader(System.in));
+//            String bidAmount = reader.readLine();
+//            return Integer.parseInt(bidAmount);
+//        }
+//        return 0;
+//    }
 
 }
