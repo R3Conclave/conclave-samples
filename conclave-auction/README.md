@@ -55,11 +55,18 @@ Run the client to sumbit a bid using the below command:
 
 `./gradlew runClient --args="BID <enclave_constraint>"`
 
-The enclave constraint used in this sample is the `code signer`,  which can be found printed during the build process as in the example below:
+The enclave constraint used in this sample is the `code signer`,  which is printed 
+on the console as you run the host as shown in the example below:
 
 ```
-Enclave code hash:   26037FC0370589FEA489110ED8124223650F5620B0732F94CDDEDDF207F07457
-Enclave code signer: 4502FEF2B5973A9DCF2F5C85358ED9F099C7738300364A7D7451371E43694A85
+Remote attestation for enclave 6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6DB61F76DE56C1F0:
+  - Mode: MOCK
+  - Code signing key hash: 0000000000000000000000000000000000000000000000000000000000000000
+  - Public signing key: 302A300506032B65700321005C7190C3011ECD16501EE1FD15167F42E112D4E074F1B6292CE2D046F4F1089F
+  - Public encryption key: BBD680B8E3A49ADD3CF018714A2B0D997315195E8B842F49385331D0532B5646
+  - Product ID: 1
+  - Revocation level: 0
+
 ```
 
 In this case the code signer `4502FEF2B5973A9DCF2F5C85358ED9F099C7738300364A7D7451371E43694A85` is the enclave constraint.
