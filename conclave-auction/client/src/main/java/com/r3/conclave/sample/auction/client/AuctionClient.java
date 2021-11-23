@@ -46,7 +46,7 @@ public class AuctionClient {
             if(bid>0) {
                 System.out.println("Sending a bid of " + bid + " to enclave");
             }else{
-
+                System.out.println("Requesting Auction Result..");
             }
             EnclaveMail responseMail = client.sendMail(serializedOutput);
 
