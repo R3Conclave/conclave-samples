@@ -10,6 +10,8 @@ import com.r3.conclave.sample.auction.common.MessageSerializer;
 import com.r3.conclave.shaded.kotlin.Pair;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,19 +20,18 @@ public class AuctionEnclave extends Enclave {
 
     private Map<PublicKey, String> userRouteMap = new HashMap<>();
     private Map<PublicKey, Integer> userBidsMap = new HashMap<>();
-    private Kryo kryo = new Kryo();
 
     private Pair<String, PublicKey> auctionAdmin = null;
 
     // Mails send from clients to the enclave are received here
     @Override
-    protected void receiveMail(long id, EnclaveMail mail, String userRoute) {
+    protected void receiveMail(EnclaveMail mail, String userRoute) {
         Message message = readMail(mail);
         PublicKey senderPK = mail.getAuthenticatedSender();
-        if (message.getType().equals("BID")) {
+        if (message.getType().equals("BIDDER")) {
             userBidsMap.put(senderPK, message.getBid());
             userRouteMap.put(senderPK, userRoute);
-        } else if (message.getType().equals("PROCESS-BID")) {
+        } else if (message.getType().equals("ADMIN")) {
             auctionAdmin = new Pair<>(userRoute, senderPK);
             processBids();
         }
@@ -75,9 +76,16 @@ public class AuctionEnclave extends Enclave {
 
 
     private Message readMail(EnclaveMail mail) {
-        kryo.register(Message.class, new MessageSerializer());
-        Input input = new Input(new ByteArrayInputStream(mail.getBodyAsBytes()));
-        return kryo.readObject(input, Message.class);
+        ByteArrayInputStream in = new ByteArrayInputStream(mail.getBodyAsBytes());
+        ObjectInputStream is;
+        try {
+            is = new ObjectInputStream(in);
+            Message message = (Message) is.readObject();
+            return message;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
