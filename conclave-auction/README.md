@@ -26,10 +26,12 @@ https://docs.conclave.net/tutorial.html#setting-up-your-machine
 
 ### Running the web host server
 
+Run the web host server using the below command.
+
 `./gradlew host:run`
 
 The web host server is an out-of-the-box spring boot server which serves as a host component for
-a simple conclave application. It perform common tasks done by a host like, load enclave, relay mails
+a simple conclave application. It performs common tasks done by a host like, load enclave, relay mails
 between client and enclave, etc. which can be called via exposed APIs.
 
 #### Running the client
