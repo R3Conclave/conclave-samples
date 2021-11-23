@@ -36,7 +36,7 @@ between client and enclave, etc. which can be called via exposed APIs.
 
 ### Running the client
 
-Run the client to submit a bid using the below command:
+Run the client to submit a bid/ process bids using the below command:
 
 `./gradlew runClient --args="<role-type> <enclave_constraint> <host-url> <bid-amount>"`
 
