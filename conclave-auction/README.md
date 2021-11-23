@@ -34,7 +34,7 @@ The web host server is an out-of-the-box spring boot server which serves as a ho
 a simple conclave application. It performs common tasks done by a host like, load enclave, relay mails
 between client and enclave, etc. which can be called via exposed APIs.
 
-#### Running the client
+### Running the client
 
 Run the client to submit a bid using the below command:
 
