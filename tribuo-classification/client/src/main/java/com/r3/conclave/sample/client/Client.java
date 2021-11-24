@@ -42,8 +42,7 @@ public class Client implements Callable<Void> {
             converter = EnclaveConstraintConverter.class)
     private EnclaveConstraint constraint;
 
-    @CommandLine.Option(names = {"-f", "--file"},
-            required = true,
+    @CommandLine.Option(names = {"-f", "--training-file"},
             description = "Training Data for training the AI model loaded in enclave")
     private String trainingDataFileName;
 
@@ -89,12 +88,9 @@ public class Client implements Callable<Void> {
             EnclaveMail responseMail = client.sendMail(requestMailBody);
 
             //ResponseMail is null till enclave doesn't reply back to the client
-            if (responseMail == null) {
-                do {
-                    Thread.sleep(2000);
-                    //Poll for reply to enclave
-                    responseMail = enclaveClient.pollMail();
-                } while (responseMail == null);
+            while (responseMail == null) {
+                Thread.sleep(2000);
+                responseMail = enclaveClient.pollMail();
             }
             System.out.println("Ad Conversion Rate is : " + new String(responseMail.getBodyAsBytes()));
         }
