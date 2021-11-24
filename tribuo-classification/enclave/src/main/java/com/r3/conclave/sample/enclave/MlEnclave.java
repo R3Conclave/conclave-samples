@@ -95,7 +95,7 @@ public class MlEnclave extends Enclave {
      * @param inputData
      * @return deserialized input data object
      */
-    public static Object deserialize(byte[] inputData) throws RuntimeException {
+    public static Object deserialize(byte[] inputData) {
         ByteArrayInputStream in = new ByteArrayInputStream(inputData);
         ObjectInputStream is;
         try {
