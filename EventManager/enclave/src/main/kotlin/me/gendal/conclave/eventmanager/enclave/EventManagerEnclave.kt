@@ -86,7 +86,7 @@ class EventManagerEnclave : Enclave() {
     *
      */
 
-    override fun receiveMail(id: Long, mail: EnclaveMail, routingHint: String?) {
+    override fun receiveMail(mail: EnclaveMail, routingHint: String?) {
         routingHint!!  // throw immediately if it's null
         when (val request = ProtoBuf.decodeFromByteArray(ClientRequest.serializer(), mail.bodyAsBytes)) {
             is SetupComputation -> setupComputation(request, mail, routingHint)

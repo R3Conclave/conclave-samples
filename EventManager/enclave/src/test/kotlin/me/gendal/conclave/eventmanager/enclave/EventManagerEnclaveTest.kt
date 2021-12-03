@@ -33,7 +33,7 @@ class EventManagerEnclaveTest {
     @BeforeEach
     fun startup() {
         enclave = EnclaveHost.load("me.gendal.conclave.eventmanager.enclave.EventManagerEnclave");
-        enclave.start(null) { commands: List<MailCommand?> ->
+        enclave.start(null, null, null) { commands: List<MailCommand?> ->
             for (command in commands) {
                 if (command is MailCommand.PostMail) {
                     synchronized(inboxes) {
@@ -203,7 +203,7 @@ class EventManagerEnclaveTest {
     private fun deliverMail(request: ClientRequest, postOffice: PostOffice, correlationId: String) {
         val requestBody = ProtoBuf.encodeToByteArray(ClientRequest.serializer(), request)
         val requestMail = postOffice.encryptMail(requestBody)
-        enclave.deliverMail(idCounter.getAndIncrement(), requestMail, correlationId)
+        enclave.deliverMail(requestMail, correlationId)
     }
 
     private fun <T : EnclaveResponse> inbox(correlationId: String, postOffice: PostOffice, serializer: KSerializer<T>): List<T> {

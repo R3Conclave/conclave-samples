@@ -14,13 +14,12 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import me.gendal.conclave.eventmanager.common.SignedData
 import java.lang.System.*
 import kotlin.jvm.Throws
+import com.r3.conclave.host.PlatformSupportException
+
 
 @ExperimentalSerializationApi
 @RestController
 class EventManagerHost {
-    // see build.gradle to see how this setting is propagated from the -PenclaveMode option to the
-    // gradle wrapper, if set.
-    private val mockMode = getProperty("conclavemode", "mock").equals("mock")
 
     private val idCounter = AtomicLong()
     private val inboxes = HashMap<String, MutableList<ByteArray>>()
@@ -30,16 +29,27 @@ class EventManagerHost {
     @Throws(EnclaveLoadException::class, IOException::class)
     @PostConstruct
     fun init() {
-        try {
-            EnclaveHost.checkPlatformSupportsEnclaves(true)
-            logger.info("This platform supports enclaves in simulation, debug and release mode.")
-        } catch (e: EnclaveLoadException) {
-            logger.info("This platform does not support hardware enclaves: " + e.message)
+
+        // Try to enable hardware enclave support if not already supported
+        if (!EnclaveHost.isHardwareEnclaveSupported()) {
+            try {
+                EnclaveHost.enableHardwareEnclaveSupport()
+            } catch (e: PlatformSupportException) {
+                println(
+                    "Hardware enclave support is not enabled! " +
+                            "Reason: " + e
+                )
+            }
         }
+
+
+        // Print out a list of supported modes
+        val supportedModes = EnclaveHost.getSupportedModes()
+        println("Supported enclave modes: $supportedModes")
 
         enclave = EnclaveHost.load("me.gendal.conclave.eventmanager.enclave.EventManagerEnclave");
 
-        enclave.start(null) { commands: List<MailCommand?> ->
+        enclave.start(null, null, null) { commands: List<MailCommand?> ->
             for (command in commands) {
                 if (command is MailCommand.PostMail) {
                     synchronized(inboxes) {
@@ -57,7 +67,7 @@ class EventManagerHost {
     @PostMapping("/deliver-mail")
     fun deliverMail(@RequestHeader("Correlation-ID") correlationId: String, @RequestBody encryptedMail: ByteArray) {
         var signedDataBytes: ByteArray? = null
-        enclave.deliverMail(idCounter.getAndIncrement(), encryptedMail, correlationId) {
+        enclave.deliverMail(encryptedMail, correlationId) {
             signedDataBytes = it
             null
         }

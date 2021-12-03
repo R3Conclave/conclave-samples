@@ -1,7 +1,7 @@
 package me.gendal.conclave.eventmanager.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.r3.conclave.client.EnclaveConstraint
+import com.r3.conclave.common.EnclaveConstraint
 import com.r3.conclave.common.EnclaveInstanceInfo
 import com.r3.conclave.common.SHA256Hash
 import com.r3.conclave.mail.Curve25519PrivateKey
