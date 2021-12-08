@@ -51,72 +51,97 @@ Merchant - Merchant passes credit card numbers of all users who have made a purc
 
 Service Provider - Service Provider passes credit card numbers of all users who have clicked the ad.
 
-## How to run in simulation mode
-
-### How to run on a non-linux based system
-
-Start the host on a non-Linux system, which will build the enclave and host:
-
-    ./container-gradle host:run
-
-On your terminal, once the host starts, pass in the credit card numbers via Merchant terminal
-
-    ./gradlew client:run --args="MERCHANT <CONSTRAINT> 1123 4456 777998 88988898"
-
-On your terminal, start Service Provider and pass in the credit card numbers of users who have clicked the ad
-
-    ./gradlew client:run --args="SERVICE-PROVIDER <CONSTRAINT> 88988898 77879 00989"
-
-Once both the clients pass in the credit card numbers, the host calculates the ad conversion rate within the enclave and sends it to both the clients.
-
-### How to run on a linux based system
-
-Start the host on a non-Linux system, which will build the enclave and host:
-
-    ./gradlew host:run
-
-On your terminal, once the host starts, pass in the credit card numbers via Merchant terminal
-
-    ./gradlew client:run --args="MERCHANT <CONSTRAINT> 1123 4456 777998 88988898"
-
-On your terminal, start Service Provider and pass in the credit card numbers of users who have clicked the ad
-
-    ./gradlew client:run --args="SERVICE-PROVIDER <CONSTRAINT> 88988898 77879 00989"
-
-Once both the clients pass in the credit card numbers, the host calculates the ad conversion rate within the enclave and sends it to both the clients.
-
-Please note:
-The enclave constraint used in this sample is the `code signer`,  which can be found printed during the build process as in the example below:
-
-```
-Enclave code hash:   26037FC0370589FEA489110ED8124223650F5620B0732F94CDDEDDF207F07457
-Enclave code signer: 4502FEF2B5973A9DCF2F5C85358ED9F099C7738300364A7D7451371E43694A85
-```
-
-#### A note about enclave constraint
-In this sample the `code signer` is used as enclave constraint, but you can also use the `code hash`. If you want to use it, remember to change the code of the client to:
-
-`EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE" ).check(attestation);`
-
-Read more in the [documentation](https://docs.conclave.net/enclave-configuration.html#productid).
+This sample is built against conclave release 1.2.<provide link to relase notes>
 
 ## How to run in mock mode
 
-We don't need to use the container-gradle plugin to load an enclave in mock mode.
+### How to build/run host
 
-Start the host on a non-Linux system, which will build the enclave and host:
+Host is responsible to do below items:
+1. Load/start enclave in the specified mode (see how we have set default mode to mock in host/build.gradle)
+2. Call the remote attestation service and populate EnclaveInstanceInfo object (Remote attestation can be represented as
+   an enclaveInstanceInfo object in conclave)    
+3. Start the built-in webserver which exposes REST endpoints for clients to communicate to enclave via Host
 
-    ./gradlew -PenclaveMode=mock host:run
+You will not find any code written in the host folder. That is because Conclave provides you with a built-in webserver.
+You can use this web server by adding a dependency to it in hosts build.gradle.
 
-On your terminal, once the host starts, pass in the credit card numbers via Merchant terminal
+    runtimeOnly "com.r3.conclave:conclave-web-host:$conclaveVersion"
 
-    ./gradlew client:run --args="MERCHANT <CONSTRAINT> 1123 4456 777998 88988898"
+We will package the host jar into a big fat jar containing all dependencies using the shadow jar plugin. Add this to 
+hosts build.gradle.
 
-On your terminal, start Service Provider and pass in the credit card numbers of users who have clicked the ad
+    plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    }
 
-    ./gradlew client:run --args="SERVICE-PROVIDER <CONSTRAINT> 88988898 77879 00989"
+Since host will load the enclave, it is important to specify which mode to load the enclave in.
 
-Once both the clients pass in the credit card numbers, the host calculates the ad conversion rate within the enclave and sends it to both the clients.
-For mock mode specify 0000000000000000000000000000000000000000000000000000000000000000 for the <CONSTRAINT> parameter.
+    shadowJar {
+    archiveAppendix.set(mode)
+    archiveClassifier.set("")
+    }
+
+Now let's use the shadowJar plugin to build host jar
+
+    ./gradlew host:shadowJar
+
+Let's now start this jar by running below command
+
+    java -jar host/build/libs/host-mock.jar
+
+You will now see the built-in spring-boot web server starting. The host server should be up when you see something like 
+this
+
+    [main] INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+    [main] INFO com.r3.conclave.host.web.EnclaveWebHost$Companion - Started EnclaveWebHost.Companion in 2.095 seconds (JVM running for 2.307)
+
+### How to build/run client
+
+Client is responsible to do below items:
+1. Client will pass constraint, host url, request to be sent to enclave via command line
+2. Connect to the built-in webserver using the given url
+3. Retrieve the EnclaveInstanceInfo object from this host server
+4. Verify this against the given constraint
+5. Send the request using EnclaveClient to the enclave
+
+Add conclave-web-client dependency to the client build.gradle. This consists of the EnclaveClient class which will be used 
+to encrypt and send mails to enclave
+
+    implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
+
+We will also add picocli dependency to the client, thus can be used by clients to provide arguments via command line
+
+    implementation "info.picocli:picocli:4.6.1"
+
+Similar to host add shadowJar plugin to client as well
+
+Use shadowJar plugin to build the client jar
+
+    ./gradlew client:shadowJar
+You can also run both together like this
+
+    ./gradlew host:shadowJar client:shadowJar
+
+Use below command to provide command line arguments to client
+Start the merchant client
+
+     java -jar client/build/libs/client.jar --role MERCHANT --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" 88
+
+Start the service provider client
+
+    java -jar client/build/libs/client.jar --role SERVICE_PROVIDER --constraint "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url "http://localhost:8080" 88
+
+Once you run both the clients, the enclave calculates the ad conversion rate and sends it to both the clients
+
+    Ad Conversion Rate is : 100.0
+
+#### A note about enclave constraint
+In this sample the `code signer` is used as enclave constraint, but you can also use the `code hash`.
+If you want to use it, pass in a different arg to the --constraint flag.
+
+`EnclaveConstraint.parse("C:"+ constraint +" SEC:INSECURE" ).check(attestation);`
+
+Read more in the [documentation](https://docs.conclave.net/writing-hello-world.html#constraints).
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net

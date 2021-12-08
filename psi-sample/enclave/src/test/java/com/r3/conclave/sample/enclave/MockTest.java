@@ -14,13 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * This test class calculates the ad conversion rate given the inputs.
+ * Tests the enclave fully in-memory in a mock environment without the web host.
  */
 public class MockTest {
 
     @Test
     void calculateAdConversionRate() throws EnclaveLoadException {
         EnclaveHost enclaveHost = EnclaveHost.load("com.r3.conclave.sample.enclave.PSIEnclave");
-        enclaveHost.start(null, null);
+        enclaveHost.start(null, null, null, (commands) -> {
+        });
 
         PSIEnclave psiEnclave = (PSIEnclave) enclaveHost.getMockEnclave();
 
