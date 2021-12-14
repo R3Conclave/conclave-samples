@@ -9,6 +9,8 @@ dependencies {
         transitive = true // for build.gradle (i.e., Groovy)
     }
 
+    implementation "org.slf4j:slf4j-api:$slf4j_version"
+    runtimeOnly "org.slf4j:slf4j-simple:$slf4j_version"
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
 }
 
