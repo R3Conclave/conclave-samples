@@ -7,10 +7,12 @@ application {
     mainClassName = "com.r3.conclave.sample.auction.client.AuctionClient"
 }
 
+
 dependencies {
     implementation project(":common");
     implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
    // implementation "info.picocli:picocli:4.6.1"
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE'
 }
 
 

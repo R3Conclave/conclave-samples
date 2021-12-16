@@ -55,7 +55,7 @@ public class AuctionClient {
                 do {
                     Thread.sleep(2000);
                     //Poll for reply to enclave
-                    responseMail = enclaveClient.pollMail();
+                    responseMail = client.pollMail();
                 } while (responseMail == null);
             }
             System.out.println("Bid Result : " + new String(responseMail.getBodyAsBytes()));
@@ -75,18 +75,5 @@ public class AuctionClient {
         return out.toByteArray();
     }
 
-//    private static int getUserBidInput(String type) throws Exception{
-//        if(type.equals("BID")) {
-//            System.out.println("Please enter your Bid Amount");
-//            System.out.println();
-//            System.out.println("---------------------------");
-//            System.out.println("Bid Amount: ");
-//            BufferedReader reader =
-//                    new BufferedReader(new InputStreamReader(System.in));
-//            String bidAmount = reader.readLine();
-//            return Integer.parseInt(bidAmount);
-//        }
-//        return 0;
-//    }
 
 }
