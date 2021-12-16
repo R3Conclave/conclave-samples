@@ -7,23 +7,40 @@ application {
     mainClassName = "com.r3.conclave.sample.auction.client.AuctionClient"
 }
 
+
 dependencies {
     implementation project(":common");
-    implementation "com.r3.conclave:conclave-client:$conclaveVersion"
+    implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
+   // implementation "info.picocli:picocli:4.6.1"
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE'
 }
 
 
 task runClientAsAdmin(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.r3.conclave.sample.auction.client.AuctionClient'
-    args 'PROCESS-BID'
+    args('ADMIN', 'C:6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6DB61F76DE56C1F0 SEC:INSECURE', 'http://localhost:8080')
 }
 
-task runClientAsBidder(type: JavaExec, dependsOn: assemble) {
+task runClientAsBidder1(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     main = 'com.r3.conclave.sample.auction.client.AuctionClient'
-    args 'BID'
+    args('BIDDER', 'C:6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6DB61F76DE56C1F0 SEC:INSECURE', 'http://localhost:8080', 1000)
+}
+
+task runClientAsBidder2(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    main = 'com.r3.conclave.sample.auction.client.AuctionClient'
+    args('BIDDER','C:6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6DB61F76DE56C1F0 SEC:INSECURE', 'http://localhost:8080', 5000)
+}
+
+task runClientAsBidder3(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    main = 'com.r3.conclave.sample.auction.client.AuctionClient'
+    args('BIDDER', 'C:6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6DB61F76DE56C1F0 SEC:INSECURE', 'http://localhost:8080', 2000)
 }
 
 task runClient(type: JavaExec, dependsOn: assemble) {
