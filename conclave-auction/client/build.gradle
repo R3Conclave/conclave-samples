@@ -48,3 +48,27 @@ task runClient(type: JavaExec, dependsOn: assemble) {
     standardInput = System.in
     main = 'com.r3.conclave.sample.auction.client.AuctionClient'
 }
+
+task runBidder1Server(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.r3.conclave.sample.auction.client.springboot.Starter'
+    args(8081)
+}
+
+task runBidder2Server(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.r3.conclave.sample.auction.client.springboot.Starter'
+    args(8082)
+}
+
+task runBidder3Server(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.r3.conclave.sample.auction.client.springboot.Starter'
+    args(8083)
+}
+
+task runAuctionAdminServer(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.r3.conclave.sample.auction.client.springboot.Starter'
+    args(8084)
+}
