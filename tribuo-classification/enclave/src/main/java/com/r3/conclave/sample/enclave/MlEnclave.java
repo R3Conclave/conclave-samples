@@ -3,6 +3,7 @@ package com.r3.conclave.sample.enclave;
 import com.r3.conclave.enclave.Enclave;
 import com.r3.conclave.mail.EnclaveMail;
 import com.r3.conclave.sample.common.InputData;
+import com.r3.conclave.sample.common.Role;
 import org.tribuo.Example;
 import org.tribuo.Model;
 import org.tribuo.MutableDataset;
@@ -29,35 +30,30 @@ import java.util.Map;
  */
 public class MlEnclave extends Enclave {
 
-    private static final String EVALUATE = "EVALUATE";
     protected static MutableDataset trainingDataset;
     protected static MutableDataset testingDataset;
 
-    private Map<String, PublicKey> routingHintToPublicKey = new HashMap();
+    private Map<String, PublicKey> routingHintToPublicKey = new HashMap<>();
 
     /**
      * This method gets called when client wants to communicate to enclave, and sends a message wrapped in a mail to host.
      * Host in turn calls deliverMail method which in turn
      * calls this method. In this method, we will deserialize the mail message, perform the computation and send the
      * result back to the clients.
-     *
-     * @param id
-     * @param mail
-     * @param routingHint
      */
     @Override
-    protected void receiveMail(long id, EnclaveMail mail, String routingHint) {
+    protected void receiveMail(EnclaveMail mail, String routingHint) {
 
-       InputData inputData = (InputData) deserialize(mail.getBodyAsBytes());
-       String inputType = inputData.getInputType();
+        InputData inputData = (InputData) deserialize(mail.getBodyAsBytes());
+        Role role = inputData.getRole();
 
-       routingHintToPublicKey.put(routingHint, mail.getAuthenticatedSender());
+        routingHintToPublicKey.put(routingHint, mail.getAuthenticatedSender());
 
-       if (EVALUATE.equals(inputType)) {
-           trainAndEvaluateModel();
-       } else {
-           collectData(inputData);
-       }
+        if (role == Role.EVALUATE) {
+            trainAndEvaluateModel();
+        } else {
+            collectData(inputData);
+        }
     }
 
     /**
@@ -71,7 +67,7 @@ public class MlEnclave extends Enclave {
         LabelEvaluator evaluator = new LabelEvaluator();
         LabelEvaluation evaluation = evaluator.evaluate(irisModel, testingDataset);
 
-        //send evaluation results back to all the clients using the routingHintToPublicKey mapping
+        //Send evaluation results back to all the clients using the routingHintToPublicKey mapping
         for (String key : routingHintToPublicKey.keySet()) {
             byte[] encryptedReply = postOffice(routingHintToPublicKey.get(key))
                     .encryptMail(evaluation.toString().getBytes(StandardCharsets.UTF_8));
@@ -81,7 +77,6 @@ public class MlEnclave extends Enclave {
 
     /**
      * This method collects data from all clients which later will be used to train the model.
-     * @param inputData
      */
     protected void collectData(InputData inputData) {
         if (trainingDataset == null && testingDataset == null) {
@@ -97,18 +92,17 @@ public class MlEnclave extends Enclave {
 
     /**
      * This method deserializes input data from clients to be used by enclave.
-     * @param  inputData
+     * @param inputData
      * @return deserialized input data object
      */
     public static Object deserialize(byte[] inputData) {
         ByteArrayInputStream in = new ByteArrayInputStream(inputData);
-        ObjectInputStream is = null;
+        ObjectInputStream is;
         try {
             is = new ObjectInputStream(in);
             return is.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }
