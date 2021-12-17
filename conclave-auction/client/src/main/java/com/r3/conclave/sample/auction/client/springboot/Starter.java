@@ -15,7 +15,7 @@ public class Starter {
         app.setBannerMode(Banner.Mode.OFF);
         app.setWebApplicationType(WebApplicationType.SERVLET);
         app.setDefaultProperties(Collections
-                .singletonMap("server.port", "8083"));
+                .singletonMap("server.port", args[0]));
         app.run(args);
     }
 }
