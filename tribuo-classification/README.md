@@ -140,7 +140,44 @@ Once all the clients pass in the training data, train the model inside the encla
 
     java -jar client/build/libs/client.jar --role=“EVALUATE” --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
 
+As you can see for mock mode we pass in the 0's as the constraint. You can read more about constraints here: https://docs.conclave.net/constraints.html.
+
 To read more on Conclave go to the documentation site - https://docs.conclave.net
+
+## How to build/run in simulation mode
+
+Build the enclave in simulation mode by passing in the simulation mode to -PenclaveMode
+
+      ./gradlew clean host:bootJar -PenclaveMode=simulation
+   
+Setup the Linux Environment
+
+      ./gradlew enclave:setupLinuxExecEnvironment
+   
+Start the docker container
+
+      docker run -it --rm -p 8080:8080 -v ${PWD}:/project -w /project conclave-build /bin/bash
+   
+Start the host in simulation mode
+
+      java -jar host/build/libs/host-simulation.jar
+   
+Build the client
+
+      ./gradlew client:shadowJar
+  
+Start Client 1 and pass training data to train the model
+
+    java -jar client/build/libs/client-all.jar --training-file="breast-cancer.data" --role="TRAIN" --constraint="S:3D71AAC9ED596F3C86241A977DAFA84B255D16D633DFF7AB88A053AE2183AD14 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
+
+Start Client 2 and pass training data to train the model
+
+      java -jar client/build/libs/client-all.jar --training-file="breast-cancer-1.data" --role="TRAIN" --constraint="S:3D71AAC9ED596F3C86241A977DAFA84B255D16D633DFF7AB88A053AE2183AD14 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
+
+Start Client 3 and evaluate the model
+
+      java -jar client/build/libs/client-all.jar --role="EVALUATE"  --constraint="S:3D71AAC9ED596F3C86241A977DAFA84B255D16D633DFF7AB88A053AE2183AD14 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
+   
 
 Please note:
 R3 code is licensed under Apache 2 but the training data set has its own terms and conditions, which you can read in the
