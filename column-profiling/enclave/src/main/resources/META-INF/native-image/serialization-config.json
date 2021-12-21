@@ -6,6 +6,9 @@
     "name": "java.lang.Number"
   },
   {
+    "name": "java.util.ArrayList"
+  },
+  {
     "name": "java.lang.Integer"
   }
 ]

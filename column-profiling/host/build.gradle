@@ -1,32 +1,39 @@
 plugins {
-    id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
+mainClassName = "com.r3.conclave.host.web.EnclaveWebHost"
+
+// Override the default (simulation) with -PenclaveMode=
+def mode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "mock"
+
+def graalVMDir = tasks.getByPath(":enclave:untarGraalVM").outputs.files.first()
+def configurationDir = project(":enclave").projectDir.toPath().resolve("src/main/resources/META-INF/native-image")
+def filterFile = configurationDir.resolve("filter.json")
 application {
-    mainClassName = "com.r3.conclave.sample.host.Host"
-}
-
-
-// Override the default (simulation) with -enclaveMode=
-def mode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "simulation"
-
-// Create a task that can be used for generating signing materials
-tasks.register("prepareForSigning") {
-    it.dependsOn(":enclave:generateEnclaveSigningMaterial${mode.capitalize()}")
+    run.dependsOn(":enclave:untarGraalVM")
+    if (project.hasProperty("generateConfigFiles") && properties.get("enclaveMode").toString().toLowerCase() == "mock" != null) {
+        applicationDefaultJvmArgs = [
+                "-agentpath:$graalVMDir/jre/lib/amd64/libnative-image-agent.so=config-output-dir=$configurationDir," +
+                        "caller-filter-file=$filterFile"
+        ]
+    }
 }
 
 dependencies {
-    implementation "com.r3.conclave:conclave-host:$conclaveVersion"
-    runtimeOnly project(path: ":enclave", configuration: mode)
+    if (mode == "mock") {
+        implementation project(path: ":enclave", configuration: "mock")
+    } else {
+        runtimeOnly project(path: ":enclave", configuration: mode)
+    }
+    //use the built in web server to interact with enclave
+    runtimeOnly "com.r3.conclave:conclave-web-host:$conclaveVersion"
     runtimeOnly "org.slf4j:slf4j-simple:1.7.30"
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
 }
 
-test {
-    testLogging {
-        outputs.upToDateWhen { false }
-        showStandardStreams = true
-    }
+shadowJar {
+    archiveAppendix.set(mode)
+    archiveClassifier.set("")
 }

@@ -40,3 +40,4 @@ conclave {
         mrsignerPublicKey = file("../signing/external_signing_public.pem")
     }
 }
+

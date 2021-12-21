@@ -10,7 +10,6 @@ import java.io.*;
 
 // Return the frequency distribution of values passed by the client
 public class DAEnclave extends Enclave {
-    byte[] previousResult;
 
     public static String dataAnalysis(ArrayList<UserProfile> arr) {
         Map<Integer, Integer> ageFreqDist = new HashMap<>();
@@ -35,7 +34,7 @@ public class DAEnclave extends Enclave {
     }
 
     @Override
-    protected void receiveMail(long id, EnclaveMail mail, String routingHint) {
+    protected void receiveMail(EnclaveMail mail, String routingHint) {
         // This is used when the host delivers a message from the client.
         // First, decode mail body
 

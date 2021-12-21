@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 application {
@@ -9,7 +10,12 @@ application {
 
 dependencies {
     implementation project(":common")
-    implementation "com.r3.conclave:conclave-client:$conclaveVersion"
+    implementation "info.picocli:picocli:4.6.1"
+    implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
+}
+
+shadowJar {
+    archiveClassifier.set("")
 }
 
 
