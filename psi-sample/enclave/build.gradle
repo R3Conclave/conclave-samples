@@ -8,6 +8,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
 }
 
+//This enclave will use the KDS "debug" type key to seal and persist data.
 conclave {
     productID = 1
     revocationLevel = 0
@@ -16,5 +17,15 @@ conclave {
     debug {
         signingType = privateKey
         signingKey = file("../signing/sample_private_key.pem")
+    }
+    kds {
+        kdsEnclaveConstraint = "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE"
+        keySpec {
+            masterKeyType = "debug"
+            policyConstraint {
+                constraint = "SEC:INSECURE"
+                useOwnCodeSignerAndProductID = true
+            }
+        }
     }
 }

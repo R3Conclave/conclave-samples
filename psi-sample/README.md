@@ -145,3 +145,39 @@ If you want to use it, pass in a different arg to the --constraint flag.
 Read more in the [documentation](https://docs.conclave.net/writing-hello-world.html#constraints).
 
 To read more on Conclave go to the documentation site - https://docs.conclave.net
+
+#### Configuring Conclave to use a key from a Key Derivation Service
+
+Conclave enclaves are able to use a key from a Key Derivation Service (KDS) for encrypting data that will be persisted outside the enclave. Using a key from a KDS allows the encrypted data that is persisted by an enclave to be accessed by the enclave even if it is moved to another physical machine. 
+To read more on KDS visit the [docs](https://docs.conclave.net/kds-configuration.html) page.
+
+The key specification to use within an enclave is configured in the build configuration for that enclave.
+Add the below code to enclave/build.gradle
+
+      conclave {
+          productID = 1
+          revocationLevel = 0
+          // you can use a privateKey to sign the enclave
+          debug {
+              signingType = privateKeysigningKey = file("../signing/sample_private_key.pem")
+          }
+          kds {
+              kdsEnclaveConstraint = "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE"
+              keySpec {
+                  masterKeyType = "debug"
+                  policyConstraint {
+                      constraint = "SEC:INSECURE"
+                      useOwnCodeSignerAndProductID = true
+                  }
+              }
+          }
+      }
+
+Use below steps to run the enclave to connect to KDS
+
+      ./gradlew clean host:shadowJar 
+      -PenclaveMode=simulation./gradlew 
+      enclave:setupLinuxExecEnvironment
+      docker run -it --rm -p 8080:8080 -v ${PWD}:/project -w /project conclave-build /bin/bash
+      java -jar host/build/libs/host-simulation.jar --filesystem.file=host/scratch.txt --kds.url=https://kds.dev.conclave.cloud/ --kds.connection.timeout.secconds=60
+
