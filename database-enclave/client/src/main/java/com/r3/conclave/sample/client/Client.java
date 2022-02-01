@@ -5,6 +5,8 @@ import com.r3.conclave.client.web.WebEnclaveTransport;
 import com.r3.conclave.common.EnclaveConstraint;
 import com.r3.conclave.mail.EnclaveMail;
 import com.r3.conclave.sample.common.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
@@ -14,23 +16,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+
 /**
- * Client can be of two types: Merchant or Service Provider
- * Merchant - who supplies list of users who have made a purchase
- * Service Providers - who supplies a list of users who have clicked on the ad
- * Both the clients send the lists to enclave, which calculates the ad conversion rate and sends it back to the clients
+ * Clients can send two types of commands to the enclave. Clients can insert new records in the database enclave
+ * by passing the ADD command. Clients can select the inserted user data by passing in the VERIFY command.
+ * We will restart the enclave and hit the VERIFY command again to make sure that the database is persisted
+ * by conclave.
  */
-@CommandLine.Command(name = "psi-client",
+@CommandLine.Command(name = "database-client",
         mixinStandardHelpOptions = true,
-        description = "Simple client that communicates with the PSIEnclave using the web host.")
+        description = "Simple client that communicates with the DatabaseEnclave using the web host.")
 public class Client implements Callable<Void> {
 
-    @CommandLine.Option(names = {"-r", "--role"}
-            , description = "Role Options: ${MERCHANT/SERVICE_PROVIDER}")
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
+
+    @CommandLine.Option(names = {"-o", "--command"}
+            , description = "Command Options: ${CREATE/ADD/VERIFY}")
     private CommandType commandType = null;
 
     //Use picocli to provide command line parameters
-    @CommandLine.Parameters(description = "Users username and password")
+    @CommandLine.Parameters(description = "username password")
     private final List<String> userDetails = new ArrayList<>();
 
     @CommandLine.Option(names = {"-u", "--url"},
@@ -72,7 +77,7 @@ public class Client implements Callable<Void> {
                     responseMail = enclaveClient.pollMail();
                 } while (responseMail == null);
             }
-            System.out.println("Enclave Reply is : " + new String(responseMail.getBodyAsBytes()));
+            logger.info("Enclave Reply is : " + new String(responseMail.getBodyAsBytes()));
         }
         return null;
     }
@@ -80,8 +85,13 @@ public class Client implements Callable<Void> {
     private InputData getInputData() {
         InputData inputData = new InputData();
         inputData.setCommandType(commandType);
-        System.out.println(userDetails.size() + "userDetails.size()");
-        inputData.setUser(new User(userDetails.get(0), userDetails.get(1)));
+        if(!userDetails.isEmpty()) {
+            if(commandType == CommandType.ADD) {
+                inputData.setUser(new User(userDetails.get(0), userDetails.get(1)));
+            } else if(commandType == CommandType.VERIFY) {
+                inputData.setUser(new User(userDetails.get(0)));
+            }
+        }
         return inputData;
     }
 

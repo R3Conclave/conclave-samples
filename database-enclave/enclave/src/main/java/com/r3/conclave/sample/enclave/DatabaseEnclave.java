@@ -7,11 +7,13 @@ import com.r3.conclave.sample.common.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
-public class PSIEnclave extends Enclave {
-
+/**
+ * This enclave shows how to use an H2 database inside an enclave. Depending on the command type we will create, insert or select
+ * database records from the database. The I/O operations are mapped to a persistent file on the host system.
+ */
+public class DatabaseEnclave extends Enclave {
     /**
      * This method gets called when client wants to communicate to enclave, and sends a message wrapped in a mail to host.
      * Host in turn calls deliverMail method which in turn
@@ -26,8 +28,7 @@ public class PSIEnclave extends Enclave {
         InputData inputData = (InputData) deserialize(mail.getBodyAsBytes());
 
         if (inputData != null) {
-            //Retrieve the clientType from mail.
-            CommandType clientType = inputData.getCommandType();
+            CommandType commandType = inputData.getCommandType();
             try {
                 Class.forName("org.h2.Driver");
                 Connection conn = DriverManager.getConnection("jdbc:h2:~/test");
@@ -35,18 +36,19 @@ public class PSIEnclave extends Enclave {
 
                 User user = inputData.getUser();
 
-                if (clientType == CommandType.ADD) {
-                    int result = st.executeUpdate("create table users(name varchar(20),  password varchar(20))");
-                    System.out.println("Created table users : " + result);
+                if (commandType == CommandType.CREATE) {
+                    st.executeUpdate("create table if not exists users(name varchar(20),  password varchar(20))");
+                    System.out.println("Created table users if table does not exists");
+                } else if (commandType == CommandType.ADD) {
                     PreparedStatement stmt = conn.prepareStatement("INSERT INTO users VALUES (?, ?)");
 
                     stmt.setString(1, user.getName());
                     stmt.setString(2, user.getPassword());
 
-                    result = stmt.executeUpdate();
+                    int result = stmt.executeUpdate();
                     System.out.println("Inserted record in the database : " + result);
 
-                    ResultSet rs = st.executeQuery("SELECT * FROM users WHERE name = " + user.getName());
+                    ResultSet rs = st.executeQuery("SELECT * FROM users WHERE name = '" + user.getName() + "'");
                     System.out.println("select query output : ");
 
                     while (rs.next()) {
@@ -58,13 +60,12 @@ public class PSIEnclave extends Enclave {
                     byte[] encryptedReply = postOffice(mail.getAuthenticatedSender()).
                             encryptMail("Added name and password to the database".getBytes());
                     postMail(encryptedReply, routingHint);
-
-                    postMail("Name and password added to the database".getBytes(StandardCharsets.UTF_8) , routingHint);
-                } else if (clientType == CommandType.VERIFY) {
-                    //verify
-                    ResultSet rs = st.executeQuery("SELECT * FROM users WHERE name = " + user.getName());
+                } else if (commandType == CommandType.VERIFY) {
+                    //retrieve the records from the database when the user passes the VERIFY command and send it back to the client
+                    ResultSet rs = st.executeQuery("SELECT * FROM users WHERE name = '" + user.getName() + "'");
                     System.out.println("select query output : ");
-                    String id = null, name = null, password = null;
+                    String name = null;
+                    String password = null;
                     while (rs.next()) {
                         name = rs.getString("name"); // Assuming there is a column called name.
                         password = rs.getString("password");
@@ -74,6 +75,9 @@ public class PSIEnclave extends Enclave {
                     byte[] encryptedReply = postOffice(mail.getAuthenticatedSender()).
                             encryptMail(("Verified name and password from the database. Name is - " + name +" password is - " +password).getBytes());
                     postMail(encryptedReply, routingHint);
+
+                    conn.prepareStatement("SHUTDOWN").executeUpdate();
+                    conn.close();
                 }
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
