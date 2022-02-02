@@ -22,12 +22,12 @@ public class InputData implements Serializable {
         return commandType;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public void setCommandType(CommandType commandType) {
         this.commandType = commandType;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setUser(User user) {

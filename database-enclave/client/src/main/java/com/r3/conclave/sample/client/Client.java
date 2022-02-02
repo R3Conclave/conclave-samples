@@ -4,7 +4,9 @@ import com.r3.conclave.client.EnclaveClient;
 import com.r3.conclave.client.web.WebEnclaveTransport;
 import com.r3.conclave.common.EnclaveConstraint;
 import com.r3.conclave.mail.EnclaveMail;
-import com.r3.conclave.sample.common.*;
+import com.r3.conclave.sample.common.CommandType;
+import com.r3.conclave.sample.common.InputData;
+import com.r3.conclave.sample.common.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -29,15 +31,12 @@ import java.util.concurrent.Callable;
 public class Client implements Callable<Void> {
 
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
-
-    @CommandLine.Option(names = {"-o", "--command"}
-            , description = "Command Options: ${CREATE/ADD/VERIFY}")
-    private CommandType commandType = null;
-
     //Use picocli to provide command line parameters
     @CommandLine.Parameters(description = "username password")
     private final List<String> userDetails = new ArrayList<>();
-
+    @CommandLine.Option(names = {"-o", "--command"}
+            , description = "Command Options: ${CREATE/ADD/VERIFY}")
+    private final CommandType commandType = null;
     @CommandLine.Option(names = {"-u", "--url"},
             required = true,
             description = "URL of the web host running the enclave.")
@@ -48,6 +47,23 @@ public class Client implements Callable<Void> {
             description = "Enclave constraint which determines the enclave's identity and whether it's acceptable to use.",
             converter = EnclaveConstraintConverter.class)
     private EnclaveConstraint constraint;
+
+    public static byte[] serialize(Object obj) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os;
+        try {
+            os = new ObjectOutputStream(out);
+            os.writeObject(obj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
+
+    public static void main(String... args) {
+        int exitCode = new CommandLine(new Client()).execute(args);
+        System.exit(exitCode);
+    }
 
     @Override
     public Void call() throws Exception {
@@ -68,15 +84,6 @@ public class Client implements Callable<Void> {
 
             //Client will send its credit card list to enclave and wait for other client to send their list
             EnclaveMail responseMail = client.sendMail(requestMailBody);
-
-            //ResponseMail is null till enclave doesn't reply back to the client
-            if (responseMail == null) {
-                do {
-                    Thread.sleep(2000);
-                    //Poll for reply to enclave
-                    responseMail = enclaveClient.pollMail();
-                } while (responseMail == null);
-            }
             logger.info("Enclave Reply is : " + new String(responseMail.getBodyAsBytes()));
         }
         return null;
@@ -85,26 +92,14 @@ public class Client implements Callable<Void> {
     private InputData getInputData() {
         InputData inputData = new InputData();
         inputData.setCommandType(commandType);
-        if(!userDetails.isEmpty()) {
-            if(commandType == CommandType.ADD) {
+        if (!userDetails.isEmpty()) {
+            if (commandType == CommandType.ADD) {
                 inputData.setUser(new User(userDetails.get(0), userDetails.get(1)));
-            } else if(commandType == CommandType.VERIFY) {
+            } else if (commandType == CommandType.VERIFY) {
                 inputData.setUser(new User(userDetails.get(0)));
             }
         }
         return inputData;
-    }
-
-    public static byte[] serialize(Object obj) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os;
-        try {
-            os = new ObjectOutputStream(out);
-            os.writeObject(obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return out.toByteArray();
     }
 
     private static class EnclaveConstraintConverter implements CommandLine.ITypeConverter<EnclaveConstraint> {
@@ -112,10 +107,5 @@ public class Client implements Callable<Void> {
         public EnclaveConstraint convert(String value) {
             return EnclaveConstraint.parse(value);
         }
-    }
-
-    public static void main(String... args) {
-        int exitCode = new CommandLine(new Client()).execute(args);
-        System.exit(exitCode);
     }
 }
