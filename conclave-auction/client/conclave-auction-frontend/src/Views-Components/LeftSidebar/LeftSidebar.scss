@@ -1,0 +1,67 @@
+.bid-form {
+  background-color: white;
+  padding: 1rem;
+  height: max-content;
+  border-radius: 3px;
+
+  h2 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+
+  form {
+    label {
+      color: var(--color-primary);
+      font-weight: bold;
+    }
+    input {
+      margin-top: 0.5rem;
+      height: 3rem;
+      min-height: fit-content;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+  }
+
+  .submit-bid-button {
+    width: max-content;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    &:disabled {
+      background-color: var(--color-main-grey);
+      color: var(--color-ternary-grey);
+      border: 1px solid #d2d1d3;
+      cursor: default;
+    }
+  }
+}
+
+.poll-button {
+  margin-top: 1rem;
+  border: 1px solid var(--color-secondary);
+  color: var(--color-main-grey);
+  box-shadow: 2px 2px 3px #001526;
+  &:disabled {
+    border: 1px solid #415769;
+    color: #415769;
+    box-shadow: none;
+    cursor: default;
+  }
+}
+
+button {
+  background-color: transparent;
+  display: block;
+  height: 3rem;
+  min-height: fit-content;
+  width: 100%;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+}
