@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'me.gendal.conclave.eventmanager'
-version '1.0-SNAPSHOT'
+version '1.2'
 
 repositories {
     mavenCentral()
@@ -20,7 +20,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.slf4j:slf4j-api:1.7.30"
     implementation "org.slf4j:slf4j-simple:1.7.30"
-    runtimeOnly project(path: ":enclave", configuration: mode)
+
+    implementation project(path: ":enclave")
 
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
 }
