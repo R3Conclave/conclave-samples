@@ -1,0 +1,38 @@
+.main-view {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr;
+
+  grid-gap: 1rem;
+  grid-template-areas: "mainSidebar mainSidebar middleSection middleSection middleSection middleSection rightSideBar rightSideBar";
+
+  .main-sidebar-section {
+    height: 100vh;
+    grid-area: mainSidebar;
+    background-color: #003245;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .middle-section {
+    height: 100vh;
+    grid-area: middleSection;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .right-sidebar-section {
+    height: 100vh;
+    grid-area: rightSideBar;
+    background-color: #003245;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}

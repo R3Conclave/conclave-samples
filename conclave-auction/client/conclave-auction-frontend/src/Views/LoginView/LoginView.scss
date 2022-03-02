@@ -1,0 +1,70 @@
+.login-view {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 50px;
+  grid-template-areas:
+    ". . . . . .  . ."
+    "loginSection loginSection loginSection loginSection loginSection loginSection loginSection loginSection"
+    ". . logo logo logo logo  . .";
+  .conclave-logo {
+    grid-area: logo;
+    align-self: center;
+    justify-self: center;
+    width: 20%;
+    height: 10%;
+    margin: 2rem;
+  }
+
+  .login-section {
+    grid-area: loginSection;
+    width: fit-content;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    .header-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      h1 {
+        font-size: 4rem;
+        line-height: 4rem;
+
+        color: var(--color-secondary);
+        margin: 0;
+        margin-bottom: 1rem;
+        text-align: center;
+        text-shadow: 2px 2px 1px #c5dae9;
+      }
+    }
+
+    .buttons-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      button {
+        text-align: center;
+        color: #ffffff;
+        border: 0;
+        background-color: #003245;
+        width: 150px;
+        height: 5rem;
+        padding: 20px;
+        font-weight: bold;
+        font-size: 1.5em;
+        text-transform: uppercase;
+        border-radius: 5px;
+        cursor: pointer;
+        &:hover {
+          color: #2aafc8;
+          transition: background-color ease-in 0.2s;
+        }
+      }
+    }
+  }
+}

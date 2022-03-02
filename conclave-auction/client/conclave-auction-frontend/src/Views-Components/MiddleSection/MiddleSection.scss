@@ -1,0 +1,112 @@
+.auction-item-section {
+  background-color: white;
+  height: 30%;
+  box-shadow: 1px 3px 6px #d2d1d3;
+
+  border-radius: 3px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--color-primary);
+    text-align: center;
+    @media (max-width: 1050px) {
+      font-size: 1rem;
+    }
+  }
+
+  div {
+    height: 50%;
+    width: 50%;
+    svg {
+      color: var(--color-primary);
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.auction-bids-section {
+  overflow-y: auto;
+  background-color: white;
+  height: 65%;
+  border-radius: 3px;
+  box-shadow: 1px 3px 6px #d2d1d3;
+  padding: 1.5rem;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+    .active-container {
+      margin: 0;
+      list-style: none;
+      background-color: white;
+      text-align: center;
+      color: #7d7e7e;
+      font-size: 0.8rem;
+      line-height: 1.5rem;
+    }
+    .host-container {
+      place-self: start;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      height: fit-content;
+      border-radius: 3px;
+      width: 100%;
+      border-bottom: 1px solid #d2d1d3;
+      border-right: 1px solid #d2d1d3;
+      background-color: var(--color-main-grey);
+      padding: 1rem 1.5rem;
+      box-shadow: 0.5px 1px 2px #d2d1d3;
+
+      list-style: none;
+      margin: 0;
+
+      &::after {
+        background-color: #d2d1d3;
+        position: absolute;
+        content: " ";
+        width: 1.5rem;
+        border: 1px solid #d2d1d3;
+        left: -1.5rem;
+      }
+    }
+
+    .client-container {
+      place-self: end;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      height: fit-content;
+      border-radius: 3px;
+      width: 100%;
+      border-bottom: 1px solid #d2d1d3;
+      border-right: 1px solid #d2d1d3;
+      background-color: var(--color-main-grey);
+      padding: 1rem 1.5rem;
+      box-shadow: 0.5px 1px 2px #d2d1d3;
+      list-style: none;
+      margin: 0;
+
+      &::after {
+        background-color: #d2d1d3;
+        position: absolute;
+        content: " ";
+        width: 1.55rem;
+        border: 1px solid #d2d1d3;
+        right: -1.6rem;
+      }
+    }
+  }
+}
