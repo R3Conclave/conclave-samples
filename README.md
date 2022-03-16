@@ -38,7 +38,7 @@ or begnin given certain input attributes.
 
 ### [Tribuo Tutorials](./tribuo-tutorials):
 Tribuo is a Java machine learning library, which makes it well suited to run with Conclave. This sample provides tools for classification, regression, clustering, model development, and more.
-This sample shows you how you can use the [Tribuo Java ML](https://tribuo.org/learn/4.0/tutorials/) library to load, train many models like classification models, regression models, clustering models etc.
+This sample shows you how you can use the [Tribuo Java ML](https://tribuo.org/learn/4.0/tutorials/) library to load and train models like classification models, regression models, clustering models etc.
 
 ### [Database Enclave](./psi-sample):
 With the new 3rd Gen Intel Xeon Scalable Processors supporting 1 TB of enclave memory, 
