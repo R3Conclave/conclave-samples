@@ -28,7 +28,7 @@ This application serves as a demo for building a confidential trading system bas
 
 ### [Psi](./psi-sample):
 PSI problem refers to the problem of determining the common elements from the intersection of two sets without leaking or disclosing any additional information of the remaining elements of either sets.
-Using this sample will see how Conclave (based on Intel SGX) can be a new tool to solve the private set intersection (PSI) problem.
+Using this sample will demonstrate how Conclave (based on Intel SGX) can be a new tool to solve the private set intersection (PSI) problem.
 
 ### [Tribuo Classification](./tribuo-classification):
 Using this sample will show how Conclave (based on Intel SGX) can be used in training a ML model. We will use Tribuo Java ML library to load the AI model.
