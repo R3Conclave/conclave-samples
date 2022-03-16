@@ -17,7 +17,7 @@ The idea is that an enclave of this type could be used to host simple one-off mu
 ### [Column Profiling](./column-profiling):
 This sample does Column Profiling on the dataset and
 returns the frequency distribution as an output. Column profiling is one of the methods used in data profiling.
-This [link](https://www.alooma.com/blog/what-is-data-profiling) explains what data profiling and column profiling means
+This [article](https://www.alooma.com/blog/what-is-data-profiling) explains what data profiling and column profiling means
 and explains its uses and applications.
 
 ### [Conclave Auction](./conclave-auction):
