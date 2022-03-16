@@ -12,7 +12,7 @@ the platform. To learn more about the Conclave platform please visit our officia
 
 ### [EventManager](./EventManager):
 Event Manager implements the idea of an enclave that can host a collection of simultaneous 'computations'. These computations are initiated by a Conclave client, have a name and a type, have a defined set of 'participants', and a 'quorum' that must be reached before results can be obtained. Supported types are average (the average of the submissions is returned), maximum and minimum (the identity of the submitter of the highest or lowest value is returned), and 'key matcher' (described below).
-The idea is that an enclave of this type could be used to host simple one-off multi-party computations (eg five employees wanting to know the average of their salaries, or ten firms wanting to know who had the lowest sales last month without revealing what that figure was).
+The idea is that an enclave of this type could be used to host simple one-off multi-party computations (e.g., five employees wanting to know the average of their salaries, or ten firms wanting to know who had the lowest sales last month without revealing what that figure was).
 
 ### [Column Profiling](./column-profiling):
 This sample does Column Profiling on the dataset and
