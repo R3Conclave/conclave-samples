@@ -24,7 +24,7 @@ and explains its uses and applications.
 This sample allows bidders to confidentially submit their bids to an enclave (A protected region of memory which cannot be accessed by the OS, Kernel or BIOS). The bids are processed confidentially in the enclave and the result is returned to concerned parties.
 
 ### [Conclave Corda Trade](./conclave-corda-trade):
-This application serves as a demo for building a confidential trading system based on Corda and Conclave. An exchange Corda node would serve as a host which runs the enclave, while broker nodes servers as clients which send encryped order from their end-clients which are matched in the enclave and trades generated are recorded in all relevant participants ledgers.
+This application serves as a demo for building a confidential trading system based on Corda and Conclave. An exchange Corda node would serve as a host which runs the enclave, while broker nodes serve as clients which send encrypted orders from their end-clients which are matched in the enclave and trades generated are recorded in all relevant participants ledgers.
 
 ### [Psi](./psi-sample):
 PSI problem refers to the problem of determining the common elements from the intersection of two sets without leaking or disclosing any additional information of the remaining elements of the either sets.
