@@ -42,7 +42,7 @@ This sample shows you how you can use the [Tribuo Java ML](https://tribuo.org/le
 
 ### [Database Enclave](./psi-sample):
 With the new 3rd Gen Intel Xeon Scalable Processors supporting 1 TB of enclave memory, 
-setting up database inside and enclave is very well possible. This sample shows how persistence is used to create a database inside an enclave and save data into it, how to create a
+setting up a database inside an enclave is very well possible. This sample shows how persistence is used to create a database inside an enclave and save data into it as well as how to create a
 table/insert records into it/select records from the table. This also shows how persisted records can be retrieved by
 the enclave once the host is re-started.
 
