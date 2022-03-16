@@ -5,8 +5,8 @@
 
 # Conclave Samples
 
-This repository contains multiple conclave sample applications which is intended to help
-developers to get started with the conclave platform and understand different features of
+This repository contains multiple Conclave sample applications which is intended to help
+developers to get started with Conclave and understand different features of
 the platform. To learn more about the Conclave platform please visit our official
 [documentation](https://docs.conclave.net/).
 
