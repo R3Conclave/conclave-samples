@@ -32,7 +32,7 @@ Using this sample will see how Conclave (based on Intel SGX) can be a new tool t
 
 ### [Tribuo Classification](./tribuo-classification):
 Using this sample will see how Conclave (based on Intel SGX) can be used in training a ML model. We will use tribuo Java ML library to load the AI model.
-Most of the hospitals/doctors have lot of their patients' data, which can be used to determine whether a tumor is malignant or begnin.
+For example, hospitals have patients' data which can be used to determine whether a tumour is malignant or benign.
 Such data can be used to train an AI model. Once a model is trained, this model can be used to predict if a given tumor is malignant
 or begnin given certain input attributes.
 
