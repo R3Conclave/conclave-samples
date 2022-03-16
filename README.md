@@ -48,7 +48,7 @@ the enclave once the host is re-started.
 
 ### Initial SetUp
 
-In order to compile, and run these samples successfully, kindly download the conclave SDK and update 
+In order to compile, and run these samples successfully, kindly download the [conclave SDK](https://www.conclave.net/get-conclave/) and update 
 the conclaveRepo property in gradle.properties to point to this path.
 
     conclaveRepo=add_path_to_repo
