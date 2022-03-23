@@ -148,6 +148,9 @@ The recommended place to set the conclaveRepo and conclaveVersion properties is 
 By default, this file is located at $HOME/.gradle/gradle.properties
 This approach means that you only have to set the properties once, rather than for every project.
 
+</br>To override conclave sdk repo path you can pass in the path value via command line arguments to the host as shown below.
+./gradlew host:run -PconclaveRepo=<path-to-conclave-sdk>
+
 ####build.gradle
 This is the top-level build.gradle file which provides common config that applies to the entire project.
 
