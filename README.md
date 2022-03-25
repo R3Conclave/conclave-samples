@@ -52,11 +52,11 @@ This tutorial can be used to get started with Conclave in 5 mins. We will create
 a string to the enclave, the enclave will reverse it and send it back to the client and the machine on which the enclave 
 is running will not be able to discover what the string was, even though the reversal logic is executing on that machine!
 
-#Step 1: Prerequisites
-You need [JDK](https://www.oracle.com/java/technologies/downloads/) 8 or 11 installed in order to build and run the app.<br />
-Grab a copy of Conclave-SDK from [conclave.net](https://www.conclave.net/get-conclave/)
-We will use the `conclave init` tool for bootstrapping Conclave projects, reducing the amount of boilerplate you need to write.
-</br>You will find conclave-init.jar in the tools directory of the Conclave SDK.
+# Step 1: Prerequisites
+1. JDK: You need [JDK](https://www.oracle.com/java/technologies/downloads/) 8 or 11 installed in order to build and run the app.<br />
+2. Conclave-SDK: Grab a copy of Conclave-SDK from [conclave.net](https://www.conclave.net/get-conclave/)
+3. Conclave Init Tool: We will use the `conclave init` tool for bootstrapping Conclave projects, reducing the amount of boilerplate you need to write.
+You will find conclave-init.jar in the tools directory of the Conclave SDK.
 
 # Step 2: Create the project template using the conclave-init tool
 
