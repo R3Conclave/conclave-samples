@@ -1,0 +1,20 @@
+[
+  {
+    "name": "com.r3.conclave.sample.common.InputData"
+  },
+  {
+    "name": "com.r3.conclave.sample.common.UserData"
+  },
+  {
+    "name": "java.lang.Integer"
+  },
+  {
+    "name": "java.util.ArrayList"
+  },
+  {
+    "name": "com.r3.conclave.sample.common.CommandType"
+  },
+  {
+    "name": "java.lang.String"
+  }
+]

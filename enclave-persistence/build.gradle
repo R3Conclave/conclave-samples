@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    version = conclaveVersion
+
+    idea {
+        module {
+            downloadJavadoc = true
+        }
+    }
+    eclipse {
+        classpath {
+            downloadJavadoc = true
+        }
+    }
+
+    repositories {
+        maven {
+            url = rootProject.file(conclaveRepo)
+        }
+        mavenCentral()
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}
