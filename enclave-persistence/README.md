@@ -41,7 +41,9 @@ java -jar host-simulation-1.2.jar --sealed.state.file="./test.disk" --filesystem
 ```
 
 The `--sealed.state.file` is the path at which the enclave should store the sealed state containing the persistent map
-while `--filesystem.file` is the path to the encrypted filesystem.
+while `--filesystem.file` is the path to the encrypted filesystem. If you are using persistent map , please specify the 
+`--sealed.state.file` and if you are using persistent filesystem , specify `--filesystem.file`. If you are using both,
+do remember to specify both these parameters. More details could be found [here](https://docs.conclave.net/conclave-web-host.html).
 
 It should print out some info about the started enclave `Started EnclaveWebHost.Companion in ... seconds` Then you can
 use the client to send it strings to reverse. Run the client, to send data to the enclave.

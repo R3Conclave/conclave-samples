@@ -61,6 +61,8 @@ public class PersistentEnclave extends Enclave {
 
 //      Example on how to store password in persistent File system
 //      Use File IO operations to write/read from a file
+//      If you are using conclave web host, specify the filesystem file path using the flag --filesystem.file while starting the host
+//      Enable persistent file-system in your enclave's build.gradle
 //        try{
 //            File yourFile = new File("passwords.txt");
 //            FileOutputStream fout = new FileOutputStream(yourFile, true);
