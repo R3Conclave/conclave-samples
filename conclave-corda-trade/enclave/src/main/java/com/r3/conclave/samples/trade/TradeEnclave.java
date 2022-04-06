@@ -4,7 +4,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.r3.conclave.enclave.Enclave;
-import com.r3.conclave.enclave.EnclavePostOffice;
 import com.r3.conclave.mail.EnclaveMail;
 import net.corda.samples.trade.common.ModelSerializer;
 import net.corda.samples.trade.common.OrderModel;
@@ -12,7 +11,6 @@ import net.corda.samples.trade.common.TradeModel;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.security.PublicKey;
 import java.util.*;
 
 public class TradeEnclave extends Enclave {
@@ -25,7 +23,7 @@ public class TradeEnclave extends Enclave {
     }
 
     @Override
-    protected void receiveMail(long id, EnclaveMail mail, String routingHint) {
+    protected void receiveMail(EnclaveMail mail, String routingHint) {
         OrderModel order = readMail(mail);
         Map<String, Set<OrderModel>> orderMap;
         if(instrumentMap.get(order.getInstrument()) == null){
