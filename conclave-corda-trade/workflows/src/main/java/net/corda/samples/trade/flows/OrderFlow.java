@@ -3,6 +3,7 @@ package net.corda.samples.trade.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
+import com.r3.conclave.mail.MailDecryptionException;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -133,13 +134,17 @@ public class OrderFlow {
             counterpartySession.send(enclave.getAttestationBytes());
 
             // Receive a mail, send it to the enclave, get a reply and send it back to the peer.
-            recieveOrderFromBroker(enclave);
+            try {
+                recieveOrderFromBroker(enclave);
+            } catch (MailDecryptionException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
 
         @Suspendable
-        private void recieveOrderFromBroker(TradeEnclaveService host) throws FlowException {
+        private void recieveOrderFromBroker(TradeEnclaveService host) throws FlowException, MailDecryptionException {
             // Other party sends us an encrypted mail.
             byte[] encryptedMail = counterpartySession.receive(byte[].class).unwrap(it -> it);
             // Deliver mail to enclave to reply.

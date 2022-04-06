@@ -3,6 +3,7 @@ package net.corda.samples.trade.flows.service;
 import co.paralleluniverse.fibers.Suspendable;
 import com.r3.conclave.common.EnclaveInstanceInfo;
 import com.r3.conclave.mail.EnclaveMail;
+import com.r3.conclave.mail.MailDecryptionException;
 import com.r3.conclave.mail.PostOffice;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowSession;
@@ -73,7 +74,7 @@ public class EnclaveClientHelper extends SingletonSerializeAsToken {
             EnclaveMail reply = session.receive(byte[].class).unwrap((mail) -> {
                 try {
                     return postOffice.decryptMail(mail);
-                } catch (IOException e) {
+                } catch (IOException | MailDecryptionException e) {
                     throw new FlowException(e);
                 }
             });

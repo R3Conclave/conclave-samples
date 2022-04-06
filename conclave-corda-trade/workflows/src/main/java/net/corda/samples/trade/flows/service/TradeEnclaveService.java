@@ -4,6 +4,7 @@ import com.r3.conclave.host.AttestationParameters;
 import com.r3.conclave.host.EnclaveHost;
 import com.r3.conclave.host.EnclaveLoadException;
 import com.r3.conclave.host.MailCommand;
+import com.r3.conclave.mail.MailDecryptionException;
 import net.corda.core.node.AppServiceHub;
 import net.corda.core.node.services.CordaService;
 import net.corda.core.serialization.SingletonSerializeAsToken;
@@ -29,7 +30,7 @@ public class TradeEnclaveService extends SingletonSerializeAsToken {
             enclave = EnclaveHost.load("com.r3.conclave.samples.trade.TradeEnclave");
             // If you want to use pre-DCAP hardware via the older EPID protocol, you'll need to get the relevant API
             // keys from Intel and replace AttestationParameters.DCAP with AttestationParameters.EPID.
-            enclave.start(new AttestationParameters.DCAP(), (commands) -> {
+            enclave.start(new AttestationParameters.DCAP(), null, null, (commands) -> {
                 // The enclave is requesting that we deliver messages transactionally. In Corda there's no way to
                 // do an all-or-nothing message delivery to multiple peers at once: for that you need a genuine
                 // ledger transaction which is more complex and slower. So for now we'll just deliver messages
@@ -57,8 +58,8 @@ public class TradeEnclaveService extends SingletonSerializeAsToken {
         t.start();
     }
 
-    public void deliverMail(byte[] encryptedMail) {
-        enclave.deliverMail(counter.incrementAndGet(), encryptedMail, null);
+    public void deliverMail(byte[] encryptedMail) throws MailDecryptionException {
+        enclave.deliverMail(encryptedMail, null);
 
     }
 
