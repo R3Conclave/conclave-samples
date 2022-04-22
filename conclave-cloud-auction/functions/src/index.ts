@@ -39,7 +39,7 @@ class ConclavePass {
     }
 
     private async getDatabase(): Promise<BidDatabase> {
-        const response = await fetch(`${serviceURL}/passwords`);
+        const response = await fetch(`${serviceURL}/bids`);
         const encryptedDB = await response.text()
         return this.decryptDatabase(encryptedDB)
     }
@@ -50,7 +50,7 @@ class ConclavePass {
         const encryptedDB = this.encryptDatabase(db);
         //logs.push("encryptedDB");
         try {
-            const res = await fetch(`${serviceURL}/passwords`, {
+            const res = await fetch(`${serviceURL}/bids`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
