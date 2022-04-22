@@ -8,7 +8,7 @@ data class SetRequest(
 )
 
 @RestController
-@RequestMapping("/passwords")
+@RequestMapping("/bids")
 class ConclavePassController {
     private val bidDatabases: MutableMap<String, String> = mutableMapOf()
     @PostMapping()
