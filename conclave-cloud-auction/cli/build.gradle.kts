@@ -8,7 +8,7 @@ plugins {
 
 tasks {
 	application {
-		mainClass.set("com.r3.conclavepass.ConclavePassKt")
+		mainClass.set("com.r3.conclavepass.ConclaveAuctionKt")
 	}
 }
 

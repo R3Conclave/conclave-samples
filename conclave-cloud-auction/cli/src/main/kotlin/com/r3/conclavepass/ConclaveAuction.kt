@@ -5,11 +5,11 @@ import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
-    exitProcess(ConclavePass().execute(args))
+    exitProcess(ConclaveAuction().execute(args))
 }
 
-class ConclavePass {
-    private val commandLine = CommandLine(ConclavePassCli())
+class ConclaveAuction {
+    private val commandLine = CommandLine(ConclaveAuctionCli())
 
     companion object {
         val auth = Authentication()
@@ -23,13 +23,13 @@ class ConclavePass {
 }
 
 @CommandLine.Command(
-    name = "conclavepass",
+    name = "conclaveauction",
     description = [
             "Conclave Pass CLI: A demonstration showing how to use Conclave Cloud."
     ],
     subcommands = [ LoginCli::class, LogoutCli::class, AddCli::class, CalculateBidWinnerCli::class]
 )
-class ConclavePassCli: Callable<Int> {
+class ConclaveAuctionCli: Callable<Int> {
     @CommandLine.Spec
     private lateinit var spec: CommandLine.Model.CommandSpec
 
@@ -48,7 +48,7 @@ class ConclavePassCli: Callable<Int> {
 )
 class LoginCli : Callable<Int> {
     override fun call(): Int {
-        ConclavePass.auth.login()
+        ConclaveAuction.auth.login()
         return 0
     }
 }
@@ -59,7 +59,7 @@ class LoginCli : Callable<Int> {
 )
 class LogoutCli : Callable<Int> {
     override fun call(): Int {
-        ConclavePass.auth.logout()
+        ConclaveAuction.auth.logout()
         return 0
     }
 }
@@ -75,7 +75,7 @@ class AddCli : Callable<Int> {
 
     override fun call(): Int {
         try {
-            println(ConclavePass.conclave.addBid(BidEntry(ConclavePass.auth.getUserInfo().username, bid)))
+            println(ConclaveAuction.conclave.addBid(BidEntry(ConclaveAuction.auth.getUserInfo().username, bid)))
         } catch (ex: Exception) {
             println("Failed to add a new bid. Perhaps you entered an incorrect password? " + ex)
         }
@@ -92,7 +92,7 @@ class CalculateBidWinnerCli : Callable<Int> {
 
     override fun call(): Int {
         try {
-            val bidEntry = ConclavePass.conclave.calculateBidWinner()
+            val bidEntry = ConclaveAuction.conclave.calculateBidWinner()
             println("The winner of the auction is : ${bidEntry.username}" + " with bid amount : " + bidEntry.bid)
         } catch (ex: Exception) {
             println("Failed get bid entry. Perhaps you entered an incorrect password or it doesn't exist?"+ex)
