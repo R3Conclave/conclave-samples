@@ -14,7 +14,7 @@ interface BidDatabase {
 const logs = new Array<string>()
 
 
-class ConclavePass {
+class ConclaveAuction {
     async addBid(entry: BidEntry) {
         const pd = await this.getDatabase();
         // Add the new entry.
@@ -81,11 +81,11 @@ class ConclavePass {
 }
 
 export async function addBid(entry: BidEntry): Promise<string> {
-    await new ConclavePass().addBid(entry);
+    await new ConclaveAuction().addBid(entry);
     //return JSON.stringify(logs);
     return "ok"
 }
 
 export async function calculateBidWinner(extra: string): Promise<BidEntry> {
-    return await new ConclavePass().calculateBidWinner();
+    return await new ConclaveAuction().calculateBidWinner();
 }

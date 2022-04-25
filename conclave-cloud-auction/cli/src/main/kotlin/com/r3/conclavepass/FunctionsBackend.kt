@@ -11,12 +11,12 @@ import com.r3.conclavecloud.client.ConclaveClientConfig
 //  ccl platform tenant
 //  ccl projects list
 val tenantID = "T5A4E8A64A4ED22176918FA66FE88746332F904408A246019CB4903F7905A0AF"
-val projectID = "4551519a8dca7832fd4e45fb4ba7fa3781ce3bea6e1d67ac1d46f86de651757c"
+val projectID = "322b25eea9bbdc90be82691b6f5cc8c3afb0d68d9c01dac31a26198e87f78f5a"
 
 // Ensure these hashes match the actual hashes of the uploaded code
 //  ccl functions list
-val addBidHash = "6B440CC4EE8A319D7F87D10DE45C97A3874AE0EB181217DB4D28D549C752E5D8"
-val calculateBidWinnerHash = "56D25D7CC1604F2B64419442B4474075F8BDECC430E6FC765E18ACD819ADD3B1"
+val addBidHash = "6ADEA2D29766AA3447C45FDE3E15BDCFF7B5587C0196DF1DE745785CCAD93DAA"
+val calculateBidWinnerHash = "2BFBB0233F243D606796965B735940E721CBD0D68E6EE880E5F17E0725D727FA"
 
 // A class to represent a bid entry.
 data class BidEntry(
