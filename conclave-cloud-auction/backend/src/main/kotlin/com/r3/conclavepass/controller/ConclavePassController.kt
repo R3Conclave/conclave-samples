@@ -10,19 +10,19 @@ data class SetRequest(
 @RestController
 @RequestMapping("/bids")
 class ConclavePassController {
-    private val bidDatabases: MutableMap<String, String> = mutableMapOf()
+    private var bidDatabases = String();
     @PostMapping()
     fun set(
         @RequestBody request: SetRequest
     ): ResponseEntity<String> {
-        println("Set: " + request.encryptedDB)
-        bidDatabases["bids"] = request.encryptedDB
+        println("Put: " + request.encryptedDB)
+        bidDatabases = request.encryptedDB
         return ResponseEntity.ok("ok")
     }
 
     @GetMapping()
     fun get(): ResponseEntity<String> {
-        println("Get: " + bidDatabases["bids"])
-        return ResponseEntity.ok(bidDatabases["bids"] ?: "")
+        println("Get: " + bidDatabases)
+        return ResponseEntity.ok(bidDatabases ?: "")
     }
 }
