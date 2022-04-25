@@ -1,4 +1,4 @@
-package com.r3.conclavepass
+package com.r3.conclaveauction
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.nio.file.Paths

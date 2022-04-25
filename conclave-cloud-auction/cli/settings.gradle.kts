@@ -1,1 +1,1 @@
-rootProject.name = "conclavepass"
+rootProject.name = "conclaveauction"

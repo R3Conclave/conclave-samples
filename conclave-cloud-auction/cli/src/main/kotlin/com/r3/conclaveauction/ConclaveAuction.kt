@@ -1,4 +1,4 @@
-package com.r3.conclavepass
+package com.r3.conclaveauction
 
 import picocli.CommandLine
 import java.util.concurrent.Callable
