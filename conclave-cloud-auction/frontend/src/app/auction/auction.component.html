@@ -1,0 +1,21 @@
+<button mat-raised-button class="logout" (click)="logout()">Logout {{auth.email}}</button>
+<mat-card>
+  <mat-card-content>
+    <form #addPasswordForm1="ngForm" (ngSubmit)="addBid()">
+      <h2>Add a new bid</h2>
+      <mat-form-field>
+        <input matInput placeholder="bid" [(ngModel)]="bid" name="bid" required>
+        <mat-error>
+          Please provide a URL
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" [disabled]="!addPasswordForm1.form.valid">Add</button>
+    </form>
+    <br/>
+    <button mat-raised-button (click)="calculateBidWinner()">Calculate Auction Winner</button>
+    <br/>
+    <br/>
+    <h1 *ngIf="textShow">Congratulations the Auction winner is : {{auctionWinner}} with the highest bid amount of : {{this.bid}}!</h1>
+  </mat-card-content>
+</mat-card>

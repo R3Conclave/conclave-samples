@@ -1,0 +1,17 @@
+.logout {
+    margin: 5px;
+}
+
+mat-card {
+    max-width: 800px;
+    margin: 2em auto;
+    text-align: left;
+}
+
+.mat-column-delete {
+    max-width: 3em;
+
+    :hover {
+        cursor: pointer;
+    }
+}
