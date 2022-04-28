@@ -147,15 +147,15 @@ Instructions on how to do this and build and run the CLI can be found in
 
 Steps to run Auction application
 
-Login to CCL using sneha.damle@r3.com and invoke below functions
+Login to CCL using user1@xyz.com and invoke below functions
 
 cli add --bid "8000"
 
-Login to CCL using tom.ron@gmail.com and invoke below functions
+Logout and login to CCL using other user as tom.ron@gmail.com and invoke below functions
 
 cli add --bid "7000"
 
 cli calculateBidWinner
 
-The winner of the auction is : sneha.damle@r3.com with bid amount : 8000
+The winner of the auction is : user1@xyz.com with bid amount : 8000
 
