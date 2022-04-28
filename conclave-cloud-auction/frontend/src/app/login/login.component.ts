@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public loginValid = true;
   public username = '';
   public password = '';
+  public dateYear = new Date().getFullYear();
 
   constructor(
     private authService: AuthService,

@@ -12,7 +12,7 @@ import { AuthService } from '../auth.service';
 })
 export class AuctionComponent implements OnInit {
   public bid = '';
-  public textShow = false;
+  public textShow = true;
   public auctionWinner = '';
 
   constructor(

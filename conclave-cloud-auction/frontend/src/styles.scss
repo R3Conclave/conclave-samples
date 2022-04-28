@@ -1,8 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --color-main: #003245;
+  --color-secondary-blue: #2aafc8;
+  --color-secondary-blue-200: rgb(175, 229, 238);
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+  --color-secondary-400: #008ca4;
+  --color-secondary-200: #5eb4c3;
+  --color-secondary-100: #a4d6df;
+  --color-main-grey: #f2f2f2;
+  --color-secondary-grey: #cad4d8;
+  --color-ternary-grey: #c0bfc7;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Poppins", Roboto, "Helvetica Neue", sans-serif;
+}
 
 h1 {
-    text-align: center;
+  text-align: center;
 }
