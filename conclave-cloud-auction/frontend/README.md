@@ -1,4 +1,5 @@
-# Conclave Pass Frontend- Password Manager implemented using Conclave Cloud
+# Conclave Auction Frontend using Conclave Cloud
+
 This project implements a frontend using Angular to demonstrate how a
 web-browser application can directly access services in Conclave Cloud.
 
@@ -7,8 +8,8 @@ implemented using a Conclave Functions backend.
 
 * Login/Logout using username and password.
 * List password entries for the logged in user.
-* Get the actual password for an entry.
-* Remove a password entry.
+* Submit an auction bid.
+* Calculate the Auction winner.
 
 ## Building
 The Conclave Cloud JavaScript SDK npm package is not currently hosted in a
