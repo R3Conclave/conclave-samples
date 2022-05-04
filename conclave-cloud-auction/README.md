@@ -22,47 +22,38 @@ This application has 4 modules - functions, frontend, cli and backend.
 Each component is described below:
 
 ## Functions
-We will be writing our functions in ts. 
-We use web pack which is a static module bundler, and it will compiles the ts functions to a single 
-JS file called the main.bundle.js.
-The ``src/index.ts`` contains the code for all of the functions that we want to upload.
-
-Now for conclave cloud to be able to access these functions we will export 
-them to a global object named ``cclexports``. 
+We will be writing our functions in typescript(.ts). 
+We use web pack which is a static module bundler, and it will compiles typescript(.ts) functions to a single 
+javascript(.js) file called the main.bundle.js.
+The src/index.ts contains the code for all of the functions that we want to upload.
+Now for conclave cloud to be able to access these functions we will export them to a global object named cclexports. 
 This is done by specifying cclexports in front of the lib parameter inside the output section in webpack.config.js.
-Ok so we now know where to write functions, how to export them.
-
-Let now see what my functions do. 
-The addBid function takes a bid from the logged in user and sends it to a backend service.
-The backend service stores the bids against the logged in user.
+The addBid function takes a bid from the logged in user and sends it to a backend service. The backend service stores 
+the bids against the logged in user.
 The calculateBidWinner function will hit the backend service, 
 will calculate the bid with the highest amount and will return the auction bid winner.
 
 ## Backend
-The backend service needs to be available as a fixed IP on the internet so that this can be called 
-by the function loaded inside conclave cloud. I have this service running as a spring boot application on my cloud.
+The backend service needs to be available as a fixed IP on the internet so that this can be called by the 
+function loaded inside conclave cloud. I have this service running as a spring boot application on my cloud.
 This service maintains the submitted bids by all the users in memory. 
-So the data will be lost when you restart the service.
-This service can eventually be replaced by an actual database, 
-which might be offered as a service by conclave cloud similar to conclave functions.
+The data will be lost when you restart the service. This service can eventually be replaced by an actual database, 
+which might be offered as a service by conclave cloud similar to conclave functions in the future.
 
 ## Frontend
-Conclave cloud provides you with 2 client sdks - one which can be used by your web browser application 
-to invoke functions deployed to conclave cloud.
-The link to the JS client SDK can be found in this videos description.
-Once you have downloaded the JS client SDK, please add this as a dependency to this frontend module
-by pasting the path to the directory containing this sdk to the conclave-cloud-sdk param in the package.json file.
-Let’s see how can we invoke the uploaded functions using this sdk. Take a look at the ccl.service.ts.
-By passing the project id and tenant id, you can get hold of the conclave object, 
-and then can call the uploaded functions using the functions.call method, passing 
-it the name of the functions, functions hash, and the input parameters.
-We will talk about what is this function hash in a bit.
+Conclave cloud provides you with 2 client sdks, one which can be used by your web browser application 
+to invoke functions deployed to the conclave cloud. You can download the Conclave JS client SDK from here.
+Once you have downloaded the JS client SDK, please add this as a dependency to this frontend module by pasting
+the path to the directory containing this sdk to the conclave-cloud-sdk param in the package.json file.
+Let's see how can we invoke the uploaded functions using this sdk. Take a look at the ccl.service.ts.
+By passing the project-id and tenant-id, you can get hold of the conclave object, and then can call the uploaded
+functions by passing it the name of the functions, functions hash(SHA-256 of the entire function code), 
+and the input parameters.
 
 ## CLI
 This demonstrates how the Conclave Cloud Kotlin/Java
 SDK can be used to interact with Conclave Functions.
 This is similar to the frontend module. 
-First you need access to the conclave object, and then you can call the functions by passing in the input parameters.
 
 ## What is it that the client wants to achieve?
 
