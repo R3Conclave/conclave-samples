@@ -10,7 +10,7 @@ The bids are processed confidentially in the enclave and the result is returned.
 
 We will write and upload two functions to the conclave cloud. 
 1. Which lets users submit their bids. 
-2. Which lets users calculate the auction winners. Once uploaded, we will execute them by calling the
+2. Which lets users calculate the auction winner. 
 
 Conclave has this concept of project which is basically a collection of multiple services. 
 As of now this just has the conclave function service.
