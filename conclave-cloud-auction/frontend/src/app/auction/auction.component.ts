@@ -12,8 +12,9 @@ import { AuthService } from '../auth.service';
 })
 export class AuctionComponent implements OnInit {
   public bid = '';
-  public textShow = true;
+  public textShow = false;
   public auctionWinner = '';
+  public winningBid = '';
 
   constructor(
     private ccl: CclService,
@@ -37,7 +38,7 @@ export class AuctionComponent implements OnInit {
   public calculateBidWinner(): void {
       this.ccl.calculateBidWinner().then((entry) => {
           console.log(`Inside calculateBidWinner:` + entry.bid);
-          this.bid = entry.bid;
+          this.winningBid = entry.bid;
           this.auctionWinner = entry.email;
           this.textShow = true;
           this.router.navigateByUrl('');
