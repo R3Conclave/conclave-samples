@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CclService, PasswordEntry } from '../ccl.service';
+import { CclService } from '../ccl.service';
 import { MatDialog } from '@angular/material/dialog';
-// import { ShowPasswordDialogComponent } from '../show-password-dialog/show-password-dialog.component';
 import { AuthService } from '../auth.service';
 
 @Component({
