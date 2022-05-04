@@ -210,7 +210,7 @@ ccl functions upload --code ./build/main.bundle.js --entry=addBid --name addBid
 ccl functions upload --code ./build/main.bundle.js --entry=calculateBidWinner --name calculateBidWinner
 ```
 
-### CLI
+### 3. CLI
 
 Edit `build.gradle.kts` and edit the repository path to point to the directory
 where you unzipped the SDK.
@@ -227,7 +227,7 @@ The tool uses PicoCli to provide a command line interface. This can be invoked
 once built using the following command:
 
 ```
-java -jar ./build/libs/conclavepass-0.0.1-SNAPSHOT-all.jar [args]
+java -jar ./build/libs/conclaveauction-0.0.1-SNAPSHOT-all.jar [args]
 ```
 
 It is recommended to create a shell script that invokes this for you, passing
@@ -236,7 +236,7 @@ all arguments to Java:
 _`cpcli`:_
 ```bash
 #/bin/bash
-java -jar ./build/libs/conclavepass-0.0.1-SNAPSHOT-all.jar "$@"
+java -jar ./build/libs/conclaveauction-0.0.1-SNAPSHOT-all.jar "$@"
 ```
 
 #### Login
@@ -273,3 +273,22 @@ We will invoke the calculateBidWinner function to calculate the Auction winner.
     cli calculateBidWinner
 
     The winner of the auction is : user1@xyz.com with bid amount : 8000
+
+### 4. Frontend
+
+The Conclave Cloud JavaScript SDK npm package is not currently hosted in a
+public repository. You need to download the package containing the SDK, unzip it
+then update `package.json` in this project to point to it.
+
+```json
+    "conclave-cloud-sdk": "file:../../../conclave-cloud-sdk-js",
+```
+
+Once configured, the project can be built and started using a local webserver using:
+
+```
+npm install
+npm start
+```
+
+This will start a web server to host the frontend on `http://localhost:4200`.
