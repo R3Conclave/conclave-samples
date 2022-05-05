@@ -178,7 +178,7 @@ This approach means that you only have to set the properties once, rather than f
 </br>To override conclave sdk repo path you can pass in the path value via command line arguments to the host as shown below.
 ./gradlew host:run -PconclaveRepo=<path-to-conclave-sdk>
 
-####build.gradle
+#### build.gradle
 This is the top-level build.gradle file which provides common config that applies to the entire project.
 
 It imports the Conclave SDK repository into our project using the conclaveRepo Gradle property.
@@ -193,7 +193,7 @@ See Gradle Properties for more information on this.
     }
     ...
 
-####gradle.properties
+#### gradle.properties
 Defines some versions of dependencies.
 Note, we assume that the required conclaveRepo and conclaveVersion properties are set in the user-wide gradle.properties file.
 
