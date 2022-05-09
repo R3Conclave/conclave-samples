@@ -7,14 +7,20 @@ interface BidEntry {
     bid: string;
 }
 
+// Bids array structure which will we will encrypt before saving to the db
 interface BidDatabase {
     bids: Array<BidEntry>;
 }
 
 const logs = new Array<string>()
 
-
+/**
+ * This class defines the methods which should be uploaded to the Conclave Cloud Platform. The user can use the
+ * ccl tool to upload these functions to the cloud platform.
+ */
 class ConclaveAuction {
+
+    // Add bid function will be called to enter a bid to the database
     async addBid(entry: BidEntry) {
         const pd = await this.getDatabase();
         // Add the new entry.
@@ -23,6 +29,7 @@ class ConclaveAuction {
         await this.putDatabase(pd);
     }
 
+    // CalculateBidWinner will query the database, loop over all the bids and return the bid winner
     async calculateBidWinner(): Promise<BidEntry> {
         const pd = await this.getDatabase();
 
@@ -38,17 +45,17 @@ class ConclaveAuction {
     return found;
     }
 
+    // This method hits the database service, decrypts the data and returns it back
     private async getDatabase(): Promise<BidDatabase> {
         const response = await fetch(`${serviceURL}/bids`);
         const encryptedDB = await response.text()
         return this.decryptDatabase(encryptedDB)
     }
 
+    // This method will take the bid entry, encrypt this and will push it to the database
     private async putDatabase(db: BidDatabase) {
-        //logs.push("putDatabase()");
 
         const encryptedDB = this.encryptDatabase(db);
-        //logs.push("encryptedDB");
         try {
             const res = await fetch(`${serviceURL}/bids`, {
                 method: "POST",
@@ -57,12 +64,12 @@ class ConclaveAuction {
                 },
                 body: JSON.stringify({ encryptedDB: encryptedDB })
             });
-            //logs.push("Service called: " + JSON.stringify(res));
         } catch (e) {
-            //logs.push("Exception");
+            logs.push("Exception");
         }
     }
 
+    // This method will decrypt the database bid entries using project key
     private decryptDatabase(db: string): BidDatabase {
         // If we have been given a database then decrypt it.
         if (db) {
@@ -74,18 +81,21 @@ class ConclaveAuction {
         }
     }
 
+    // This method will encrypt the database bid entries using project key
     private encryptDatabase(pd: BidDatabase): string {
         const encrypted = AES.encrypt(JSON.stringify(pd), crypto.getProjectKey());
         return encrypted.toString()
     }
 }
 
+// Exporting addBid function such that addBid function is available to be called by the Conclave Cloud Platform
 export async function addBid(entry: BidEntry): Promise<string> {
     await new ConclaveAuction().addBid(entry);
     //return JSON.stringify(logs);
     return "ok"
 }
 
+// Exporting addBid function such that calculateBidWinner function is available to be called by the Conclave Cloud Platform
 export async function calculateBidWinner(extra: string): Promise<BidEntry> {
     return await new ConclaveAuction().calculateBidWinner();
 }

@@ -23,6 +23,10 @@ export interface BidEntry {
   bid: string;
 }
 
+/**
+ * This class shows you how you can use the Conclave JS sdk to invoke the uploaded functions in conclave
+ * cloud.
+ */
 @Injectable({
   providedIn: 'root'
 })
