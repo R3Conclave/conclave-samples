@@ -1,0 +1,28 @@
+<section class="login-section">
+    <div class="conclave-logo"></div>
+    <h1>CONCLAVE CLOUD AUCTION</h1>
+<mat-card class="card">
+    <mat-card-content>
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+            <h2>Log In</h2>
+            <mat-error *ngIf="!loginValid">
+                The username and password were not recognized
+            </mat-error>
+            <mat-form-field>
+                <input matInput placeholder="Email" [(ngModel)]="username" name="username" required>
+                <mat-error>
+                    Please provide a valid email address
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input color="primary" matInput type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
+                <mat-error>
+                    Please provide a valid password
+                </mat-error>
+            </mat-form-field>
+            <button mat-raised-button [disabled]="!loginForm.form.valid" class="login-button">Login</button>
+        </form>
+    </mat-card-content>
+</mat-card>
+<p class="copyright"><small>&#169; {{dateYear}} R3. All rights reserved.</small></p>
+</section>

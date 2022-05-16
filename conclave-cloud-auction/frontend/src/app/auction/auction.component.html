@@ -1,0 +1,29 @@
+<section class="auction-view">
+  <section class="user-details-section">
+    <h1>Conclave Cloud Auction</h1>
+<p><span class="label">USER:</span> {{auth.email}}</p>
+<button mat-raised-button class="logout" (click)="logout()">Logout</button>
+</section>
+<section class="bid-section">
+<mat-card class="bid-card">
+    <mat-card class="winning-text">
+      <h2 *ngIf="textShow">Congratulations the Auction winner is : {{auctionWinner}} <br>with the highest bid amount of :
+        {{this.winningBid}}!</h2>
+    </mat-card>
+  <mat-card-content>
+    <form #addPasswordForm1="ngForm" (ngSubmit)="addBid()">
+      <h2 class="bid-title">Add a new bid</h2>
+      <mat-form-field>
+        <input matInput placeholder="bid" [(ngModel)]="bid" name="bid" required>
+        <mat-error>
+          Please provide a Bid
+        </mat-error>
+      </mat-form-field>
+
+      <button class="add-button" mat-raised-button color="primary" [disabled]="!addPasswordForm1.form.valid">Add</button>
+    </form>
+    <button class="add-button" mat-raised-button color="primary" (click)="calculateBidWinner()" [disabled]="!addPasswordForm1.form.valid">Calculate Winner</button>
+  </mat-card-content>
+</mat-card>
+</section>
+</section>

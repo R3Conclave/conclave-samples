@@ -1,0 +1,68 @@
+.login-section {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  //   background-color: var(--color-main);
+  background-color: var(--color-main-grey);
+}
+
+.conclave-logo {
+  height: 3rem;
+  width: 8rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("../../assets/Conclave_logo_master_b&r.svg");
+}
+
+h1 {
+  color: var(--color-main);
+  font-weight: bold;
+  letter-spacing: 0.075rem;
+  text-shadow: 0px 1px 2px var(--color-ternary-grey);
+  //   font-family: "Poppins";
+}
+
+.card {
+  width: 20rem;
+  border: solid 2px var(--color-main);
+  box-shadow: 0px 3px 2px -1px var(--color-ternary-grey),
+    0px 2px 2px 0px var(--color-main-grey),
+    0px 2px 4px 0px var(--color-ternary-grey);
+  text-align: center;
+}
+
+mat-form-field {
+  display: block;
+}
+
+.login-button {
+  background-color: var(--color-main);
+  color: white;
+  &:hover {
+    background-color: var(--color-secondary-400);
+  }
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.26);
+    cursor: default;
+  }
+}
+
+.copyright {
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+  color: #a1a0a9;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: var(--color-secondary-400) !important;
+}
+
+::ng-deep.mat-form-field-ripple {
+  /*change color of underline when focused*/
+  background-color: var(--color-secondary-400) !important;
+}

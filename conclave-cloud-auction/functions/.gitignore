@@ -1,0 +1,13 @@
+build
+test_run
+node_modules
+.DS_Store
+.gradle/
+.idea
+**/build/
+**/bin/
+*/.gradle/
+*/.idea/*
+**/.vscode/*
+**/out/
+**/logs/
