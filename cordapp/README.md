@@ -17,7 +17,7 @@ do some manual work to set up a docker container (instructions below).
 ### macOS
 
 1. Download and install Docker Desktop if it isn't installed already. Ensure that it is running.
-2. Download and unpack JDK 11 (LTS) and set `JAVA_HOME` environment variable to point it. If you're already using 
+2. Download and unpack JDK 11 (LTS) and set `JAVA_HOME` environment variable to point to it. If you're already using 
    versions 8 to 12 then you can skip this step.
 3. Create and enter the Linux execution environment:
    ```
