@@ -11,7 +11,7 @@ do some manual work to set up a docker container (instructions below).
 
 ### Linux
 
-1. Download and unpack JDK 8 and set `JAVA_HOME` environment variable to point it.
+1. Download and unpack JDK 8 and set `JAVA_HOME` environment variable to point to it.
 2. Run `./gradlew workflows:test`
 
 ### macOS
@@ -25,7 +25,7 @@ do some manual work to set up a docker container (instructions below).
    docker run -it --rm -v ${HOME}:/home/${USER} -w /home/${USER} conclave-build /bin/bash
    ```
    This will mount your home directory and give you a Linux shell.
-4. Run the following command to setup JDK 8 inside the Linux environment:
+4. Run the following command to set up JDK 8 inside the Linux environment:
    ```
    apt-get -y update && apt-get install -y openjdk-8-jdk-headless && export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
    ```
@@ -38,7 +38,7 @@ do some manual work to set up a docker container (instructions below).
 ### Windows
 
 1. Download and install Docker Desktop if it isn't installed already. Ensure that it is running.
-2. Download and unpack JDK 11 (LTS) and set `JAVA_HOME` environment variable to point it. If you're already using
+2. Download and unpack JDK 11 (LTS) and set `JAVA_HOME` environment variable to point to it. If you're already using
    versions 8 to 12 then you can skip this step.
 3. Create and enter the Linux execution environment:
     ```
@@ -46,7 +46,7 @@ do some manual work to set up a docker container (instructions below).
     docker run -it --rm -v ${HOME}:/home/${env:UserName} -w /home/${env:UserName} conclave-build /bin/bash
     ```
     This will mount your user directory and give you a Linux shell.
-4. Run the following command to setup JDK 8 inside the Linux environment:
+4. Run the following command to set up JDK 8 inside the Linux environment:
    ```
    apt-get -y update && apt-get install -y openjdk-8-jdk-headless && export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
    ```
