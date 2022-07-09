@@ -40,6 +40,9 @@ This application serves as a demo for building a confidential trading system bas
 ### [Conclave Hello World](./hello-world):
 This is a simple app using the Conclave API and functions as a tutorial. It is licensed under the Apache 2 license, and therefore you may copy/paste it to act as the basis of your own commercial or open source apps.
 
+### [Cordapp](./cordapp):
+This is a simple CorDapp using the Conclave API and functions as a tutorial. It is licensed under the Apache 2 license, and therefore you may copy/paste it to act as the basis of your own commercial or open source apps.
+
 ### [Psi](./psi-sample):
 PSI problem refers to the problem of determining the common elements from the intersection of two sets without leaking or disclosing any additional information of the remaining elements of either sets.
 Using this sample will demonstrate how Conclave (based on Intel SGX) can be a new tool to solve the private set intersection (PSI) problem.
