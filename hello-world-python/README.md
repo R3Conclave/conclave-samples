@@ -19,7 +19,10 @@ There are four modes in which an enclave can be loaded
 3. Simulation Mode
 4. Mock Mode
 
+In order to run the sample in simulation mode take a look at the steps [here](https://docs.conclave.net/running-hello-world.html#build-the-enclave-in-other-modes).
+
 For this sample we will run our sample in mock mode.
+
 You can read more about modes [here](https://docs.conclave.net/enclave-modes.html).
 
 # Configurations to be added to a hello world conclave sample
