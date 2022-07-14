@@ -9,11 +9,11 @@ dependencies {
 conclave {
     productID = 1
     revocationLevel = 0
+    supportLanguages = "python"
 
     simulation {
         signingType = privateKey
         signingKey = file("../signing/sample_private_key.pem")
-        supportLanguages = "python"
     }
 
     debug {
