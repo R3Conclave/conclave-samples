@@ -38,7 +38,10 @@ This sample allows bidders to confidentially submit their bids to an enclave (A 
 This application serves as a demo for building a confidential trading system based on Corda and Conclave. An exchange Corda node would serve as a host which runs the enclave, while broker nodes serve as clients which send encrypted orders from their end-clients which are matched in the enclave and trades generated are recorded in all relevant participants ledgers.
 
 ### [Conclave Hello World](./hello-world):
-This is a simple app using the Conclave API and functions as a tutorial. It is licensed under the Apache 2 license, and therefore you may copy/paste it to act as the basis of your own commercial or open source apps.
+This is a simple conclave application which shows you how you can reverse a string in java.
+
+### [Conclave Hello World Python](./hello-world-python):
+This is a simple conclave application which shows how you can reverse a string in python.
 
 ### [Cordapp](./cordapp):
 This is a simple CorDapp using the Conclave API and functions as a tutorial. It is licensed under the Apache 2 license, and therefore you may copy/paste it to act as the basis of your own commercial or open source apps.
