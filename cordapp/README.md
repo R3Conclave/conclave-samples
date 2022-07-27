@@ -1,6 +1,6 @@
 # CorDapp Sample
 
-This is a simple [CorDapp](https://docs.r3.com/en/platform/corda/4.8/open-source/cordapp-overview.html) written in Java using the Conclave API. It is licensed under the Apache 2 license. So, you 
+This is a simple [CorDapp](https://docs.r3.com/en/platform/corda/4.8/open-source/cordapp-overview.html) written in Java using the Conclave API. It is licensed under the Apache 2 license. So, you
 can copy/paste it to act as the basis of your commercial or open source apps.
 
 This CorDapp sample builds on the [hello-world](https://docs.conclave.net/writing-hello-world.html) sample. It reverses a string using two [nodes](https://docs.r3.com/en/platform/corda/4.8/enterprise/node/component-topology.html). One of these nodes is used to load the enclave.
@@ -10,13 +10,13 @@ This sample does not use smart contracts. It requires only flows.
 The sample divides the code into several parts. You can copy/paste the packages that _don't_ have `samples` in the name.
 The code expects a DCAP-capable host.
 
-!!! important
+*Note:
 To understand this tutorial, you should read both the [Conclave Hello World tutorial](https://docs.conclave.net/writing-hello-world.html)
-and [the Corda tutorials](https://docs.corda.net/docs/corda-os/4.7/hello-world-introduction.html).
+and [the Corda tutorials](https://docs.corda.net/docs/corda-os/4.7/hello-world-introduction.html).*
 
 ## How to run the sample CorDapp in different environments
 
-Unlike most CorDapps, this sample will *only run on Linux* due to the need for an enclave. However, you can use 
+Unlike most CorDapps, this sample will *only run on Linux* due to the need for an enclave. However, you can use
 virtualization to run it on Windows and macOS. For Windows and macOS, you need to set up a docker container.
 
 ### Linux
@@ -27,7 +27,7 @@ virtualization to run it on Windows and macOS. For Windows and macOS, you need t
 ### macOS
 
 1. Download and install Docker Desktop. Ensure that it is running.
-2. Download and unpack JDK 11 (LTS) and set `JAVA_HOME` environment variable to point to it. If you're already using 
+2. Download and unpack JDK 11 (LTS) and set `JAVA_HOME` environment variable to point to it. If you're already using
    versions 8 to 12, you can skip this step.
 3. Create and enter the Linux execution environment:
    ```
@@ -75,7 +75,7 @@ For an explanation of the Docker command used above, see
 ## Corda Node Identity Validation
 The [certificates](certificates) folder contains the truststore.jks Java KeyStore that has the Corda Root
 Certificate Authority (CA) public key. This public key can be used for development or testing purposes. The public key also creates
-the certificate *trustedroot.cer*, embedded as a resource in the enclave. This certificate is used to validate a Corda node's identity 
+the certificate *trustedroot.cer*, embedded as a resource in the enclave. This certificate is used to validate a Corda node's identity
 when the host relays a message to the enclave.
 
 To learn more about root certificates in the Corda network, please refer to
@@ -85,7 +85,7 @@ You can find the public Corda Network Root Certificate [here](https://trust.cord
 
 ### Usage
 Use the shell script `dmp-cordarootca.sh` to dump the Root CA certificate. Then, copy and paste the
-output to the cordapp/enclave/src/main/resources/trustedroot.cer. 
+output to the cordapp/enclave/src/main/resources/trustedroot.cer.
 
 *Note that this has been already
 done for you, and is reported here only for documentation purpose*.
@@ -133,9 +133,9 @@ dependencies {
 }
 ```
 
-!!! important
+*Note:
 You must use Gradle's `compile` configurations for the host dependencies. If you use `implementation`, you
-will get errors when the node starts up about missing classes due to issues with fat JARing. The host `dependencies` section should look like the above.
+will get errors when the node starts up about missing classes due to issues with fat JARing. The host `dependencies` section should look like the above snippet.*
 
 ## Write an enclave host service
 
@@ -155,7 +155,7 @@ public class ReverseEnclaveService extends EnclaveHostService {
 This will enable SGX support on the host. Then, it loads the sample `ReverseEnclave` class. The `EnclaveHostService` class exposes methods to
 send and receive mail with the enclave, and suspends flows waiting for the enclave to deliver mail.
 
-In the next section about relaying a mail from a flow to the enclave, Conclave uses 
+In the next section about relaying a mail from a flow to the enclave, Conclave uses
 the above class as a parameter to initiate the responder flow that ensures the host service is started.
 
 ## Relaying mail from a flow to the enclave
@@ -171,7 +171,7 @@ the other is the responder that reverses the string inside the enclave. To imple
 The responder flow to get the enclave host service up and running is as follows:
 
 1. Get the enclave attestation and send it to the other party for verification.
-2. Get, verify, and acknowledge the other party's encrypted identity. 
+2. Get, verify, and acknowledge the other party's encrypted identity.
 3. Get the other party's encrypted mail with the string to reverse.
 4. Send the string and the encrypted mail to the enclave.
 5. Retrieve the enclave-encrypted mail to send to the other party for decryption.
@@ -214,7 +214,7 @@ The flow responder expects to receive an identity during the initialization. You
 @Throws(FlowException::class)
 @JvmStatic
 @JvmOverloads
-fun <T : EnclaveHostService> initiateResponderFlow(flow: FlowLogic<*>, 
+fun <T : EnclaveHostService> initiateResponderFlow(flow: FlowLogic<*>,
                                                    counterPartySession: FlowSession,
                                                    serviceType: Class<T>): EnclaveFlowResponder {
     // Start an instance of the enclave hosting service
@@ -230,7 +230,7 @@ fun <T : EnclaveHostService> initiateResponderFlow(flow: FlowLogic<*>,
 
 The `EnclaveFlowResponder` implements a request/response protocol that receives an encrypted byte array
 and uses the `deliverAndPickUpMail` method of the `EnclaveHostService` class. This returns an operation that can be passed
-to `await`. The flow will suspend and free up its thread, potentially for an extended period. The enclave need not reply immediately. 
+to `await`. The flow will suspend and free up its thread, potentially for an extended period. The enclave need not reply immediately.
 It can return from processing the delivered mail without replying. When the enclave replies, the flow will be re-awakened, and the encrypted mail will be returned to the other side.
 
 ```kotlin
@@ -247,8 +247,8 @@ fun relayMessageToFromEnclave() {
 }
 ```
 
-!!! important
-This sample code does not handle node restarts, although the Corda flow framework has built-in support for it.
+*Note:
+This sample code does not handle node restarts, although the Corda flow framework has built-in support for it.*
 
 ### The Initiator Flow
 
@@ -257,7 +257,7 @@ The initiator flow that starts a session with the responder party is as follows:
 1. Get the enclave attestation and validate it.
 2. Build and send a verifiable identity for the enclave to validate.
 3. Send the encrypted mail with the string to reverse.
-4. Read and decrypt the enclave's response. Note that a verifiable identity is only sent to the enclave if the `anonymous`
+4. Read and decrypt the enclave's response. Remember that a verifiable identity is only sent to the enclave if the `anonymous`
 property is set to false.
 
 ```java
@@ -439,5 +439,5 @@ The call [`mail.getBodyAsBytes()`](https://docs.conclave.net/api/-conclave/com.r
 the data to be processed by the enclave. As mentioned before, the `identity`
 parameter object contains the identity of the sender if the sender is not anonymous. It is set to null if the sender is anonymous.
 
-!!! important
-The `receiveMail` method has an extra identity parameter in addition to the parameters in a regular enclave. You can check how this works in the [CordaEnclave class](https://github.com/R3Conclave/conclave-samples/blob/master/cordapp/enclave/src/main/kotlin/com/r3/conclave/cordapp/sample/enclave/CordaEnclave.kt).
+*Note:
+The `receiveMail` method has an extra identity parameter in addition to the parameters in a regular enclave. You can check how this works in the [CordaEnclave class](https://github.com/R3Conclave/conclave-samples/blob/master/cordapp/enclave/src/main/kotlin/com/r3/conclave/cordapp/sample/enclave/CordaEnclave.kt).*
