@@ -1,18 +1,17 @@
-# CorDapp Sample - Java
+# CorDapp Sample
 
-This is a simple [CorDapp](https://docs.r3.com/en/platform/corda/4.8/open-source/cordapp-overview.html) using the Conclave API. It is licensed under the Apache 2 license. So, you 
+This is a simple [CorDapp](https://docs.r3.com/en/platform/corda/4.8/open-source/cordapp-overview.html) written in Java using the Conclave API. It is licensed under the Apache 2 license. So, you 
 can copy/paste it to act as the basis of your commercial or open source apps.
 
-This CorDapp sample builds on the [hello-world](writing-hello-world.md) sample. It reverses a string using two [nodes](https://docs.r3.com/en/platform/corda/4.8/enterprise/node/component-topology.html). One of these nodes is used to load the enclave.
+This CorDapp sample builds on the [hello-world](https://docs.conclave.net/writing-hello-world.html) sample. It reverses a string using two [nodes](https://docs.r3.com/en/platform/corda/4.8/enterprise/node/component-topology.html). One of these nodes is used to load the enclave.
 
 This sample does not use smart contracts. It requires only flows.
 
 The sample divides the code into several parts. You can copy/paste the packages that _don't_ have `samples` in the name.
-The code expects a DCAP-capable host. If you want to use EPID, you can edit the enclave startup code to make it use your
-Intel API keys.
+The code expects a DCAP-capable host.
 
 !!! important
-To understand this tutorial, you should read both the [Conclave Hello World tutorial](writing-hello-world.md)
+To understand this tutorial, you should read both the [Conclave Hello World tutorial](https://docs.conclave.net/writing-hello-world.html)
 and [the Corda tutorials](https://docs.corda.net/docs/corda-os/4.7/hello-world-introduction.html).
 
 ## How to run the sample CorDapp in different environments
@@ -75,7 +74,7 @@ For an explanation of the Docker command used above, see
 
 ## Corda Node Identity Validation
 The [certificates](certificates) folder contains the truststore.jks Java KeyStore that has the Corda Root
-Certificate Authority (CA) public key. This public key can be used for development or testing purposes. It creates
+Certificate Authority (CA) public key. This public key can be used for development or testing purposes. The public key also creates
 the certificate *trustedroot.cer*, embedded as a resource in the enclave. This certificate is used to validate a Corda node's identity 
 when the host relays a message to the enclave.
 
@@ -86,7 +85,9 @@ You can find the public Corda Network Root Certificate [here](https://trust.cord
 
 ### Usage
 Use the shell script `dmp-cordarootca.sh` to dump the Root CA certificate. Then, copy and paste the
-output to the cordapp/enclave/src/main/resources/trustedroot.cer. *Note that this has been already
+output to the cordapp/enclave/src/main/resources/trustedroot.cer. 
+
+*Note that this has been already
 done for you, and is reported here only for documentation purpose*.
 
 ```shell
@@ -114,7 +115,7 @@ For instructions on how to set the mode at build time, see [here](https://docs.c
 ## Configure your workflow CorDapp module
 
 Both Conclave and Corda rely on Gradle build system plugins. Follow the instructions in the
-[hello world tutorial](writing-hello-world.md) to configure Gradle to include an enclave mode. Add the host libraries
+[hello world tutorial](https://docs.conclave.net/writing-hello-world.html) to configure Gradle to include an enclave mode. Add the host libraries
 to your Corda workflows module:
 
 ```
@@ -154,14 +155,14 @@ public class ReverseEnclaveService extends EnclaveHostService {
 This will enable SGX support on the host. Then, it loads the sample `ReverseEnclave` class. The `EnclaveHostService` class exposes methods to
 send and receive mail with the enclave, and suspends flows waiting for the enclave to deliver mail.
 
-In the next section about [relaying a mail from a flow to the enclave](writing-cordapps.md#relaying-mail-from-a-flow-to-the-enclave), Conclave uses 
+In the next section about relaying a mail from a flow to the enclave, Conclave uses 
 the above class as a parameter to initiate the responder flow that ensures the host service is started.
 
 ## Relaying mail from a flow to the enclave
 
-You have already seen how to [create a new subclass of enclave](writing-hello-world.md#create-a-new-subclass-of-enclave) and how to
-[receive and post mail in the enclave](writing-hello-world.md#receiving-and-post-mail-in-the-enclave) in the
-[hello-world](writing-hello-world.md) tutorial. Conclave has wrapped some of this boilerplate into an API to simplify setting up secure flows and exchanging secure messages between parties.
+You can see how to [create a new subclass of enclave](https://docs.conclave.net/writing-hello-world.html#create-a-new-subclass-of-enclave) and how to
+[receive and post mail in the enclave](https://docs.conclave.net/writing-hello-world.html#sending-and-receiving-mail) in the
+[hello-world](https://docs.conclave.net/writing-hello-world.html#sending-and-receiving-mail) tutorial. Conclave has wrapped some of this boilerplate into an API to simplify setting up secure flows and exchanging secure messages between parties.
 
 In this tutorial, reversing a string involves two parties: one is the initiator that sends the secret string to reverse, and
 the other is the responder that reverses the string inside the enclave. To implement this, you will need an *initiator* flow used by clients and a *responder* flow used by the host node.
@@ -434,7 +435,7 @@ protected void receiveMail(long id, EnclaveMail mail, String routingHint, Sender
 
 The method `receiveMail` contains the enclave logic. You can code your business requirements in the `receiveMail method`.
 In the example above, the enclave reverses a string and returns the result back with the sender name if the party is not anonymous. The mail parameter contains some metadata, and the data which is going to be processed by the enclave.
-The call [`mail.getBodyAsBytes()`](api/-conclave/com.r3.conclave.mail/-enclave-mail/get-body-as-bytes.html) returns
+The call [`mail.getBodyAsBytes()`](https://docs.conclave.net/api/-conclave/com.r3.conclave.mail/-enclave-mail/index.html#-2025980493%2FFunctions%2F-654294413) returns
 the data to be processed by the enclave. As mentioned before, the `identity`
 parameter object contains the identity of the sender if the sender is not anonymous. It is set to null if the sender is anonymous.
 
