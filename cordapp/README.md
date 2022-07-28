@@ -66,7 +66,7 @@ virtualization to run it on Windows and macOS. For Windows and macOS, you need t
     ./gradlew workflows:test
     ```
 
-Alternatively, Ubuntu 20.04 via WSL 2 ([Windows Subsystem for Linux 2](https://docs.microsoft.com/en-us/windows/wsl/install)
+Alternatively, Ubuntu 20.04 via WSL 2 ([Windows Subsystem for Linux 2](https://docs.microsoft.com/en-us/windows/wsl/install))
 may also prove to work for you, though this has not been extensively tested.
 
 For an explanation of the Docker command used above, see
@@ -141,7 +141,7 @@ will get errors when the node starts up about missing classes due to issues with
 
 Conclave loads the enclave into a service object. This singleton will be available to flows for later usage, and lets
 us integrate with the node's lifecycle. The sample project contains a helper class called `EnclaveHostService` that
-you can copy into your project and subclass. You need to edit this helper class to make it work for your use case.
+you can copy into your project and subclass. You can edit this helper class to make it work for your use case.
 
 ```java
 @CordaService
