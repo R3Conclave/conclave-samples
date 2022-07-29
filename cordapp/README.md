@@ -292,10 +292,10 @@ public class ReverseFlow extends FlowLogic<String> {
 }
 ```
 
-After establishing a session with the hosting node, the flow waits for an [`EnclaveInstanceInfo`](api/-conclave/com.r3.conclave.common/-enclave-instance-info/index.html) to verify it
+After establishing a session with the hosting node, the flow waits for an [`EnclaveInstanceInfo`](https://docs.conclave.net/api/-conclave/com.r3.conclave.common/-enclave-instance-info/index.html) to verify it
 against the constraint passed. If the enclave verifies successfully
 and doesn't throw an exception, the flow sends the initiator party identity to the enclave for
-[authentication](writing-cordapps.md#authenticating-senders-identity). The last step is applicable only if the party wishes to
+[authentication](#authenticating-senders-identity). The last step is applicable only if the party wishes to
 share its identity. The flow doesn't send any identity information if the `anonymous` parameter is set to `true`.
 
 
@@ -331,7 +331,7 @@ fun initiateFlow(flow: FlowLogic<*>, receiver: Party, constraint: String,
 After verifying the enclave and authenticating the identity (if the party shares its identity),
 the flow can securely exchange encrypted messages with the enclave through the `EnclaveFlowInitiator` instance.
 This instance implements a send/receive API that encrypts and decrypts the outgoing and incoming data in the form of byte arrays.
-The send and receive methods use the [`PostOffice`](api/-conclave/com.r3.conclave.mail/-post-office/index.html) API. The
+The send and receive methods use the [`PostOffice`](https://docs.conclave.net/api/-conclave/com.r3.conclave.mail/-post-office/index.html) API. The
 `EnclaveFlowInitiator` class holds one `PostOffice` instance which has the topic set to the session's flow id.
 
 ```kotlin
@@ -363,20 +363,20 @@ fun receiveFromEnclave(): ByteArray {
 }
 ```
 
-# Authenticating the sender's identity
+# Authenticating the sender's identity <a id="authenticating-senders-identity"></a>
 
 The enclave can authenticate a sender's identity that belongs to a network where nodes are identified by a X.509
 certificate, and the network is controlled by a certificate authority like in a Corda network.
 
 The network CA root certificate's public key must be stored in the enclave's resource folder (in this example the
-path is enclave/src/main/resources/) in a file named trustedroot.cer, so that the enclave can validate the sender
+path is enclave/src/main/resources/) in a file named trustedroot.cer, so that the enclave can validate the sender's
 identity.
 
 The identity is set up by the `EnclaveFlowInitiator` class during authentication and sent to the enclave which
 verifies it. Please be aware that the first byte of the identity message indicates whether a party wants to remain
 anonymous or not. If a party decides to remain anonymous, the identity message is padded with zeros to prevent
 anyone in the middle from using statistical analysis to guess whether a party is anonymous or not.
-The remaining bytes represent the party's identity If the party decides to authenticate
+The remaining bytes represent the party's identity if the party decides to authenticate
 itself.
 
 ```kotlin
@@ -433,7 +433,7 @@ protected void receiveMail(long id, EnclaveMail mail, String routingHint, Sender
 }
 ```
 
-The method `receiveMail` contains the enclave logic. You can code your business requirements in the `receiveMail method`.
+The method `receiveMail` contains the enclave logic. You can code your business requirements in this method.
 In the example above, the enclave reverses a string and returns the result back with the sender name if the party is not anonymous. The mail parameter contains some metadata, and the data which is going to be processed by the enclave.
 The call [`mail.getBodyAsBytes()`](https://docs.conclave.net/api/-conclave/com.r3.conclave.mail/-enclave-mail/index.html#-2025980493%2FFunctions%2F-654294413) returns
 the data to be processed by the enclave. As mentioned before, the `identity`
