@@ -152,7 +152,7 @@ public class ReverseEnclaveService extends EnclaveHostService {
 }
 ```
 
-This will enable SGX support on the host. Then, it loads the sample `ReverseEnclave` class. The `EnclaveHostService` class exposes methods to
+This loads the sample `ReverseEnclave` class. The `EnclaveHostService` class exposes methods to
 send and receive mail with the enclave, and suspends flows waiting for the enclave to deliver mail.
 
 In the next section about relaying a mail from a flow to the enclave, Conclave uses
