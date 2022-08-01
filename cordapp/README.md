@@ -74,7 +74,7 @@ For an explanation of the Docker command used above, see
 
 ## Corda Node Identity Validation
 The [certificates](certificates) folder contains the truststore.jks Java KeyStore that has the Corda Root
-Certificate Authority (CA) public key. This public key can be used for development or testing purposes. The public key also creates
+Certificate Authority (CA) public key. This public key can be used for development or testing purposes. The public key is also used to create
 the certificate *trustedroot.cer*, embedded as a resource in the enclave. This certificate is used to validate a Corda node's identity
 when the host relays a message to the enclave.
 
