@@ -1,9 +1,5 @@
 pluginManagement {
     repositories {
-        maven {
-            name = "R3 artifactory"
-            url = "https://software.r3.com/artifactory/conclave-maven"
-        }
         // Add standard repositories back.
         gradlePluginPortal()
         jcenter()
