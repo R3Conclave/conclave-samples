@@ -42,9 +42,6 @@ allprojects {
         maven { url 'https://software.r3.com/artifactory/corda' }
         maven { url 'https://jitpack.io' }
         maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-        maven {
-            url = rootProject.file(conclaveRepo)
-        }
     }
 
     tasks.withType(JavaCompile) {
