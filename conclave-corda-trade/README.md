@@ -15,13 +15,6 @@ participants ledgers.
 ## Pre-Requisites
 For Corda development environment setup, please refer to: [Setup Guide](https://docs.corda.net/getting-set-up.html).
 
-## Conclave SDK Location
-In order to compile this sample successfully, kindly download the conclave SDK and update the location in gradle.properties.
-
-conclaveRepo=<path_to_conclave_sdk>
-
-Conclave SDK can ve downloaded from here: https://conclave.net/get-conclave/
-
 ### Running the nodes:
 Open a terminal and go to the project root directory and type: (to deploy the nodes using bootstrapper)
 ```
