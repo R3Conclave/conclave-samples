@@ -12,6 +12,9 @@ repositories {
 subprojects {
     repositories {
         mavenCentral()
+        maven {
+            url = rootProject.file(conclaveRepo)
+        }
     }
 }
 
