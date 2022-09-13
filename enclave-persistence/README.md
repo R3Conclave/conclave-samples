@@ -37,7 +37,7 @@ Start the host inside the container, which will build the enclave and host. You 
 
 ```
 cd host/build/libs
-java -jar host-simulation-1.2.jar --sealed.state.file="./test.disk" --filesystem.file="./conclave.disk"
+java -jar host-simulation-1.3.jar --sealed.state.file="./test.disk" --filesystem.file="./conclave.disk"
 ```
 
 The `--sealed.state.file` is the path at which the enclave should store the sealed state containing the persistent map
@@ -50,8 +50,8 @@ use the client to send it strings to reverse. Run the client, to send data to th
 
 ```
 cd client/build/libs
-java -jar client-1.2.jar --constraint "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE" --file-state "client-state" --url "http://localhost:8080" ADD user myPassword
-java -jar client-1.2.jar --constraint "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE" --file-state "client-state" --url "http://localhost:8080" VERIFY user myPassword
+java -jar client-1.3.jar --constraint "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE" --file-state "client-state" --url "http://localhost:8080" ADD user myPassword
+java -jar client-1.3.jar --constraint "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE" --file-state "client-state" --url "http://localhost:8080" VERIFY user myPassword
 
 ```
 
