@@ -64,9 +64,9 @@ the enclave once the host is re-started.
 ## Learning Resources <a name="Resources"></a>
 
 - [Documentation](https://docs.conclave.net)
-  - We recommend to read the [Concepts chapter](https://docs.conclave.net/enclaves.html) to learn more about confidential computing, enclaves, and Conclave's architecture
+  - We recommend reading [Concepts chapter](https://docs.conclave.net/enclaves.html) to learn more about confidential computing, enclaves, and Conclave's architecture
 - [Video tutorials and bootcamps](https://www.youtube.com/channel/UCSZbii_Z5QXci6Sr-CvStuw)
-  -  We recommend to watch the video ["Getting started with Conclave SDK 1.3"](https://youtu.be/nwyGL5OemSU)
+  -  We recommend watching the video ["Getting started with Conclave SDK 1.3"](https://youtu.be/nwyGL5OemSU)
 -  [Developer Blog](https://developer.r3.com/blog/category/conclave/)
 -  Get the latest news and announcements on [Twitter](https://twitter.com/Conclavecompute),  or sign up for our monthly [newsletter](https://www.conclave.net/#newsletter)
 
