@@ -59,7 +59,7 @@ Remote attestation for enclave 6C5AE57C0D779D635FBF5227CE1DEC4A0736BD5F02CC8E8E6
 In this case the code signer `0000000000000000000000000000000000000000000000000000000000000000` is the enclave constraint.
 
 You can submit bids using the below command with role type as bidder:
-`./gradlew runClient --args="'BIDDER' ’S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE' 'http://localhost:8080' 1000"`
+`./gradlew runClient --args="'BIDDER' 'S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE' 'http://localhost:8080' 1000"`
 
 You could run multiple clients to submit different bids.
 
