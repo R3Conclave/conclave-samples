@@ -1,8 +1,9 @@
 { "rules":
   [
-    {"excludeClasses": "nonapi.**"},
-    {"excludeClasses": "com.r3.conclave.host.**"},
+    {"excludeClasses": "javax.**"},
     {"excludeClasses": "org.springframework.**"},
-    {"excludeClasses": "ch.qos.logback.**"}
+    {"excludeClasses": "com.r3.conclave.host.**"},
+    {"excludeClasses": "ch.qos.logback.**"},
+    {"excludeClasses": "org.apache.**"}
   ]
 }
