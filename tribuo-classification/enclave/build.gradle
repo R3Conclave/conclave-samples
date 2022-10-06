@@ -5,13 +5,9 @@ plugins {
 dependencies {
     implementation project(path: ":common")
 
-    implementation ("org.tribuo:tribuo-core:$tribuoVersion")
-    implementation ("org.tribuo:tribuo-classification-core:$tribuoVersion")
     implementation ("org.tribuo:tribuo-classification-sgd:$tribuoVersion")
 
-    testImplementation ("org.tribuo:tribuo-core:$tribuoVersion")
     testImplementation ("org.tribuo:tribuo-classification-core:$tribuoVersion")
-
     testImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
 }
 
