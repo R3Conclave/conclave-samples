@@ -2,6 +2,7 @@
   [
     {"excludeClasses": "nonapi.**"},
     {"excludeClasses": "com.r3.conclave.host.**"},
-    {"excludeClasses": "org.springframework.**"}
+    {"excludeClasses": "org.springframework.**"},
+    {"excludeClasses": "ch.qos.logback.**"}
   ]
 }
