@@ -6,10 +6,10 @@ import com.r3.conclave.common.EnclaveConstraint;
 import com.r3.conclave.mail.EnclaveMail;
 import com.r3.conclave.sample.common.InputData;
 import com.r3.conclave.sample.common.Role;
+import org.tribuo.DataSource;
 import org.tribuo.MutableDataset;
 import org.tribuo.classification.LabelFactory;
 import org.tribuo.data.csv.CSVLoader;
-import org.tribuo.datasource.ListDataSource;
 import org.tribuo.evaluation.TrainTestSplitter;
 import picocli.CommandLine;
 
@@ -109,7 +109,7 @@ public class Client implements Callable<Void> {
                     "SingleEpithelialCell Size", "BareNuclei", "BlandChromatin", "NormalNucleoli", "Mitoses", "Class"};
 
             String filePath = System.getProperty("user.dir") + "/client/data/" + trainingDataFileName;
-            ListDataSource irisesSource = csvLoader.loadDataSource(Paths.get(filePath), "Class", breastCancerHeaders);
+            DataSource irisesSource = csvLoader.loadDataSource(Paths.get(filePath), "Class", breastCancerHeaders);
 
             //Split the input loaded data into training and testing data
             TrainTestSplitter irisSplitter = new TrainTestSplitter<>(irisesSource, 0.7, 1L);
