@@ -1,5 +1,7 @@
-{ "rules": [
-  {"excludeClasses": "nonapi.**"},
-  {"excludeClasses": "com.r3.conclave.host.**"}
-]
+{ "rules":
+  [
+    {"excludeClasses": "nonapi.**"},
+    {"excludeClasses": "com.r3.conclave.host.**"},
+    {"excludeClasses": "org.springframework.**"}
+  ]
 }
