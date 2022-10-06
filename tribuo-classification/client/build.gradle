@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version $shadowPluginVersion
+    id 'com.github.johnrengelman.shadow' version "$shadowPluginVersion"
 }
 
 application {

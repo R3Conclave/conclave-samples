@@ -1,7 +1,7 @@
 plugins {
     id 'application'
-    id 'org.springframework.boot' version $springBootVersion
-    id 'com.github.johnrengelman.shadow' version $shadowPluginVersion
+    id 'org.springframework.boot' version "$springBootVersion"
+    id 'com.github.johnrengelman.shadow' version "$shadowPluginVersion"
 }
 
 mainClassName = "com.r3.conclave.host.web.EnclaveWebHost"
