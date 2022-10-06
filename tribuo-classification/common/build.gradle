@@ -3,9 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation 'com.esotericsoftware:kryo:$kryoVersion'
-
-    implementation ("org.tribuo:tribuo-all:$tribuoVersion") 
-
-    testImplementation "junit:junit:$junitVersion"
+    implementation ("org.tribuo:tribuo-core:$tribuoVersion")
 }

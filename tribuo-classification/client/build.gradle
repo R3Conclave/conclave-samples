@@ -10,7 +10,8 @@ application {
 
 dependencies {
     implementation project(":common")
-    implementation ("org.tribuo:tribuo-all:$tribuoVersion")
+    implementation ("org.tribuo:tribuo-core:$tribuoVersion")
+    implementation ("org.tribuo:tribuo-classification-core:$tribuoVersion")
 
     implementation "info.picocli:picocli:$picocliVersion"
     implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"

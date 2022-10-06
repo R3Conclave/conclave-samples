@@ -30,56 +30,172 @@
   "name":"java.beans.PropertyVetoException"
 },
 {
+  "name":"java.io.Closeable",
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"java.io.FilePermission"
 },
 {
+  "name":"java.io.Serializable",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.AutoCloseable",
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"java.lang.Class",
-  "queriedMethods":[{"name":"getModule","parameterTypes":[] }]
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"getModule","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.ClassLoader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.Comparable",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.Enum",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.Class","java.lang.String"] }]
 },
 {
   "name":"java.lang.Module",
-  "queriedMethods":[
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"isExported","parameterTypes":["java.lang.String"] }
-  ]
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"getLayer","parameterTypes":[] }]
 },
 {
   "name":"java.lang.ModuleLayer",
-  "queriedMethods":[
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
     {"name":"boot","parameterTypes":[] }, 
-    {"name":"configuration","parameterTypes":[] }
+    {"name":"configuration","parameterTypes":[] }, 
+    {"name":"findLoader","parameterTypes":["java.lang.String"] }, 
+    {"name":"parents","parameterTypes":[] }
   ]
 },
 {
   "name":"java.lang.Object",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true
-},
-{
-  "name":"java.lang.Runtime$Version",
-  "methods":[{"name":"major","parameterTypes":[] }]
 },
 {
   "name":"java.lang.RuntimePermission"
 },
 {
+  "name":"java.lang.StackWalker",
+  "methods":[
+    {"name":"forEach","parameterTypes":["java.util.function.Consumer"] }, 
+    {"name":"getInstance","parameterTypes":["java.lang.StackWalker$Option"] }
+  ]
+},
+{
+  "name":"java.lang.StackWalker$Option"
+},
+{
+  "name":"java.lang.StackWalker$StackFrame",
+  "methods":[{"name":"getDeclaringClass","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.System",
+  "methods":[{"name":"getSecurityManager","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.constant.Constable",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.invoke.TypeDescriptor",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.invoke.TypeDescriptor$OfField",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.management.ManagementFactory",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"getRuntimeMXBean","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.management.PlatformManagedObject",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.management.RuntimeMXBean",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"getInputArguments","parameterTypes":[] }]
+},
+{
   "name":"java.lang.module.Configuration",
-  "queriedMethods":[{"name":"modules","parameterTypes":[] }]
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"modules","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.module.ModuleDescriptor",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"name","parameterTypes":[] }, 
+    {"name":"packages","parameterTypes":[] }, 
+    {"name":"rawVersion","parameterTypes":[] }
+  ]
+},
+{
+  "name":"java.lang.module.ModuleReader",
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"list","parameterTypes":[] }, 
+    {"name":"open","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"java.lang.module.ModuleReference",
-  "queriedMethods":[{"name":"location","parameterTypes":[] }]
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"descriptor","parameterTypes":[] }, 
+    {"name":"location","parameterTypes":[] }, 
+    {"name":"open","parameterTypes":[] }
+  ]
 },
 {
   "name":"java.lang.module.ResolvedModule",
-  "queriedMethods":[{"name":"reference","parameterTypes":[] }]
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"reference","parameterTypes":[] }]
 },
 {
   "name":"java.lang.reflect.AccessibleObject",
-  "queriedMethods":[{"name":"canAccess","parameterTypes":["java.lang.Object"] }]
+  "methods":[
+    {"name":"canAccess","parameterTypes":["java.lang.Object"] }, 
+    {"name":"trySetAccessible","parameterTypes":[] }
+  ],
+  "queriedMethods":[
+    {"name":"isAccessible","parameterTypes":[] }, 
+    {"name":"setAccessible","parameterTypes":["boolean"] }
+  ]
 },
 {
-  "name":"java.lang.reflect.InaccessibleObjectException"
+  "name":"java.lang.reflect.AnnotatedElement",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.reflect.GenericDeclaration",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.reflect.Type",
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"java.net.NetPermission"
@@ -88,27 +204,23 @@
   "name":"java.net.SocketPermission"
 },
 {
-  "name":"java.net.URLConnection",
-  "queriedMethods":[{"name":"setDefaultUseCaches","parameterTypes":["java.lang.String","boolean"] }]
-},
-{
   "name":"java.net.URLPermission",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }]
 },
 {
-  "name":"java.net.UnixDomainSocketAddress",
-  "queriedMethods":[{"name":"of","parameterTypes":["java.lang.String"] }]
-},
-{
-  "name":"java.nio.channels.ServerSocketChannel",
-  "queriedMethods":[{"name":"open","parameterTypes":["java.net.ProtocolFamily"] }]
-},
-{
-  "name":"java.nio.channels.SocketChannel",
-  "queriedMethods":[{"name":"open","parameterTypes":["java.net.ProtocolFamily"] }]
+  "name":"java.security.AccessController",
+  "methods":[{"name":"doPrivileged","parameterTypes":["java.security.PrivilegedAction"] }]
 },
 {
   "name":"java.security.AllPermission"
+},
+{
+  "name":"java.security.PrivilegedAction"
+},
+{
+  "name":"java.security.SecureClassLoader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"java.security.SecureRandomParameters"
@@ -118,7 +230,9 @@
 },
 {
   "name":"java.util.Optional",
-  "queriedMethods":[
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
     {"name":"get","parameterTypes":[] }, 
     {"name":"isPresent","parameterTypes":[] }
   ]
@@ -127,25 +241,81 @@
   "name":"java.util.PropertyPermission"
 },
 {
-  "name":"java.util.jar.JarFile",
-  "methods":[{"name":"runtimeVersion","parameterTypes":[] }],
-  "queriedMethods":[
-    {"name":"<init>","parameterTypes":["java.io.File","boolean","int","java.lang.Runtime$Version"] }, 
-    {"name":"isMultiRelease","parameterTypes":[] }
-  ]
+  "name":"java.util.function.Consumer"
 },
 {
-  "name":"java.util.logging.SimpleFormatter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "name":"java.util.stream.AbstractPipeline",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
-  "name":"org.graalvm.nativeimage.ImageInfo",
-  "methods":[{"name":"inImageCode","parameterTypes":[] }]
+  "name":"java.util.stream.BaseStream",
+  "queryAllDeclaredMethods":true
 },
 {
-  "name":"org.slf4j.spi.LocationAwareLogger"
+  "name":"java.util.stream.Collector"
 },
-
+{
+  "name":"java.util.stream.Collectors",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"toList","parameterTypes":[] }]
+},
+{
+  "name":"java.util.stream.PipelineHelper",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.util.stream.ReferencePipeline",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.util.stream.ReferencePipeline$Head",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.util.stream.Stream",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"collect","parameterTypes":["java.util.stream.Collector"] }]
+},
+{
+  "name":"jdk.internal.loader.BuiltinClassLoader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"jdk.internal.loader.ClassLoaders$AppClassLoader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"jdk.internal.module.ModuleReferenceImpl",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"jdk.internal.module.SystemModuleFinders$SystemModuleReader",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"sun.management.RuntimeImpl",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"sun.misc.Unsafe",
+  "fields":[{"name":"theUnsafe"}],
+  "methods":[{"name":"invokeCleaner","parameterTypes":["java.nio.ByteBuffer"] }]
+},
 {
   "name":"sun.security.provider.NativePRNG",
   "methods":[{"name":"<init>","parameterTypes":[] }]
