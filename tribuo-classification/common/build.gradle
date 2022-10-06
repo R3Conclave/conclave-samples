@@ -3,12 +3,12 @@ plugins {
 }
 
 dependencies {
-    implementation 'com.esotericsoftware:kryo:4.0.0'
+    implementation 'com.esotericsoftware:kryo:$kryoVersion'
 
-    implementation ("org.tribuo:tribuo-all:4.1.0@pom") {
+    implementation ("org.tribuo:tribuo-all:$tribuoVersion@pom") {
         transitive = true // for build.gradle (i.e., Groovy)
         // isTransitive = true // for build.gradle.kts (i.e., Kotlin)
     }
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:$junitVersion'
 }

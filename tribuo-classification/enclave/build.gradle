@@ -5,13 +5,13 @@ plugins {
 dependencies {
     implementation project(path: ":common")
 
-    implementation ("org.tribuo:tribuo-all:4.2.1@pom") {
+    implementation ("org.tribuo:tribuo-all:$tribuoVersion@pom") {
         transitive = true // for build.gradle (i.e., Groovy)
     }
 
-    implementation "org.slf4j:slf4j-api:$slf4j_version"
-    runtimeOnly "org.slf4j:slf4j-simple:$slf4j_version"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.9.1"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    runtimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
 }
 
 conclave {

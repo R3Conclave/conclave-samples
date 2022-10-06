@@ -1,7 +1,7 @@
 plugins {
     id 'application'
-    id 'org.springframework.boot' version '2.7.1'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'org.springframework.boot' version $springBootVersion
+    id 'com.github.johnrengelman.shadow' version $shadowPluginVersion
 }
 
 mainClassName = "com.r3.conclave.host.web.EnclaveWebHost"
@@ -15,7 +15,7 @@ dependencies {
     //use the built in web server to interact with enclave
     runtimeOnly "com.r3.conclave:conclave-web-host:$conclaveVersion"
 
-    testImplementation "org.junit.jupiter:junit-jupiter:5.9.1"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
 }
 
 shadowJar {

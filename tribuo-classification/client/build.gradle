@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version $shadowPluginVersion
 }
 
 application {
@@ -10,10 +10,10 @@ application {
 
 dependencies {
     implementation project(":common")
-    implementation ("org.tribuo:tribuo-all:4.1.0@pom") {
+    implementation ("org.tribuo:tribuo-all:$tribuoVersion@pom") {
         transitive = true // for build.gradle (i.e., Groovy)
         // isTransitive = true // for build.gradle.kts (i.e., Kotlin)
     }
-    implementation "info.picocli:picocli:4.6.1"
+    implementation "info.picocli:picocli:$picocliVersion"
     implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
 }
