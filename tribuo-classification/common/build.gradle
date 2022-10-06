@@ -10,5 +10,5 @@ dependencies {
         // isTransitive = true // for build.gradle.kts (i.e., Kotlin)
     }
 
-    testImplementation 'junit:junit:$junitVersion'
+    testImplementation "junit:junit:$junitVersion"
 }
