@@ -129,16 +129,16 @@ You can also run both together like this
 Use below command to provide command line arguments to client
 Start the client, and pass in the file name to the breast cancer data to train the model
 
-    java -jar client/build/libs/client.jar --training-file="breast-cancer.data" --role="TRAIN" --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
+    java -jar client/build/libs/client-all.jar --training-file="breast-cancer.data" --role="TRAIN" --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
 
 On other terminal, start a new client and pass in a new file name
 
-    java -jar client/build/libs/client.jar --training-file="breast-cancer-1.data" --role="TRAIN" --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
+    java -jar client/build/libs/client-all.jar --training-file="breast-cancer-1.data" --role="TRAIN" --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
 
 You can start as many clients as you want. Pass in the file names each time.
 Once all the clients pass in the training data, train the model inside the enclave and retrieve the evaluation result.
 
-    java -jar client/build/libs/client.jar --role=“EVALUATE” --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
+    java -jar client/build/libs/client-all.jar --role="EVALUATE" --constraint="S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
 
 As you can see for mock mode we pass in the 0's as the constraint. You can read more about constraints here: https://docs.conclave.net/constraints.html.
 
@@ -177,7 +177,14 @@ Start Client 2 and pass training data to train the model
 Start Client 3 and evaluate the model
 
       java -jar client/build/libs/client-all.jar --role="EVALUATE"  --constraint="S:3D71AAC9ED596F3C86241A977DAFA84B255D16D633DFF7AB88A053AE2183AD14 PROD:1 SEC:INSECURE" --url="http://localhost:8080"
-   
+
+## How to generate the reflection and serialization configuration files for the enclave
+
+Conclave uses the GraalVM Native Image JVM, in which all bytecode is compiled to native code ahead of time. However, 
+this cannot always predict all usages of the Java Reflection or the Serialization.
+Undetected usages of these dynamic features must be provided to the enclave in configuration files.
+You can find these configuration files at `tribuo-classification/enclave/src/main/resources/META-INF/native-image location.`
+You can follow the steps specified on the [docs](https://docs.conclave.net/enclave-configuration.html#assisted-configuration-of-native-image-builds) to generate these configuration files.
 
 Please note:
 R3 code is licensed under Apache 2 but the training data set has its own terms and conditions, which you can read in the

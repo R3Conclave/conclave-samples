@@ -6,6 +6,7 @@ import com.r3.conclave.sample.common.InputData;
 import com.r3.conclave.sample.common.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.tribuo.DataSource;
 import org.tribuo.MutableDataset;
 import org.tribuo.classification.LabelFactory;
 import org.tribuo.data.csv.CSVLoader;
@@ -76,7 +77,7 @@ public class MockTest {
         File file = new File(classLoader.getResource("data/breast-cancer.data").getFile());
         System.out.println(file.getAbsolutePath());
 
-        ListDataSource irisesSource = csvLoader.loadDataSource(Paths.get(file.toURI()), "Class",breastCancerHeaders);
+        DataSource irisesSource = csvLoader.loadDataSource(Paths.get(file.toURI()), "Class",breastCancerHeaders);
 
         //split the input loaded data into training and testing data
         TrainTestSplitter irisSplitter = new TrainTestSplitter<>(irisesSource,0.7,1L);
