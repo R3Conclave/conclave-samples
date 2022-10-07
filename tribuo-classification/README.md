@@ -185,6 +185,7 @@ this cannot always predict all usages of the Java Reflection or the Serializatio
 Undetected usages of these dynamic features must be provided to the enclave in configuration files.
 You can find these configuration files at `tribuo-classification/enclave/src/main/resources/META-INF/native-image location.`
 You can follow the steps specified on the [docs](https://docs.conclave.net/enclave-configuration.html#assisted-configuration-of-native-image-builds) to generate these configuration files.
+
 Please note:
 R3 code is licensed under Apache 2 but the training data set has its own terms and conditions, which you can read in the
 sample files.
