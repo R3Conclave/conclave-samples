@@ -35,11 +35,11 @@ https://docs.conclave.net/tutorial.html#setting-up-your-machine
    the container has all the required dependencies to run the host. Also ensure that the conclave-sdk is present within.
 
 Start the host inside the container, which will build the enclave and host. You will find a file named
-`host-simulation-1.2.jar` inside `host/build/libs`
+`host-simulation-1.3.jar` inside `host/build/libs`
 
 ```
-cd column-profiling/host/build/libs
-java -jar host-simulation-1.2.jar
+cd host/build/libs
+java -jar host-simulation-1.3.jar
 ```
 
 It should print out some info about the started enclave `Started EnclaveWebHost.Companion in ... seconds` This will
@@ -65,7 +65,7 @@ Name:String Age:Integer Country:String Gender:String(m,f)
 
 To find the frequency distribution run the below command:
 `cd client/build/libs`
-`java -jar client-1.2.jar John 45 USA m Sera 45 India f Jacod 20 USA m Emily 20 UK na --constraint "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE" --url "http://localhost:8080"`
+`java -jar client-1.3.jar John 45 USA m Sera 45 India f Jacod 20 USA m Emily 20 UK na --constraint "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE" --url "http://localhost:8080"`
 
 The enclave should reply with a response message indicating the freq distribution of age, country and gender. The
 response will look like below:
@@ -92,20 +92,4 @@ enclave/src/main/resources/META-INF/native-image. These files could be generated
 using [native-image-agent](https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds)
 . The agent tracks usage of dynamic features and generates configuration files when run against a regular JVM. If you
 make any changes to the Enclave code, you may want to either manually append these configuration files or run the
-native-agent again. Steps for running the agent are:
-
-1. Download [GraalVM](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.0.0) for you Operating system
-   and [install](https://www.graalvm.org/docs/getting-started/) it.
-2. After setting up the GraalVM, install native-image
-   `$JAVA_HOME/bin/gu install native-image`
-3. enable native-image-agent on the command line of the GraalVM java command:
-   `$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=/path/to/enclave/src/main/resources/META-INF/native-image/ ...`
-4. Add the Shadow Gradle plugin to the plugins section of the host's build.gradle:
-   `plugins { id 'com.github.johnrengelman.shadow' version '6.1.0' }`
-5. Generate the shadow jar. This will create a host-all.jar under host/build/libs
-   `./gradlew -PenclaveMode=mock host:shadowJar`
-6. Run the host with the native-agent enabled to generate the configuration files.
-   `$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=/path/to/enclave/src/main/resources/META-INF/native-image/,caller-filter-file=/path/to/enclave/src/main/resources/META-INF/native-image/filter.json -jar /path/to/host/build/libs/host-all.jar`
-7. Trigger your enclave by sending client requests
-   `./gradlew client:run`
-
+native-agent again. For running the agent, please refer to the steps mentioned in the [docs](https://docs.conclave.net/enclave-configuration.html#assisted-configuration-of-native-image-builds).

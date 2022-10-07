@@ -1,25 +1,12 @@
 plugins {
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version "$shadowPluginVersion"
 }
 
 mainClassName = "com.r3.conclave.host.web.EnclaveWebHost"
 
 // Override the default (simulation) with -PenclaveMode=
 def mode = findProperty("enclaveMode")?.toString()?.toLowerCase() ?: "mock"
-
-def graalVMDir = tasks.getByPath(":enclave:untarGraalVM").outputs.files.first()
-def configurationDir = project(":enclave").projectDir.toPath().resolve("src/main/resources/META-INF/native-image")
-def filterFile = configurationDir.resolve("filter.json")
-application {
-    run.dependsOn(":enclave:untarGraalVM")
-    if (project.hasProperty("generateConfigFiles") && properties.get("enclaveMode").toString().toLowerCase() == "mock" != null) {
-        applicationDefaultJvmArgs = [
-                "-agentpath:$graalVMDir/jre/lib/amd64/libnative-image-agent.so=config-output-dir=$configurationDir," +
-                        "caller-filter-file=$filterFile"
-        ]
-    }
-}
 
 dependencies {
     if (mode == "mock") {
@@ -29,8 +16,8 @@ dependencies {
     }
     //use the built in web server to interact with enclave
     runtimeOnly "com.r3.conclave:conclave-web-host:$conclaveVersion"
-    runtimeOnly "org.slf4j:slf4j-simple:1.7.30"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.6.0"
+    runtimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
 }
 
 shadowJar {
