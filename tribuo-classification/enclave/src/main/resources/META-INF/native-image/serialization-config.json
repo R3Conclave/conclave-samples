@@ -136,5 +136,8 @@
   },
   {
     "name":"org.tribuo.impl.ArrayExample"
+  },
+  {
+    "name":"[Ljava.lang.String;"
   }
 ]
