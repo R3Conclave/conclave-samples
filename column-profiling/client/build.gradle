@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version "$shadowPluginVersion"
 }
 
 application {
@@ -10,7 +10,7 @@ application {
 
 dependencies {
     implementation project(":common")
-    implementation "info.picocli:picocli:4.6.1"
+    implementation "info.picocli:picocli:$picocliVersion"
     implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
 }
 
