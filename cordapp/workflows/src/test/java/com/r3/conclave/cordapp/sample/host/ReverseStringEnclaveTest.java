@@ -23,8 +23,8 @@ class ReverseStringEnclaveTest {
     // when unit testing and developing.
     //
     // Obviously in a real app you'd not use SEC:INSECURE, however this makes the sample work in simulation mode.
-    private final String constraint = "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1 SEC:INSECURE";
-    private final String mock_constraint = "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE";
+    private final String NON_MOCK_CONSTRAINT = "S:4924CA3A9C8241A3C0AA1A24A407AA86401D2B79FA9FF84932DA798A942166D4 PROD:1";
+    private final String MOCK_CONSTRAINT = "S:0000000000000000000000000000000000000000000000000000000000000000 PROD:1 SEC:INSECURE";
 
     @BeforeAll
     static void setup() {
@@ -66,9 +66,18 @@ class ReverseStringEnclaveTest {
     }
 
     private String getConstraint() {
-        String mode = System.getProperty("enclaveMode");
-        if (mode == null || !mode.toLowerCase().equals("mock"))
-            return constraint;
-        return mock_constraint;
+        String mode = System.getProperty("enclaveMode").toLowerCase();
+
+        if (mode == null || !mode.toLowerCase().equals("mock")) {
+            String securitySuffix;
+
+            if (mode == "release") {
+                securitySuffix = "SEC:STALE";
+            } else { //  debug or simulation
+                securitySuffix = "SEC:INSECURE"
+            }
+            return NON_MOCK_CONSTRAINT + " " + securitySuffix;
+        }
+        return MOCK_CONSTRAINT;
     }
 }
