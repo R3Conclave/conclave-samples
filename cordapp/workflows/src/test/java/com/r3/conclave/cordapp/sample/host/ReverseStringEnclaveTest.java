@@ -74,7 +74,7 @@ class ReverseStringEnclaveTest {
             if (mode == "release") {
                 securitySuffix = "SEC:STALE";
             } else { //  debug or simulation
-                securitySuffix = "SEC:INSECURE"
+                securitySuffix = "SEC:INSECURE";
             }
             return NON_MOCK_CONSTRAINT + " " + securitySuffix;
         }
