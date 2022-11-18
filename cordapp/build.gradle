@@ -77,19 +77,6 @@ allprojects {
     }
 
     repositories {
-        // Add the Conclave repository to every project.
-        maven {
-            def path = Paths.get(rootDir.absolutePath).resolve(conclaveRepo).toAbsolutePath().normalize()
-            if (!Files.isDirectory(path.resolve("com"))) {
-                if (Files.isDirectory(Paths.get("/repo/com"))) {
-                    path = Paths.get("/repo")
-                } else {
-                    throw new Exception("Neither $path nor /repo seem to exist, or they aren't Maven repositories; it should be the SDK 'repo' subdirectory.")
-                }
-            }
-            url = path.toFile()
-        }
-
         mavenCentral()
         maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
         maven { url 'https://software.r3.com/artifactory/corda' }
