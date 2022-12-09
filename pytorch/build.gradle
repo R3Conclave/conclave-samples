@@ -1,0 +1,32 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    idea {
+        module {
+            downloadJavadoc = true
+        }
+    }
+
+    eclipse {
+        classpath {
+            downloadJavadoc = true
+        }
+    }
+
+    repositories {
+        // Delete this when 1.4 is released.
+        maven {
+            name = "R3 artifactory"
+            url = "https://software.r3.com/artifactory/conclave-maven"
+        }
+        mavenCentral()
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+}
