@@ -1,0 +1,13 @@
+plugins {
+    id 'com.r3.conclave.enclave'
+}
+
+conclave {
+    productID = 1
+    revocationLevel = 0
+
+    release {
+        // Use a random signing key for release mode.
+        signingType = dummyKey
+    }
+}

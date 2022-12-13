@@ -1,0 +1,19 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+}
+
+application {
+    mainClass.set("com.r3.conclave.sample.pytorch.client.PyTorchClient")
+}
+
+dependencies {
+    implementation "com.r3.conclave:conclave-web-client:$conclaveVersion"
+
+    runtimeOnly 'org.slf4j:slf4j-simple:2.0.5'
+}
+
+shadowJar {
+    archiveClassifier.set("")
+}
