@@ -62,10 +62,10 @@ submitters respectively.
 
 ## Running the enclave
 
-To build the enclave/host:
+To build the enclave/host in simulation mode:
 
 ```bash
-./gradlew host:bootJar -PenclaveMode=release
+./gradlew host:bootJar -PenclaveMode=simulation
 ```
 
 This assumes you have an [SGX enabled machine](https://docs.conclave.net/machine-setup.html). If you do not then you 
@@ -73,25 +73,25 @@ can build in simulation mode instead by replacing `release` with `simulation`.
 
 To run the enclave:
 ```bash
-java -jar host/build/libs/host-release.jar
+java -jar host/build/libs/host-simulation.jar
 ```
 
 It may take a while for the enclave to load. Once it has you will see ouput similar to this:
 
 ```
-2022-12-09 16:45:18.935  INFO 14188 --- [           main] c.r.c.host.web.EnclaveWebController      : Enclave com.r3.conclave.python.PythonEnclaveAdapter started
-2022-12-09 16:45:18.944  INFO 14188 --- [           main] c.r.c.host.web.EnclaveWebController      : Remote attestation for enclave C21AD17F2C6F80D8F2A8E6F4FA2F62F93C8DFFAD89FEB657A81FF682FA120993:
-  - Mode: RELEASE
-  - Code signer: 12241F3E985F814961F4873BBB2497665A5E7EE17FE7A3230217B6D081BEE9E7
-  - Session signing key: 302A300506032B657003210011D3BA3089CE2ACF63CBCD01881ED6B018334483492228693512DDDA1452894E
-  - Session encryption key: B7956A10E03592840B5EFADEEE1ABA459A7088BC8E5D02C11797516B3501AF3A
+2022-12-13 11:20:44.592  INFO 11346 --- [           main] c.r.c.host.web.EnclaveWebController      : Enclave com.r3.conclave.python.PythonEnclaveAdapter started
+2022-12-13 11:20:44.602  INFO 11346 --- [           main] c.r.c.host.web.EnclaveWebController      : Remote attestation for enclave FA640B535EF2158B345956976A4E55A29C88A93E7F0B5E9DD512D0457A3693BE:
+  - Mode: SIMULATION
+  - Code signer: A322D25EFD20BE8C9C07690AF7A2EA565CE2FA06BB7DF733E2119EE222D4B81F
+  - Session signing key: 302A300506032B6570032100E7955625898FBF5EFCD9794CFA42672722F8A52195A06C65BB8AA44432DE60A7
+  - Session encryption key: DDD4CA639AAD4DAD33A60187FB5152A0600A472B592844F80B3E316B2EDC3E7D
   - Product ID: 1
   - Revocation level: 0
 
-Assessed security level at 2022-12-05T03:02:22Z is SECURE
-  - A signature of the ISV enclave QUOTE was verified correctly and the TCB level of the SGX platform is up-to-date.
-2022-12-09 16:45:19.137  INFO 14188 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-12-09 16:45:19.144  INFO 14188 --- [           main] c.r.c.host.web.EnclaveWebHost$Companion  : Started EnclaveWebHost.Companion in 72.93 seconds (JVM running for 73.191)
+Assessed security level at 2022-12-13T11:20:37.470920290Z is INSECURE
+  - Enclave is running in simulation mode.
+2022-12-13 11:20:44.790  INFO 11346 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-12-13 11:20:44.800  INFO 11346 --- [           main] c.r.c.host.web.EnclaveWebHost$Companion  : Started EnclaveWebHost.Companion in 9.288 seconds (JVM running for 9.555)
 ```
 
 ## Running the client
@@ -110,7 +110,7 @@ To run as the ML model owner and provision the enclave with the private image cl
 ```bash
 java -jar client/build/libs/client.jar \
     "http://localhost:8080" \
-    "C:C21AD17F2C6F80D8F2A8E6F4FA2F62F93C8DFFAD89FEB657A81FF682FA120993" \ 
+    "C:FA640B535EF2158B345956976A4E55A29C88A93E7F0B5E9DD512D0457A3693BE SEC:INSECURE" \ 
     provision \
     ~/alexnet-pretrained.pt \
     classes.txt
@@ -146,7 +146,7 @@ Provisioning the model into the enclave may take a short while since it's around
 Once the enclave has been provisioned, other users can now confidentially submit their images to be classified:
 
 ```bash
-java -jar client/build/libs/client.jar "http://localhost:8080" "C:C21AD17F2C6F80D8F2A8E6F4FA2F62F93C8DFFAD89FEB657A81FF682FA120993" classify
+java -jar client/build/libs/client.jar "http://localhost:8080" "C:FA640B535EF2158B345956976A4E55A29C88A93E7F0B5E9DD512D0457A3693BE SEC:INSECURE" classify
 ```
 
 This will bring up a simple console where can specify local files or URLs of images. These will be securely sent to 
@@ -156,6 +156,16 @@ the enclave to be classified, which will respond back with the closest matched l
 Enter path or URL of image: https://upload.wikimedia.org/wikipedia/commons/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg
 tiger cat (74.9%)
 Enter path or URL of image:
+```
+
+### Release mode
+
+The above example used simulation mode, which is insecure, but lets you test the enclave on a non-SGX machine. To 
+use the full privacy of SGX, build and run the enclave in [release mode](https://docs.conclave.net/enclave-modes.html):
+
+```bash
+./gradlew host:bootJar -PenclaveMode=release
+java -jar host/build/libs/host-release.jar
 ```
 
 ## Next steps
