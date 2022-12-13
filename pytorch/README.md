@@ -134,7 +134,6 @@ Let's explain the arguments to this command:
    import torch
    from pathlib import Path
    
-   output_filename = "alexnet-pretrained.pt"
    alexnet = models.alexnet(pretrained=True)
    torch.save(alexnet, f"{Path.home()}/alexnet-pretrained.pt")
    ```
