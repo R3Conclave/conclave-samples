@@ -68,15 +68,12 @@ To build the enclave/host in simulation mode:
 ./gradlew host:bootJar -PenclaveMode=simulation
 ```
 
-This assumes you have an [SGX enabled machine](https://docs.conclave.net/machine-setup.html). If you do not then you 
-can build in simulation mode instead by replacing `release` with `simulation`.
-
 To run the enclave:
 ```bash
 java -jar host/build/libs/host-simulation.jar
 ```
 
-It may take a while for the enclave to load. Once it has you will see ouput similar to this:
+Once the enclave has loaded you will see ouput similar to this:
 
 ```
 2022-12-13 11:20:44.592  INFO 11346 --- [           main] c.r.c.host.web.EnclaveWebController      : Enclave com.r3.conclave.python.PythonEnclaveAdapter started
