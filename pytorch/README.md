@@ -167,6 +167,6 @@ java -jar host/build/libs/host-release.jar
 
 ## Next steps
 
-You can find out more information on the Python API [here](https://github.com/R3Conclave/conclave-core-sdk#python-support-work-in-progress),
+You can find out more information on the Python API [here](https://github.com/R3Conclave/conclave-core-sdk/wiki/Python-API-(beta)),
 if you wish to create your own Python enclave. As this is a work-in-progress feature, there are some limitations 
 which are documented. Also remember the API isn't stable yet and is not ready for production.
